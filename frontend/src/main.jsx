@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import UserCreate from "./pages/UserCreate";
 import UserLogin from "./pages/userLogin";
-import userProfile from "./pages/userProfile";
+import UserProfile from "./pages/userProfile";
 import Home from "./pages/Home";
 import ProductsDetails from "./pages/ProductsDetails";
 import OwnerCreate from "./pages/OwnerCreate";
@@ -20,11 +20,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/" element={<Home />} />
       <Route path="/users/register" element={<UserCreate />} />
       <Route path="/users/login" element={<UserLogin />} />
-      <Route path="/users/profile" element={<userProfile />} />
       <Route path="/products/:id" element={<ProductsDetails />} />
       <Route path="/owner/register" element={<OwnerCreate />} />
       <Route path="/owner/login" element={<OwnerLogin />} />
       <Route path="/owner/dashboard" element={<OwnerDashboard />} />
+      <Route path="/users/profile" element={<UserProfile />} />
 
       </Routes>
   </BrowserRouter>

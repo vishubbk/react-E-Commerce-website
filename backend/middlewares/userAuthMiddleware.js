@@ -5,7 +5,8 @@ const userAuthMiddleware = (req, res, next) => {
   const token = req.header("Authorization");
 
   if (!token) {
-    return res.status(401).json({ message: "Unauthorized: No token provided" });
+   return res.redirect("/login");
+
   }
 
   try {
@@ -13,7 +14,7 @@ const userAuthMiddleware = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(401).json({ message: "Unauthorized: Invalid token" });
+    return res.redirect("/login");
   }
 };
 
