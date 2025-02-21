@@ -8,6 +8,9 @@ import UserLogin from "./pages/userLogin";
 import userProfile from "./pages/userProfile";
 import Home from "./pages/Home";
 import ProductsDetails from "./pages/ProductsDetails";
+import OwnerCreate from "./pages/OwnerCreate";
+import OwnerLogin from "./pages/OwnerLogin";
+import OwnerDashboard from "./pages/OwnerDashboard";
 import "./index.css";
 
 
@@ -19,6 +22,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/users/login" element={<UserLogin />} />
       <Route path="/users/profile" element={<userProfile />} />
       <Route path="/products/:id" element={<ProductsDetails />} />
-    </Routes>
+      <Route path="/owner/register" element={<OwnerCreate />} />
+      <Route path="/owner/login" element={<OwnerLogin />} />
+      <Route path="/owner/dashboard" element={<OwnerDashboard />} />
+
+      </Routes>
   </BrowserRouter>
 );
