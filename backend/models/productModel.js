@@ -26,7 +26,7 @@ const productSchema = new mongoose.Schema({
   image: {
     public_id: { type: String, required: true },
     url: { type: String, required: true },
-  },
+},
 });
 
 // Create the model

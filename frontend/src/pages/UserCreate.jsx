@@ -1,65 +1,160 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from "react-router-dom";
-import Toastify from "toastify-js";
-import "toastify-js/src/toastify.css";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
-const Register = () => {
+
+const UserCreate = () => {
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [contact, setContact] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
+  const isValidContact = (contact) => /^[0-9]{10}$/.test(contact);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    Toastify({
-      text: "Account created successfully!",
-      duration: 3000,
-      gravity: "top",
-      position: "center",
-      backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-    }).showToast();
-    navigate("/login");
+    setLoading(true);
+
+    try {
+    
+      if (!firstname || !lastname || !email || !password || !contact) {
+        toast.error("Please fill all the fields");
+        setLoading(false);
+        return;
+      }
+      if (password.length <4) {
+        toast.error("Password must be at least 4 characters long");
+        setLoading(false);
+        return;
+      }
+      if (!isValidEmail(email)) {
+        toast.error("Please enter a valid email");
+        setLoading(false);
+        return;
+      }
+      if (!isValidContact(contact)) {
+        toast.error("Please enter a valid contact number (10 digits)");
+        setLoading(false);
+        return;
+      }
+      const userData = {
+        firstname,
+        lastname,
+        email,
+        password,
+        contact,
+      };
+      const response = await axios.post(
+
+        `${import.meta.env.VITE_BASE_URL}/users/register`,
+        userData
+      );
+      if (response.status === 201) {
+        toast.success("User created successfully");
+        setFirstname("");
+        setLastname("");
+        setEmail("");
+        setPassword("");
+        setContact("");
+        setLoading(false);
+           navigate("/users/login");
+      }
+
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="w-full max-w-sm bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">Create User Account</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Full Name</label>
-            <input type="text" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm" required />
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">Create User Account</h1>
+      <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
+        <div className="flex flex-col gap-4">
+          <div className="fullname flex w-full gap-3">
+            <label className="text-gray-700 font-medium w-1/2">
+              First Name
+              <input
+                className="w-full mt-1 border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-blue-500"
+                type="text"
+                placeholder="Enter your first name"
+                value={firstname}
+                onChange={(e) => setFirstname(e.target.value)}
+                required
+              />
+            </label>
+
+            <label className="text-gray-700 font-medium w-1/2">
+              Last Name
+              <input
+                className="w-full mt-1 border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-blue-500"
+                type="text"
+                placeholder="Enter your last name"
+                value={lastname}
+                onChange={(e) => setLastname(e.target.value)}
+                required
+              />
+            </label>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <input type="email" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm" required />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Mobile Number</label>
-            <input type="text" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm" required />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
-            <input type="password" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm" required />
-          </div>
-          <button type="submit" className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">Create Account</button>
-        </form>
-        <p className="text-sm text-center text-gray-600 mt-4">
-          Already have an account? <Link to="/login" className="text-blue-600 hover:underline">Login</Link>
+
+          <label className="text-gray-700 font-medium">
+            Email
+            <input
+              className="w-full mt-1 border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-blue-500"
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </label>
+
+          <label className="text-gray-700 font-medium">
+            Password
+            <input
+              className="w-full mt-1 border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-blue-500"
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </label>
+
+          <label className="text-gray-700 font-medium">
+            Contact
+            <input
+              className="w-full mt-1 border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-blue-500"
+              type="text"
+              placeholder="Enter your contact number"
+              value={contact}
+              onChange={(e) => setContact(e.target.value)}
+              required
+            />
+          </label>
+        </div>
+
+        <button
+          type="submit"
+          className="w-full mt-6 bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition-all duration-300"
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "Create User"}
+        </button>
+
+        <p className="text-gray-700 font-medium mt-3 flex justify-center">
+          Already have an account? <Link className="text-blue-500 ml-1" to="/users/login">Login</Link>
         </p>
-      </div>
+      </form>
+      <ToastContainer />
     </div>
   );
 };
 
-
-
-const App = () => {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/users/register" element={<Register />} />
-
-      </Routes>
-    </Router>
-  );
-};
-
-export default App;
+export default UserCreate;
