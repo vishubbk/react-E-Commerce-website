@@ -10,7 +10,7 @@ const productControllers = {};
 
 productControllers.addProduct = async (req, res) => {
   try {
-    
+
 
     const { name, price, discount, bgcolor, panelcolor, textcolor, Details } = req.body;
     const image = req.file;
@@ -51,6 +51,7 @@ productControllers.addProduct = async (req, res) => {
 
 productControllers.getAllProducts = async (req, res) => {
   try {
+    console.log("getAllProducts");
     const products = await productModel.find();
     res.status(200).json(products);
   } catch (error) {

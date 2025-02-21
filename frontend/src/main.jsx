@@ -7,6 +7,7 @@ import UserCreate from "./pages/UserCreate";
 import UserLogin from "./pages/userLogin";
 import userProfile from "./pages/userProfile";
 import Home from "./pages/Home";
+import ProductsDetails from "./pages/ProductsDetails";
 import "./index.css";
 
 
@@ -17,6 +18,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/users/register" element={<UserCreate />} />
       <Route path="/users/login" element={<UserLogin />} />
       <Route path="/users/profile" element={<userProfile />} />
+      <Route path="/products/:id" element={<ProductsDetails />} />
     </Routes>
   </BrowserRouter>
 );
