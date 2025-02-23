@@ -11,6 +11,7 @@ import ProductsDetails from "./pages/ProductsDetails";
 import OwnerCreate from "./pages/OwnerCreate";
 import OwnerLogin from "./pages/OwnerLogin";
 import OwnerDashboard from "./pages/OwnerDashboard";
+import UserProfileEdit from "./pages/UserProfileEdit";
 import "./index.css";
 
 
@@ -25,6 +26,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/owner/login" element={<OwnerLogin />} />
       <Route path="/owner/dashboard" element={<OwnerDashboard />} />
       <Route path="/users/profile" element={<UserProfile />} />
+      <Route path="/users/profile/edit" element={<UserProfileEdit />} />
 
       </Routes>
   </BrowserRouter>

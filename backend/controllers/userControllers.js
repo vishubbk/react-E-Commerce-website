@@ -125,12 +125,27 @@ userControllers.logoutUser = async (req, res) => {
 // 📌 Get User Profile
 userControllers.getUserProfile = async (req, res) => {
   try {
-    const user = await userModel.findOne({ email: req.user.email }).select("-password");
+    const user = await userModel
+      .findOne({ email: req.user.email })
+      .select("-password"); // Password hata diya response se
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json(user);
+    // ✅ Convert Buffer to Base64 (agar image buffer format me ho)
+    let profilePictureBase64 = null;
+    if (user.profilePicture && user.profilePicture.data) {
+      profilePictureBase64 = `data:${user.profilePicture.contentType};base64,${user.profilePicture.data.toString("base64")}`;
+    }
+
+    res.status(200).json({
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      contact: user.contact,
+      profilePicture: profilePictureBase64, // ✅ Base64 format me send ho rahi hai
+    });
   } catch (error) {
     console.error("Error fetching user profile:", error.message);
 
@@ -144,5 +159,77 @@ userControllers.getUserProfile = async (req, res) => {
     return res.status(401).json({ message: "Unauthorized: Invalid token" });
   }
 };
+
+
+
+userControllers.updateUserProfile = async (req, res) => {
+  try {
+    const { firstname, lastname, contact, email } = req.body;
+
+    // ✅ Token fetch karo cookies se
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized: No token provided" });
+    }
+
+    // ✅ Token verify karke email nikalo
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userEmail = decoded.email; // JWT se email extract kiya
+
+    // ✅ Ab database se user dhoondo using JWT email
+    const user = await userModel.findOne({ email: userEmail });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // ✅ Update user fields
+    if (firstname) user.firstname = firstname;
+    if (lastname) user.lastname = lastname;
+    if (contact) user.contact = contact;
+
+    let newToken = null; // Store new token if email changes
+
+    // ✅ Agar email change ho raha hai toh naye email ka check karo
+    if (email && email !== user.email) {
+      const emailExists = await userModel.findOne({ email });
+      if (emailExists) {
+        return res.status(400).json({ message: "Email already in use" });
+      }
+
+      user.email = email; // Update email
+      newToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "7d" }); // ✅ Generate new token
+
+      // ✅ Save new token in cookies
+      res.cookie("token", newToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "Strict",
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      });
+    }
+
+    // ✅ Handle profile picture upload
+    if (req.file) {
+      user.profilePicture = {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      };
+    }
+
+    await user.save();
+
+    return res.status(200).json({
+      message: "Profile updated successfully",
+      user,
+      token: newToken || token, // ✅ Return updated token if changed
+    });
+
+  } catch (error) {
+    console.error("Error updating user profile:", error.message);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
 
 module.exports = userControllers;

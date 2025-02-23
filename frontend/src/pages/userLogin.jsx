@@ -4,6 +4,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ArrowLeft } from "lucide-react";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
@@ -25,14 +26,13 @@ const UserLogin = () => {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/users/login`,
         { email, password },
-        { withCredentials: true } // ✅ Send cookies with the request
+        { withCredentials: true }
       );
 
       if (response.status === 200) {
         const data = response.data;
         console.log("data", data);
 
-        // ✅ Store Token in Cookies (Expires in 7 days)
         Cookies.set("token", data.token, { expires: 7, secure: true, sameSite: "Strict" });
 
         toast.success("✅ Login successful!");
@@ -54,6 +54,9 @@ const UserLogin = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <button className="absolute top-6 left-6 flex items-center text-gray-700" onClick={() => navigate("/")}>
+        <ArrowLeft className="w-5 h-5 mr-2" /> Back
+      </button>
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Login</h1>
       <form className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4">
