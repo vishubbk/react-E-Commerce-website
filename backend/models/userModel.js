@@ -19,6 +19,7 @@ const userSchema  = new mongoose.Schema({
         orders: {
         type: Array,
         default: [],
+        
     },
      password:{
         type:String,

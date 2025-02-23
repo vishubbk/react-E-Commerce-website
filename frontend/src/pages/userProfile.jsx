@@ -1,30 +1,62 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 const UserProfile = () => {
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/users/login");
-    }
-  }, [navigate]);
+  // Fetch User Profile
+  const fetchUserProfile = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("Unauthorized! Redirecting to login...");
+        navigate("/users/login");
+        return;
+      }
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/users/login");
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setUserData(response.data);
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+      toast.error(error.response?.data?.message || "Failed to load profile!");
+    } finally {
+      setLoading(false);
+    }
   };
 
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
+
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-md text-center">
-        <h1 className="text-2xl font-bold text-blue-600">Welcome to Your Profile</h1>
-        <p className="text-gray-600 mt-2">You are successfully logged in.</p>
-        <button onClick={handleLogout} className="bg-blue-600 text-white px-4 py-2 rounded-md mt-4">
-          Logout
-        </button>
-      </div>
+    <div className="profile-container">
+      <h1>User Profile</h1>
+      {loading ? (
+        <p>Loading profile...</p>
+      ) : userData ? (
+        <div className="profile-card">
+          <p><strong>Name:</strong> {userData.firstname} {userData.lastname}</p>
+          <p><strong>Email:</strong> {userData.email}</p>
+          <p><strong>Contact:</strong> {userData.contact}</p>
+        </div>
+      ) : (
+        <p>No profile data found</p>
+      )}
+      <button onClick={() => {
+        localStorage.removeItem("token");
+        navigate("/users/login");
+      }}>
+        Logout
+      </button>
+      <ToastContainer />
     </div>
   );
 };

@@ -10,44 +10,56 @@ const UserLogin = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // ✅ Function to Get Cookies and Log Errors
+  const getCookies = () => {
+    const cookies = document.cookie;
+    console.log("Cookies in browser:", cookies);
+
+    if (!cookies.includes("token")) {
+      console.error("❌ Cookie 'token' is missing! Make sure backend is setting it properly.");
+    }
+  };
+
+  // ✅ Handle Login Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       if (!email || !password) {
-        toast.error("Please enter email and password");
+        toast.error("❌ Please enter both email and password");
+        console.error("❌ Error: Email or Password is missing.");
         setLoading(false);
         return;
       }
 
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/users/login`,
-        { email, password }
+        { email, password },
+        { withCredentials: true } // ✅ Ensures cookies are included
       );
 
       if (response.status === 200) {
-        toast.success("Login successful!");
-        localStorage.setItem("token", response.data.token);
+        toast.success("✅ Login successful!");
+        console.log("✅ Server Response:", response.data);
         setLoading(false);
+        getCookies(); // ✅ Logs cookies after successful login
         navigate("/");
       }
     } catch (error) {
       setLoading(false);
+      console.error("❌ Login Error:", error);
 
+      // 🔴 Handle Different Error Cases
       if (error.response) {
-        const errorMessage = error.response.data.message;
-
-        if (errorMessage === "User already exists") {
-          toast.error("User already exists! Please log in.");
-          navigate("/users/register");
-        } else if (errorMessage === "Invalid credentials") {
-          toast.error("Invalid email or password. Try again.");
-        } else {
-          toast.error("Something went wrong. Please try again.");
-        }
+        console.error("❌ Server Response Error:", error.response.data);
+        toast.error(`❌ ${error.response.data.message || "Login failed!"}`);
+      } else if (error.request) {
+        console.error("❌ No response from server. Possible network issue.");
+        toast.error("❌ Server not responding. Check your internet connection.");
       } else {
-        toast.error("Network error. Please check your connection.");
+        console.error("❌ Request Error:", error.message);
+        toast.error("❌ Something went wrong!");
       }
     }
   };
@@ -59,40 +71,21 @@ const UserLogin = () => {
         <div className="flex flex-col gap-4">
           <label className="text-gray-700 font-medium">
             Email
-            <input
-              className="w-full mt-1 border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <input className="w-full mt-1 border border-gray-300 rounded-md p-3" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </label>
 
           <label className="text-gray-700 font-medium">
             Password
-            <input
-              className="w-full mt-1 border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <input className="w-full mt-1 border border-gray-300 rounded-md p-3" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </label>
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full mt-6 bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition-all duration-300"
-        >
+        <button type="submit" disabled={loading} className="w-full mt-6 bg-blue-600 text-white py-3 rounded-md">
           {loading ? "Logging in..." : "Login"}
         </button>
 
-        <p className="text-gray-700 font-medium mt-3 flex justify-center">
-          Don&apos;t have an account?{" "}
-          <Link className="text-blue-500" to="/users/register">
-            Create Account
-          </Link>
+        <p className="text-gray-700 font-medium mt-3">
+          Don't have an account? <Link className="text-blue-500" to="/users/register">Create Account</Link>
         </p>
       </form>
       <ToastContainer />

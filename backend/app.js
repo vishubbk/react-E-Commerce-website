@@ -1,7 +1,6 @@
-require("dotenv").config();  // Ensure dotenv is required first
+require("dotenv").config(); // Load environment variables first
 const express = require("express");
 const http = require("http");
-const config = require("config");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const connectdb = require("./db/db");
@@ -13,8 +12,11 @@ const ownerRoutes = require("./routes/ownerRoutes");
 const app = express();
 const port = process.env.PORT || 3000;
 
-// 🔹 Connect Database
-connectdb();
+// 🔹 Connect Database with Error Handling
+connectdb().catch((err) => {
+  console.error("Database connection failed:", err);
+  process.exit(1); // Exit process if DB connection fails
+});
 
 // 🔹 Middlewares
 app.use(express.json());
@@ -27,7 +29,6 @@ app.get("/", (req, res) => {
 });
 
 // 🔹 Define Routes
-
 app.use("/products", productRoutes);
 app.use("/owner", ownerRoutes);
 app.use("/users", userRoutes);
@@ -35,12 +36,12 @@ app.use("/home", homeRoutes);
 
 // 🔹 Error Handling Middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Something broke!");
+  console.error("Error:", err.stack);
+  res.status(500).json({ message: "Internal Server Error" });
 });
 
 // 🔹 Start Server
 const server = http.createServer(app);
 server.listen(port, () => {
-  console.log(`Server connected successfully on port ${port}`);
+  console.log(`✅ Server running on http://localhost:${port}`);
 });
