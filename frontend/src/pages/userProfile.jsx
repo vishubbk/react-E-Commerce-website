@@ -1,64 +1,83 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const UserProfile = () => {
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
+const Profile = () => {
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch User Profile
-  const fetchUserProfile = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        toast.error("Unauthorized! Redirecting to login...");
-        navigate("/users/login");
-        return;
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/profile`, {
+          withCredentials: true, // ✅ Automatically sends cookies
+        });
+
+        setUser(response.data);
+      } catch (error) {
+        console.error("Error fetching profile:", error.response?.data?.message);
+
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          navigate("/users/login");
+        }
       }
+    };
 
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/profile`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+    fetchProfile();
+  }, [navigate]);
 
-      setUserData(response.data);
+  const handleLogout = async () => {
+    try {
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/users/logout`, {}, { withCredentials: true });
+      navigate("/users/login");
     } catch (error) {
-      console.error("Error fetching profile:", error);
-      toast.error(error.response?.data?.message || "Failed to load profile!");
-    } finally {
-      setLoading(false);
+      console.error("Logout error:", error.response?.data?.message);
     }
   };
 
-  useEffect(() => {
-    fetchUserProfile();
-  }, []);
-
   return (
-    <div className="profile-container">
-      <h1>User Profile</h1>
-      {loading ? (
-        <p>Loading profile...</p>
-      ) : userData ? (
-        <div className="profile-card">
-          <p><strong>Name:</strong> {userData.firstname} {userData.lastname}</p>
-          <p><strong>Email:</strong> {userData.email}</p>
-          <p><strong>Contact:</strong> {userData.contact}</p>
+    <div className="mt-6 w-full max-w-4xl p-6 bg-white shadow-md rounded-lg">
+      <div className="flex items-center space-x-4">
+        <img
+          src={user?.profileImage || "https://via.placeholder.com/150"}
+          alt="Profile"
+          className="w-24 h-24 rounded-full border-4 border-white shadow-lg"
+        />
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800">{user?.firstname} {user?.lastname}</h2>
+          <p className="text-gray-600">{user?.email}</p>
         </div>
-      ) : (
-        <p>No profile data found</p>
-      )}
-      <button onClick={() => {
-        localStorage.removeItem("token");
-        navigate("/users/login");
-      }}>
+      </div>
+
+      <div className="mt-4 grid grid-cols-2 gap-4">
+        <div className="p-3 border rounded bg-gray-50">
+          <label className="block text-gray-600">First Name</label>
+          <p className="text-gray-700">{user?.firstname || "N/A"}</p>
+        </div>
+
+        <div className="p-3 border rounded bg-gray-50">
+          <label className="block text-gray-600">Last Name</label>
+          <p className="text-gray-700">{user?.lastname || "N/A"}</p>
+        </div>
+
+        <div className="p-3 border rounded bg-gray-50">
+          <label className="block text-gray-600">Email</label>
+          <p className="text-gray-700">{user?.email || "N/A"}</p>
+        </div>
+
+        <div className="p-3 border rounded bg-gray-50">
+          <label className="block text-gray-600">Contact</label>
+          <p className="text-gray-700">{user?.contact || "N/A"}</p>
+        </div>
+      </div>
+
+      <button
+        onClick={handleLogout}
+        className="mt-6 px-4 py-2 bg-red-500 text-white rounded shadow hover:bg-red-600">
         Logout
       </button>
-      <ToastContainer />
     </div>
   );
 };
 
-export default UserProfile;
+export default Profile;

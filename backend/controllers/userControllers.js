@@ -1,10 +1,8 @@
 require("dotenv").config();
-const express = require("express");
-const validator = require("email-validator");
-const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
+const validator = require("email-validator");
+const userModel = require("../models/userModel");
 
 const userControllers = {};
 
@@ -38,23 +36,31 @@ userControllers.registerUser = async (req, res) => {
     });
 
     await newUser.save();
-    console.log("New User Created:", newUser);
 
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    // ✅ Generate Token with 7 Days Expiry
+    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-    // ✅ Set HTTP-Only Cookie
+    // ✅ Secure Cookie Settings
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // Change to `true` in production
-      sameSite: "Lax",
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      sameSite: "Strict", // Better CSRF protection
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days expiry
     });
 
-    res.status(201).json({ message: "User registered successfully", user: newUser });
+    res.status(201).json({
+      message: "User registered successfully",
+      user: {
+        firstname,
+        lastname,
+        email,
+        contact,
+      },
+      token,
+    });
   } catch (error) {
-    console.error("Error:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    console.error("Registration Error:", error.message);
+    return res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
 
@@ -63,36 +69,37 @@ userControllers.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // 🔴 Validate Required Fields
     if (!email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // 🔴 Check if user exists
     const user = await userModel.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    // ✅ Compare Password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    // ✅ Generate JWT Token
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    // ✅ Generate Secure Token
+    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-    // ✅ Set Cookie with Token
+    // ✅ Store token in HTTP-only cookie
     res.cookie("token", token, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).json({ message: "User logged in successfully", user });
+    res.status(200).json({
+      message: "User logged in successfully",
+      user: { firstname: user.firstname, lastname: user.lastname, email: user.email, contact: user.contact },
+    });
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Login Error:", error.message);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -101,36 +108,40 @@ userControllers.loginUser = async (req, res) => {
 // 📌 Logout User
 userControllers.logoutUser = async (req, res) => {
   try {
-    res.clearCookie("token", { httpOnly: true, secure: false, sameSite: "Lax" });
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+    });
+
     res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Logout Error:", error.message);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
+
 // 📌 Get User Profile
 userControllers.getUserProfile = async (req, res) => {
   try {
-    const token = req.cookies.token; // ✅ Retrieve Cookie
-
-    console.log("Retrieved Cookie Token:", token);
-
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized: No token found" });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await userModel.findOne({ email: decoded.email }).select("-password");
-
+    const user = await userModel.findOne({ email: req.user.email }).select("-password");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
     res.status(200).json(user);
   } catch (error) {
-    console.error("Error fetching user profile:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.error("Error fetching user profile:", error.message);
+
+    // ✅ Clear invalid token on error
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+    });
+
+    return res.status(401).json({ message: "Unauthorized: Invalid token" });
   }
 };
 

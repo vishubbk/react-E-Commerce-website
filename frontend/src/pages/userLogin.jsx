@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Cookies from "js-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -10,17 +11,6 @@ const UserLogin = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ Function to Get Cookies and Log Errors
-  const getCookies = () => {
-    const cookies = document.cookie;
-    console.log("Cookies in browser:", cookies);
-
-    if (!cookies.includes("token")) {
-      console.error("❌ Cookie 'token' is missing! Make sure backend is setting it properly.");
-    }
-  };
-
-  // ✅ Handle Login Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -28,7 +18,6 @@ const UserLogin = () => {
     try {
       if (!email || !password) {
         toast.error("❌ Please enter both email and password");
-        console.error("❌ Error: Email or Password is missing.");
         setLoading(false);
         return;
       }
@@ -36,29 +25,28 @@ const UserLogin = () => {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/users/login`,
         { email, password },
-        { withCredentials: true } // ✅ Ensures cookies are included
+        { withCredentials: true } // ✅ Send cookies with the request
       );
 
       if (response.status === 200) {
+        const data = response.data;
+        console.log("data", data);
+
+        // ✅ Store Token in Cookies (Expires in 7 days)
+        Cookies.set("token", data.token, { expires: 7, secure: true, sameSite: "Strict" });
+
         toast.success("✅ Login successful!");
-        console.log("✅ Server Response:", response.data);
         setLoading(false);
-        getCookies(); // ✅ Logs cookies after successful login
         navigate("/");
       }
     } catch (error) {
       setLoading(false);
-      console.error("❌ Login Error:", error);
 
-      // 🔴 Handle Different Error Cases
       if (error.response) {
-        console.error("❌ Server Response Error:", error.response.data);
         toast.error(`❌ ${error.response.data.message || "Login failed!"}`);
       } else if (error.request) {
-        console.error("❌ No response from server. Possible network issue.");
         toast.error("❌ Server not responding. Check your internet connection.");
       } else {
-        console.error("❌ Request Error:", error.message);
         toast.error("❌ Something went wrong!");
       }
     }
