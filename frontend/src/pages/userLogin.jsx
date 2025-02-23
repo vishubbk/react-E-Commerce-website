@@ -14,15 +14,17 @@ const UserLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!email || !password) {
+      toast.error("❌ Please enter both email and password");
+      return;
+    }
+
+    toast.info("🔄 Logging in...", { autoClose: 1000 });
+
     setLoading(true);
 
     try {
-      if (!email || !password) {
-        toast.error("❌ Please enter both email and password");
-        setLoading(false);
-        return;
-      }
-
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/users/login`,
         { email, password },
@@ -35,9 +37,12 @@ const UserLogin = () => {
 
         Cookies.set("token", data.token, { expires: 7, secure: true, sameSite: "Strict" });
 
-        toast.success("✅ Login successful!");
-        setLoading(false);
-        navigate("/");
+        toast.success("✅ Login Successful!", { autoClose: 2000 });
+
+        setTimeout(() => {
+          setLoading(false);
+          navigate("/");
+        }, 2000);
       }
     } catch (error) {
       setLoading(false);
@@ -79,7 +84,7 @@ const UserLogin = () => {
           Don't have an account? <Link className="text-blue-500" to="/users/register">Create Account</Link>
         </p>
       </form>
-      <ToastContainer />
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };

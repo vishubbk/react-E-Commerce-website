@@ -26,14 +26,7 @@ const Profile = () => {
     fetchProfile();
   }, [navigate]);
 
-  const handleLogout = async () => {
-    try {
-      await axios.post(`${import.meta.env.VITE_BASE_URL}/users/logout`, {}, { withCredentials: true });
-      navigate("/users/login");
-    } catch (error) {
-      console.error("Logout error:", error.response?.data?.message);
-    }
-  };
+
 
   return (
     <>
@@ -78,12 +71,7 @@ const Profile = () => {
           </div>
 
           <div className="flex justify-center mt-6 gap-4">
-            <button
-              onClick={handleLogout}
-              className="px-6 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition"
-            >
-              Logout
-            </button>
+
             <button
               onClick={() => navigate("/users/profile/edit")}
               className="px-6 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"

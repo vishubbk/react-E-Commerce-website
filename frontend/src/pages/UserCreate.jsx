@@ -4,7 +4,6 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
-
 const UserCreate = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -13,61 +12,58 @@ const UserCreate = () => {
   const [contact, setContact] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
   const isValidContact = (contact) => /^[0-9]{10}$/.test(contact);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!firstname || !lastname || !email || !password || !contact) {
+      toast.error("❌ Please fill all the fields");
+      return;
+    }
+    if (password.length < 4) {
+      toast.error("❌ Password must be at least 4 characters long");
+      return;
+    }
+    if (!isValidEmail(email)) {
+      toast.error("❌ Please enter a valid email");
+      return;
+    }
+    if (!isValidContact(contact)) {
+      toast.error("❌ Please enter a valid contact number (10 digits)");
+      return;
+    }
+
+    toast.info("🔄 Creating account...", { autoClose: 1000 });
+
     setLoading(true);
 
     try {
-    
-      if (!firstname || !lastname || !email || !password || !contact) {
-        toast.error("Please fill all the fields");
-        setLoading(false);
-        return;
-      }
-      if (password.length <4) {
-        toast.error("Password must be at least 4 characters long");
-        setLoading(false);
-        return;
-      }
-      if (!isValidEmail(email)) {
-        toast.error("Please enter a valid email");
-        setLoading(false);
-        return;
-      }
-      if (!isValidContact(contact)) {
-        toast.error("Please enter a valid contact number (10 digits)");
-        setLoading(false);
-        return;
-      }
-      const userData = {
-        firstname,
-        lastname,
-        email,
-        password,
-        contact,
-      };
-      const response = await axios.post(
+      const userData = { firstname, lastname, email, password, contact };
 
+      const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/users/register`,
         userData
       );
-      if (response.status === 201) {
-        toast.success("User created successfully");
-        setFirstname("");
-        setLastname("");
-        setEmail("");
-        setPassword("");
-        setContact("");
-        setLoading(false);
-           navigate("/users/login");
-      }
 
+      if (response.status === 201) {
+        toast.success("✅ User created successfully!", { autoClose: 2000 });
+
+        setTimeout(() => {
+          setFirstname("");
+          setLastname("");
+          setEmail("");
+          setPassword("");
+          setContact("");
+          setLoading(false);
+          navigate("/users/login");
+        }, 2000);
+      }
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error("❌ Something went wrong. Please try again.");
       setLoading(false);
     }
   };
@@ -145,14 +141,14 @@ const UserCreate = () => {
           className="w-full mt-6 bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition-all duration-300"
           disabled={loading}
         >
-          {loading ? "Loading..." : "Create User"}
+          {loading ? "Creating..." : "Create Account"}
         </button>
 
         <p className="text-gray-700 font-medium mt-3 flex justify-center">
           Already have an account? <Link className="text-blue-500 ml-1" to="/users/login">Login</Link>
         </p>
       </form>
-      <ToastContainer />
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };
