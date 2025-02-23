@@ -14,6 +14,7 @@ import OwnerDashboard from "./pages/OwnerDashboard";
 import UserProfileEdit from "./pages/UserProfileEdit";
 import Logout from "./Logout";
 import "./index.css";
+import RouteProtection from "./pages/RouteProtection"
 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -29,6 +30,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/users/profile" element={<UserProfile />} />
       <Route path="/users/profile/edit" element={<UserProfileEdit />} />
       <Route path="/users/logout" element={<Logout />} />
+      <Route path="*" element={<RouteProtection />} />
 
       </Routes>
   </BrowserRouter>
