@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
-  // ✅ Extract token from cookies instead of headers
   const token = req.cookies.token;
   console.log("Received Token from Cookies:", token);
 
@@ -10,11 +9,10 @@ const authMiddleware = (req, res, next) => {
   }
 
   try {
-    // ✅ Verify JWT token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log("Decoded Token:", decoded);
 
-    req.user = decoded; // Attach user info to request
+    req.user = decoded;
     next();
   } catch (error) {
     console.error("JWT Verification Error:", error.message);

@@ -4,7 +4,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const validator = require("email-validator");
+const userModel = require("../models/userModel");
 require("dotenv").config();
+const productModel = require("../models/productModel");
 
 const ownerControllers = {};
 
@@ -26,7 +28,7 @@ ownerControllers.registerOwner = async (req, res) => {
         // 🔴 Check if owner already exists
         const existingOwner = await ownerModel.findOne();
         if (existingOwner) {
-            return res.redirect("/owner/login"); // ✅ Redirect to login if owner exists
+            return res.status(400).json({ message: "Owner already exists. Please log in." });
         }
 
         // 🔴 Hash Password
@@ -49,10 +51,14 @@ ownerControllers.registerOwner = async (req, res) => {
         const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
         // 🔴 Set Cookie with Token
-        res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "Lax" });
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Lax",
+        });
 
         // 🔴 Send Success Response
-        res.status(201).json({ message: "Owner registered successfully", owner: newOwner });
+        res.status(201).json({ message: "Owner registered successfully", owner: newOwner, token });
 
     } catch (error) {
         console.error("Error:", error);
@@ -86,10 +92,14 @@ ownerControllers.loginOwner = async (req, res) => {
         const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
         // 🔴 Set Cookie with Token
-        res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "Lax" });
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Lax",
+        });
 
         // 🔴 Send Success Response
-        res.status(200).json({ message: "Owner logged in successfully", owner });
+        res.status(200).json({ message: "Owner logged in successfully", owner, token });
 
     } catch (error) {
         console.error("Error:", error);
@@ -130,6 +140,57 @@ ownerControllers.getOwnerProfile = async (req, res) => {
         }
 
         res.status(200).json({ message: "Owner profile fetched successfully", owner });
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+// 📌 Owner Dashboard
+ownerControllers.Ownerdashboard = async (req, res) => {
+    try {
+        const token = req.cookies.token;
+        if (!token) {
+            return res.status(401).json({ message: "Unauthorized. Please log in first." });
+        }
+        console.log("token", token);
+
+        let decoded;
+        try {
+            decoded = jwt.verify(token, process.env.JWT_SECRET);
+        } catch (err) {
+            return res.status(401).json({ message: "Invalid or expired token" });
+        }
+
+        const owner = await ownerModel.findOne({ email: decoded.email });
+
+        if (!owner) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+
+        // 🔹 Get all users
+        const users = await userModel.find();
+
+        // 🔹 Get total number of users
+
+        const totalUsers = users.length;
+
+        // 🔹 Get all products
+        const products = await productModel.find();
+
+        // 🔹 Get total number of products
+        const totalProducts = products.length;
+
+        res.status(200).json({
+            message: "Owner dashboard fetched successfully",
+            owner,
+            totalUsers,
+            users,
+            products,
+            totalProducts,
+            token,
+        });
+
     } catch (error) {
         console.error("Error:", error);
         res.status(500).json({ message: "Internal server error" });

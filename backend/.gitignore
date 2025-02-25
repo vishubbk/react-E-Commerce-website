@@ -4,11 +4,14 @@ package-lock.json
 
 # Environment variables
 .env
+utiles
+config/
 
 # Logs
 logs
 *.log
 npm-debug.log*
+
 
 # Runtime data
 pids

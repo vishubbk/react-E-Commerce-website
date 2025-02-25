@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Header from "../components/Navbar";
+import Header from "../../components/Navbar";
 import { ArrowLeft } from "lucide-react";
 
 const Profile = () => {

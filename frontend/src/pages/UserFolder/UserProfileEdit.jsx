@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Header from "../components/Navbar";
+import Header from "../../components/Navbar";
 import { ArrowLeft } from "lucide-react";
 const UserProfileEdit = () => {
   const [userData, setUserData] = useState({

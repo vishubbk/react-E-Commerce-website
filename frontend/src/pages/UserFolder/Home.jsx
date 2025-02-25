@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import "../App.css";
+import "../../App.css"
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
