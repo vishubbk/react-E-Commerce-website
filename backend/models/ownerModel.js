@@ -27,7 +27,7 @@ const ownerSchema  = new mongoose.Schema({
         type:String,
 
     },
-    picture: {
+    profilePicture: {
       data: Buffer, // Binary data for the image
       contentType: String, // MIME type (e.g., 'image/png', 'image/jpeg')
   },

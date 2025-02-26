@@ -120,31 +120,44 @@ ownerControllers.logoutOwner = async (req, res) => {
 
 // 📌 Get Owner Profile
 ownerControllers.getOwnerProfile = async (req, res) => {
-    try {
-        const token = req.cookies.token;
-        if (!token) {
-            return res.status(401).json({ message: "Unauthorized" });
-        }
+  try {
+      const token = req.cookies.token;
+      if (!token) {
+          return res.status(401).json({ message: "Unauthorized" });
+      }
 
-        let decoded;
-        try {
-            decoded = jwt.verify(token, process.env.JWT_SECRET);
-        } catch (err) {
-            return res.status(401).json({ message: "Invalid or expired token" });
-        }
+      let decoded;
+      try {
+          decoded = jwt.verify(token, process.env.JWT_SECRET);
+      } catch (err) {
+          return res.status(401).json({ message: "Invalid or expired token" });
+      }
 
-        const owner = await ownerModel.findOne({ email: decoded.email });
+      const owner = await ownerModel.findOne({ email: decoded.email });
 
-        if (!owner) {
-            return res.status(401).json({ message: "Unauthorized" });
-        }
+      if (!owner) {
+          return res.status(401).json({ message: "Unauthorized" });
+      }
 
-        res.status(200).json({ message: "Owner profile fetched successfully", owner });
-    } catch (error) {
-        console.error("Error:", error);
-        res.status(500).json({ message: "Internal server error" });
-    }
+      // Convert buffer to Base64
+      let profilePictureBase64 = null;
+      if (owner.profilePicture?.data) {
+          profilePictureBase64 = `data:${owner.profilePicture.contentType};base64,${owner.profilePicture.data.toString("base64")}`;
+      }
+
+      res.status(200).json({
+          message: "Owner profile fetched successfully",
+          owner: {
+              ...owner._doc,
+              profilePicture: profilePictureBase64
+          }
+      });
+  } catch (error) {
+      console.error("Error:", error);
+      res.status(500).json({ message: "Internal server error" });
+  }
 };
+
 
 // 📌 Owner Dashboard
 ownerControllers.Ownerdashboard = async (req, res) => {
@@ -196,5 +209,55 @@ ownerControllers.Ownerdashboard = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
+// 📌 Update Owner Profile
+ownerControllers.editProfile = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      return res.status(401).json({ message: "Invalid or expired token" });
+    }
+
+    const owner = await ownerModel.findOne({ email: decoded.email });
+
+    if (!owner) {
+      return res.status(401).json({ message: "Owner not found" });
+    }
+
+    // Update profile fields
+    owner.firstname = req.body.firstName;
+    owner.lastname = req.body.lastName;
+    owner.contact = req.body.phoneNumber;
+    owner.bio = req.body.bio; // Added bio
+
+    // Prevent email modification
+    if (req.body.email && req.body.email !== owner.email) {
+      return res.status(400).json({ message: "Email cannot be changed" });
+    }
+
+    // Handle profile image upload
+    if (req.file) {
+      owner.profilePicture = {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      };
+    }
+
+    await owner.save();
+
+    res.status(200).json({ message: "Profile updated successfully", owner });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 
 module.exports = ownerControllers;

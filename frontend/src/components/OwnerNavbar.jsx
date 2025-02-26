@@ -18,7 +18,7 @@ const Navbar = () => {
       localStorage.clear();
       sessionStorage.clear();
 
-      toast.success("Logout Successfully", { autoClose: 2000 });
+      toast.error("Logout Successfully", { autoClose: 1500 });
 
       setTimeout(() => {
         navigate("/users/logout");

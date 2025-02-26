@@ -19,6 +19,7 @@ import RouteProtection from "./pages/UserFolder/RouteProtection"
 import OwnerAllItems from "./pages/OwnerFolder/AllItems";
 import OwnerAddItems from "./pages/OwnerFolder/AddItems";
 import OwnerProfile from "./pages/OwnerFolder/Profile";
+import OwnerProfileEdit from "./pages/OwnerFolder/EditProfile";
 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -37,6 +38,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/owner/All-Items" element={<OwnerAllItems />} />
       <Route path="/owner/Add-Items" element={<OwnerAddItems />} />
       <Route path="/owner/Profile" element={<OwnerProfile />} />
+      <Route path="/owner/editProfile" element={<OwnerProfileEdit />} />
       <Route path="*" element={<RouteProtection />} />
 
       </Routes>

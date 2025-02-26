@@ -2,12 +2,19 @@ const express = require("express");
 const { body, validationResult } = require("express-validator");
 const cookieParser = require("cookie-parser");
 const authentication = require("../middlewares/userAuthMiddleware");
+const upload = require("../config/multer-config");
 
-const {registerOwner,loginOwner,logoutOwner,getOwnerProfile,Ownerdashboard} = require("../controllers/ownerControllers");
+const {registerOwner,loginOwner,logoutOwner,getOwnerProfile,Ownerdashboard,editProfile} = require("../controllers/ownerControllers");
 
 
 const router = express.Router();
 router.use(cookieParser());
+
+
+router.post("/editprofile", authentication, upload.single("profileImage"), editProfile);
+
+
+// router.post("/dashboard", authentication, Ownerdashboard);
 
 
 
