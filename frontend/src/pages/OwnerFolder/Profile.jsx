@@ -13,12 +13,13 @@ const Profile = () => {
   useEffect(() => {
     const fetchOwnerProfile = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/owner/dashboard`, {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/owner/profile`, {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
+        console.log(response.data);
         setOwner(response.data.owner);
       } catch (err) {
        console.error("Error fetching owner profile:", err.response?.data?.message);
@@ -28,6 +29,7 @@ const Profile = () => {
     };
 
     fetchOwnerProfile();
+
   }, []);
 
   return (
@@ -48,11 +50,12 @@ const Profile = () => {
               <div className="h-48 bg-gradient-to-r from-blue-500 to-purple-600"></div>
               <div className="relative px-6 pb-6">
                 <div className="flex flex-col md:flex-row items-center md:items-end -mt-20 md:-mt-16 space-y-4 md:space-y-0 md:space-x-6">
-                  <img
-                    src={owner.profilePicture || "https://via.placeholder.com/150"}
-                    alt="Profile"
-                    className="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
-                  />
+                <img
+  src={owner?.profilePicture || "https://via.placeholder.com/150"}
+  alt="Profile"
+  className="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
+/>
+
                   <div className="text-center md:text-left">
                     <h1 className="text-3xl font-bold text-gray-800">{owner.firstname} {owner.lastname}</h1>
                     <p className="text-gray-600 mt-1">{owner.email}</p>

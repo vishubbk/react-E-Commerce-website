@@ -1,146 +1,194 @@
-import { useState } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-const EditProfile = () => {
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    bio: "", // Added bio field
-    profileImage: null,
-    imagePreview: "",
+import axios from "axios";
+import Header from "../../components/Navbar";
+import { ArrowLeft } from "lucide-react";
+const UserProfileEdit = () => {
+  const [userData, setUserData] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    contact: "",
+    profilePicture: null,
   });
 
+  const [previewImage, setPreviewImage] = useState(""); // 🔹 Base64 preview ke liye
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  // ✅ Fetch user details when the component loads
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get("http://localhost:4000/owner/dashboard", {
+
+          withCredentials: true,
+        }); console.log(response.data.owner.firstname);
+
+        setUserData({
+          firstname: response.data.owner.firstname || "",
+          lastname: response.data.owner.lastname || "",
+          email: response.data.owner.email || "",
+          contact: response.data.owner.contact || "",
+          profilePicture: response.data.owner.profilePicture || null,
+        });
+
+        // ✅ Agar backend se image mili toh use Base64 me convert karo
+        if (response.data.profilePicture?.data) {
+          const base64Image = `data:${response.data.profilePicture.contentType};base64,${Buffer.from(
+            response.data.profilePicture.data
+          ).toString("base64")}`;
+          setPreviewImage(base64Image);
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  // ✅ Handle form input changes
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    setUserData({ ...userData, [e.target.name]: e.target.value });
   };
 
-  const handleImageChange = (e) => {
+  // ✅ Handle file selection & show preview
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setUserData({ ...userData, profilePicture: file });
+
+      // ✅ Create preview in Base64
       const reader = new FileReader();
-      reader.readAsDataURL(file);
       reader.onloadend = () => {
-        setFormData((prevState) => ({
-          ...prevState,
-          profileImage: file,
-          imagePreview: reader.result,
-        }));
+        setPreviewImage(reader.result);
       };
+      reader.readAsDataURL(file);
     }
   };
 
+  // ✅ Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
 
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append("firstName", formData.firstName);
-      formDataToSend.append("lastName", formData.lastName);
-      formDataToSend.append("phoneNumber", formData.phoneNumber);
-      formDataToSend.append("bio", formData.bio); // Send bio
-      if (formData.profileImage) {
-        formDataToSend.append("profileImage", formData.profileImage);
+      const formData = new FormData();
+      formData.append("firstname", userData.firstname);
+      formData.append("lastname", userData.lastname);
+      formData.append("email", userData.email);
+      formData.append("contact", userData.contact);
+      if (userData.profilePicture) {
+        formData.append("profilePicture", userData.profilePicture);
       }
 
-      const response = await axios.post(
-        "http://localhost:4000/owner/editprofile",
-        formDataToSend,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-          withCredentials: true,
-        }
-      );
+      const response = await axios.post("http://localhost:4000/owner/editprofile", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      });
 
       if (response.status === 200) {
-        navigate("/users/profile");
+        navigate("/owner/profile"); // ✅ Redirect after success
       }
     } catch (error) {
       console.error("Error updating profile:", error);
-      setError(error.response?.data?.message || "Failed to update profile.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
-      <h1 className="text-3xl font-bold mb-6 text-center">Edit Profile</h1>
+    <div>
+      <Header />
+      <button className="absolute top-20 left-6 flex items-center text-gray-700" onClick={() => navigate("/owner/profile")}>
+        <ArrowLeft className="w-5 h-5 mr-2" /> Back
+      </button>
+      <div className="mt-6 w-full max-w-4xl p-6 absolute top-20 left-1/2 -translate-x-1/2 bg-white shadow-md rounded-lg">
+        <h1 className="text-2xl font-bold text-gray-800 mb-4">Edit Profile</h1>
 
-      {error && <p className="text-red-500 text-center">{error}</p>}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {/* 🔹 Profile Picture Preview */}
+          <div className="flex flex-col  items-center">
+            <img
+              src={previewImage || "https://via.placeholder.com/150"}
+              alt="Profile Preview"
+              className="w-24 h-24 rounded-full border-4 border-gray-300 shadow-lg object-cover"
+            />
+            <label htmlFor="profilePicture" className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer">
+              Choose Picture
+            </label>
+            <input
+              type="file"
+              id="profilePicture"
+              name="profilePicture"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hidden" // 🔹 Hide default file input
+            />
+          </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex justify-center">
-          <label className="cursor-pointer">
-            <input type="file" className="hidden" onChange={handleImageChange} />
-            <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-gray-300 flex items-center justify-center">
-              {formData.imagePreview ? (
-                <img src={formData.imagePreview} alt="Profile" className="w-full h-full object-cover" />
-              ) : (
-                <img src="https://via.placeholder.com/150" alt="Default Profile" className="w-full h-full object-cover" />
-              )}
-            </div>
-          </label>
-        </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="firstname" className="text-gray-700 font-medium">First Name</label>
+            <input
+              type="text"
+              name="firstname"
+              value={userData.firstname}
+              onChange={handleChange}
+              className="border p-2 rounded-md"
+              required
+            />
+          </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <input
-            type="text"
-            name="firstName"
-            placeholder="First Name"
-            value={formData.firstName}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Last Name"
-            value={formData.lastName}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-        </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="lastname" className="text-gray-700 font-medium">Last Name</label>
+            <input
+              type="text"
+              name="lastname"
+              value={userData.lastname}
+              onChange={handleChange}
+              className="border p-2 rounded-md"
+              required
+            />
+          </div>
 
-        <input
-          type="text"
-          name="phoneNumber"
-          placeholder="Phone Number"
-          value={formData.phoneNumber}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-        />
+          <div className="flex flex-col gap-2">
+            <label htmlFor="email" className="text-gray-700 font-medium">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={userData.email}
+              onChange={handleChange}
+              className="border p-2 rounded-md"
+              required
+            />
+          </div>
 
-        <textarea
-          name="bio"
-          placeholder="Bio (optional)"
-          value={formData.bio}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-        />
+          <div className="flex flex-col gap-2">
+            <label htmlFor="contact" className="text-gray-700 font-medium">Contact</label>
+            <input
+              type="text"
+              name="contact"
+              value={userData.contact}
+              onChange={handleChange}
+              className="border p-2 rounded-md"
+              required
+            />
+          </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-          disabled={isLoading}
-        >
-          {isLoading ? "Saving..." : "Save Changes"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            className={`p-2 rounded-md text-white ${isLoading ? "bg-gray-500" : "bg-green-600 hover:bg-green-700"}`}
+            disabled={isLoading}
+          >
+            {isLoading ? "Saving..." : "Save Changes"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
 
-export default EditProfile;
+export default UserProfileEdit;

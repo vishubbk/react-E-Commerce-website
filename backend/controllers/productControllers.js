@@ -51,7 +51,7 @@ productControllers.addProduct = async (req, res) => {
 
 productControllers.getAllProducts = async (req, res) => {
   try {
-    console.log("getAllProducts");
+  
     const products = await productModel.find();
     res.status(200).json(products);
   } catch (error) {
