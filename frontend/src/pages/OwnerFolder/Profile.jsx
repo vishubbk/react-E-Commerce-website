@@ -57,8 +57,9 @@ const Profile = () => {
 />
 
                   <div className="text-center md:text-left">
-                    <h1 className="text-3xl font-bold text-gray-800">{owner.firstname} {owner.lastname}</h1>
-                    <p className="text-gray-600 mt-1">{owner.email}</p>
+                    <h1 className="text-3xl font-bold text-gray-900">{owner.firstname} {owner.lastname}</h1>
+                    <p className="text-gray-600 mt-1">{owner.email}  -   {owner.contact}</p>
+
                   </div>
                 </div>
               </div>
