@@ -50,7 +50,10 @@ const Navbar = () => {
             <Link to="/owner/dashboard" className="nav-link">Home</Link>
             <Link to="/owner/Add-Items" className="nav-link">Add-Items</Link>
             <Link to="/owner/All-Items" className="nav-link">All-Items</Link>
-            <button onClick={handleLogout} className="logout-btn">LogOut</button>
+            <button onClick={handleLogout} className="logout-btn pointer-events-auto cursor-pointer">
+  LogOut
+</button>
+
             <Link to="/owner/profile" className="nav-link">Profile</Link>
           </nav>
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden focus:outline-none">
@@ -69,7 +72,10 @@ const Navbar = () => {
             <Link to="/owner/dashboard" className="mobile-nav-link">Home</Link>
             <Link to="/owner/Add-Items" className="nav-link">Add-Items</Link>
             <Link to="/owner/All-Items" className="nav-link">All-Items</Link>
-            <button onClick={handleLogout} className="mobile-logout-btn">LogOut</button>
+            <button onClick={handleLogout} className="mobile-logout-btn cursor-pointer absolute mt-40">
+  LogOut
+</button>
+
             <Link to="/owner/profile" className="mobile-nav-link">Profile</Link>
           </nav>
         </div>

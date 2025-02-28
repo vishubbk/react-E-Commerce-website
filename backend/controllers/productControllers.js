@@ -1,19 +1,13 @@
-const mongoose = require("mongoose");
 const productModel = require("../models/productModel");
-const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
-require("dotenv").config();
 const cloudinary = require("../utiles/cloudinary");
-const upload = require("../Config/multer-config");
 
 const productControllers = {};
 
+// ✅ Add Product Controller
 productControllers.addProduct = async (req, res) => {
   try {
-
-
     const { name, price, discount, bgcolor, panelcolor, textcolor, Details } = req.body;
-    const image = req.file;
+    const image = req.file; // Get uploaded image
 
     if (!image) {
       return res.status(400).json({ message: "Image is required" });
@@ -23,35 +17,44 @@ productControllers.addProduct = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Upload image to Cloudinary
-    const result = await cloudinary.uploader.upload_stream({ folder: "products" }, async (error, result) => {
-      if (error) {
-        return res.status(500).json({ message: "Cloudinary upload failed", error: error.message });
-      }
+    // ✅ Upload to Cloudinary
+    const result = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: "products" },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+      stream.end(image.buffer); // ✅ Send buffer instead of image.path
+    });
 
-      const product = new productModel({
-        name,
-        price,
-        discount,
-        bgcolor,
-        panelcolor,
-        textcolor,
-        Details,
-        image: result.secure_url,
-      });
+    // ✅ Save Product to Database
+    const product = new productModel({
+      name,
+      price,
+      discount,
+      bgcolor,
+      panelcolor,
+      textcolor,
+      Details,
+      image: {
+        public_id: result.public_id,
+        url: result.secure_url,
+      },
+    });
 
-      await product.save();
-      res.status(200).json({ message: "Product added successfully", product });
-    }).end(image.buffer);
-
+    await product.save();
+    res.status(201).json({ message: "Product added successfully", product });
   } catch (error) {
+    console.error("Error adding product:", error);
     res.status(500).json({ error: error.message });
   }
 };
 
+// ✅ Get All Products
 productControllers.getAllProducts = async (req, res) => {
   try {
-  
     const products = await productModel.find();
     res.status(200).json(products);
   } catch (error) {
@@ -59,6 +62,7 @@ productControllers.getAllProducts = async (req, res) => {
   }
 };
 
+// ✅ Get Product By ID
 productControllers.getProductById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -72,6 +76,7 @@ productControllers.getProductById = async (req, res) => {
   }
 };
 
+// ✅ Delete Product
 productControllers.deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
@@ -85,4 +90,4 @@ productControllers.deleteProduct = async (req, res) => {
   }
 };
 
-module.exports = productControllers;
+module.exports = productControllers; // ✅ Export controllers correctly

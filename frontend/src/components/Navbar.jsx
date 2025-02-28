@@ -51,6 +51,7 @@ const Navbar = () => {
             <Link to="/cart" className="nav-link">My Cart</Link>
             <button onClick={handleLogout} className="logout-btn">LogOut</button>
             <Link to="/users/profile" className="nav-link">Profile</Link>
+            <Link to="/owner/dashboard" className="nav-link">Owner-route</Link>
           </nav>
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden focus:outline-none">
             <img src="https://img.icons8.com/ios-filled/30/000000/menu.png" alt="Menu Icon" />
@@ -69,6 +70,7 @@ const Navbar = () => {
             <Link to="/cart" className="mobile-nav-link">My Cart</Link>
             <button onClick={handleLogout} className="mobile-logout-btn">LogOut</button>
             <Link to="/users/profile" className="mobile-nav-link">Profile</Link>
+
           </nav>
         </div>
       </div>

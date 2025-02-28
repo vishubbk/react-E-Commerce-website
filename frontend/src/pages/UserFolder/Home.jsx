@@ -78,6 +78,7 @@ const Home = () => {
                       <>₹{product.price}</>
                     )}
                   </p>
+                  <p className="text-sm text-gray-600 mb-2">Quantity: {product.Details}</p>
                   <button
                     onClick={() => addToCart(product.name)}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2 transition duration-300"
