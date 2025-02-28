@@ -81,7 +81,7 @@ const Profile = () => {
             </div>
 
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <button onClick={() => navigate("/owner/new-product")} className="flex items-center justify-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors w-full">
+              <button onClick={() => navigate("/owner/Add-Items")} className="flex items-center justify-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors w-full">
                 <span>Add New Product</span>
               </button>
               <button onClick={() => navigate("/owner/editProfile")} className="flex items-center justify-center space-x-2 bg-pink-900 text-white px-6 py-3 rounded-lg shadow-md hover:bg-pink-800 transition-colors w-full">

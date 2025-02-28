@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import OwnerNavbar from "../../components/OwnerNavbar";
+
 
 const AllItems = () => {
   const [items, setItems] = useState([]);
@@ -24,7 +26,10 @@ const AllItems = () => {
   }, []);
 
   return (
+    <>
+   <OwnerNavbar />
     <div className="max-w-6xl mx-auto p-6">
+
       <h2 className="text-3xl font-bold text-center mb-6">All Items</h2>
 
       {loading ? (
@@ -37,7 +42,7 @@ const AllItems = () => {
               className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300"
             >
               <img
-                src={item.image || "https://via.placeholder.com/300"}
+                src={item.image?.url || "https://via.placeholder.com/150"}
                 alt={item.name}
                 className="w-full h-48 object-cover"
               />
@@ -57,7 +62,7 @@ const AllItems = () => {
       ) : (
         <p className="text-center text-gray-500">No items available.</p>
       )}
-    </div>
+    </div>  </>
   );
 };
 
