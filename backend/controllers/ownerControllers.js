@@ -173,7 +173,7 @@ ownerControllers.Ownerdashboard = async (req, res) => {
     if (!token) {
       return res.status(401).json({ message: "Unauthorized. Please log in first." });
     }
-  
+
 
     let decoded;
     try {
@@ -217,7 +217,6 @@ ownerControllers.Ownerdashboard = async (req, res) => {
   }
 };
 
-// 📌 Update Owner Profile
 // 📌 Update Owner Profile
 ownerControllers.editProfile = async (req, res) => {
   try {

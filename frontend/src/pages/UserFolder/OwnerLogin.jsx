@@ -103,7 +103,7 @@ const OwnerLogin = () => {
 
         <p className="text-gray-700 font-medium mt-3 flex justify-center">
           Don&apos;t have an account?{" "}
-          <Link className="text-blue-500 ml-1" to="/users/register">
+          <Link className="text-blue-500 ml-1" to="/owner/register">
             Create Account
           </Link>
         </p>

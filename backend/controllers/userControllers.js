@@ -164,14 +164,13 @@ userControllers.removeCart = async (req, res) => {
 };
 
 
-
+//Add to cart route
 userControllers.Addtocart = async (req, res) => {
   try {
-    console.log("addtocart API hit");
+
     const token = req.cookies.token;
-    console.log("tokenaaa", token);
+
     const productIda = req.params.id;
-    console.log("productIdaaa", productIda);
 
 
     if (!token) {
@@ -187,7 +186,7 @@ userControllers.Addtocart = async (req, res) => {
     }
 
     const { productId } = req.body;
-    console.log("productIdaaa", productId);
+
     if (!productId) {
       return res.status(400).json({ message: "Product ID is required" });
     }
@@ -204,12 +203,13 @@ userControllers.Addtocart = async (req, res) => {
   }
 };
 
+// Get Add to cart Route
 userControllers.getCartItems = async (req, res) => {
   try {
     const token = req.cookies.token;
     const productId =req.params.itemId;
 
-    console.log("token getCartItems", token);
+
     if (!token) {
       return res.status(401).json({ message: "Unauthorized: No token provided" });
     }
@@ -237,9 +237,6 @@ userControllers.getCartItems = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
-
-
-
 
 
 // 📌 Get User Profile
@@ -281,7 +278,7 @@ userControllers.getUserProfile = async (req, res) => {
 };
 
 
-
+//Post Update user profile page
 userControllers.updateUserProfile = async (req, res) => {
   try {
     const { firstname, lastname, contact, email } = req.body;

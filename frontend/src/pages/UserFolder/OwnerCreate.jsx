@@ -67,7 +67,7 @@ import axios from "axios";
 
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again. Owner Already exists Plz remove old owner then try again...");
       setLoading(false);
     }
   };
