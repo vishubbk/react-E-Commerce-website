@@ -14,9 +14,9 @@ const Home = () => {
   const [bannerIndex, setBannerIndex] = useState(0);
 
   const banners = [
-    { title: "Mega Sale - Up to 50% Off!", subtitle: "Shop the best deals before they run out!" },
-    { title: "New Arrivals Just Landed!", subtitle: "Explore the latest collection now!" },
-    { title: "Limited Time Offer!", subtitle: "Exclusive discounts on top brands!" }
+    { title: "🔥 Mega Sale - Up to 50% Off!", subtitle: "Shop the best deals before they run out!" },
+    { title: "🆕 New Arrivals Just Landed!", subtitle: "Explore the latest collection now!" },
+    { title: "⚡ Limited Time Offer!", subtitle: "Exclusive discounts on top brands!" },
   ];
 
   useEffect(() => {
@@ -25,12 +25,11 @@ const Home = () => {
         const response = await axios.get("http://localhost:4000/products");
         setProducts(response.data);
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("❌ Error fetching products:", error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
 
@@ -41,93 +40,98 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const addToCart = (productName) => {
-    Toastify({
-      text: `${productName} added to cart!`,
-      duration: 3000,
-      gravity: "top",
-      position: "right",
-      backgroundColor: "blue",
-    }).showToast();
+  const addToCart = async (productId, productName) => {
+    try {
+      await axios.post("http://localhost:4000/users/addtocart", { productId }, { withCredentials: true });
+      Toastify({
+        text: `🛒 ${productName} added to cart!`,
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        style: { background: "blue", color: "#fff", borderRadius: "8px", fontWeight: "bold", padding: "12px" },
+      }).showToast();
+    } catch (error) {
+      console.error("❌ Error adding to cart:", error);
+      Toastify({
+        text: "❌ Failed to add product to cart",
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        style: { background: "#FF5733", color: "#fff", borderRadius: "8px", fontWeight: "bold", padding: "12px" },
+      }).showToast();
+    }
   };
 
-  const filteredProducts = products.filter(product =>
+  const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="bg-gray-50 text-gray-900 font-sans min-h-screen ">
-      <Navbar className="absolute" />
-
-      {/* Banner */}
-      <div className="bg-gradient-to-r from-[#2e2e66] to-[#971b7e] relative top-8 text-white py-12 text-center shadow-md">
-        <h1 className="text-4xl font-extrabold">{banners[bannerIndex].title}</h1>
-        <p className="text-lg mt-2 font-medium">{banners[bannerIndex].subtitle}</p>
+    <div className="bg-gray-100 min-h-screen">
+      <Navbar />
+      {/* Banner Section */}
+      <div className="relative w-full h-56 bg-gradient-to-r from-purple-700 to-pink-600 text-white flex items-center justify-center shadow-md">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold">{banners[bannerIndex].title}</h1>
+          <p className="text-lg mt-2">{banners[bannerIndex].subtitle}</p>
+        </div>
       </div>
-
       {/* Search Bar */}
-      <div className="container mx-auto mt-6 px-4 relative top-4.5">
+      <div className="container mx-auto mt-6 px-4">
         <input
           type="text"
-          placeholder="Search for products..."
+          placeholder="🔍 Search for products..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full p-4 border border-gray-700 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          className="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 shadow-sm"
         />
       </div>
-
+      {/* Products Section */}
       <main className="container mx-auto px-4 py-12">
-        <h1 className="text-3xl font-bold mb-8 text-center">Products</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {loading ? (
-            Array.from({ length: 8 }).map((_, index) => (
-              <div
-                key={index}
-                className="shadow-md rounded-lg p-6 animate-pulse bg-gray-300 h-64"
-              ></div>
+        <h1 className="text-3xl font-bold mb-6 text-center">🛍️ Featured Products</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {loading
+            ? Array.from({ length: 8 }).map((_, index) => (
+              <div key={index} className="h-64 bg-gray-300 rounded-lg animate-pulse"></div>
             ))
-          ) : filteredProducts.length > 0 ? (
-            filteredProducts.map((product) => (
-              <div key={product._id} className="bg-white shadow-lg rounded-lg p-4 hover:shadow-xl transition duration-300">
-                <Link to={`/products/${product._id}`}>
-                  <div className="rounded-md overflow-hidden">
-                    <img
-                      src={product.image?.url || "https://via.placeholder.com/150"}
-                      alt={product.name}
-                      className="w-full h-48 object-cover rounded-md hover:scale-105 transition duration-300"
-                    />
-                  </div>
-                  <h2 className="text-lg font-semibold mt-4">{product.name}</h2>
-                  <p className="text-sm text-gray-600 mt-1">
-                    {product.discount ? (
-                      <>
-                        <s className="text-red-500 font-medium">₹{product.price}</s>{" "}
-                        <span className="text-green-600 font-bold">₹{product.discount}</span>
-                      </>
-                    ) : (
-                      <>₹{product.price}</>
-                    )}
-                  </p>
-                  <p className="text-sm text-gray-500">Quantity: {product.Details}</p>
-                </Link>
-                <button
-                  onClick={() => addToCart(product.name)}
-                  className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center justify-center gap-2 transition duration-300"
-                >
-                  <img
-                    src="https://img.icons8.com/ios-filled/30/ffffff/add-shopping-cart.png"
-                    className="w-5 h-5"
-                  />
-                  Add to Cart
-                </button>
-              </div>
-            ))
-          ) : (
-            <p className="text-center text-gray-600">No products available.</p>
-          )}
+            : filteredProducts.length > 0
+              ? filteredProducts.map((product) => (
+                <div key={product._id} className="bg-white p-4 rounded-lg shadow-lg hover:shadow-xl transition">
+                  <Link to={`/products/${product._id}`}>
+                    <div className="relative h-48 overflow-hidden rounded-md">
+                      <img
+                        src={product.image?.url || "https://via.placeholder.com/150"}
+                        alt={product.name}
+                        className="absolute inset-0 w-full h-full object-contain hover:scale-105 transition duration-300"
+                        onError={(e) => {
+                          e.target.src = "https://via.placeholder.com/150";
+                          e.target.onerror = null;
+                        }}
+                      />
+                    </div>
+                    <h2 className="text-lg font-semibold mt-2">{product.name}</h2>
+                    <p className="text-gray-600 mt-1">
+                      {product.discount ? (
+                        <>
+                          <s className="text-red-500">₹{product.price}</s> <span className="text-green-600 font-bold">₹{product.discount}</span>
+                        </>
+                      ) : (
+                        <>₹{product.price}</>
+                      )}
+                    </p>
+                  </Link>
+                  <button
+                    onClick={() => addToCart(product._id, product.name)}
+                    className="mt-3 w-full bg-blue-600 text-white py-2 rounded-md flex items-center justify-center gap-2 hover:bg-blue-700 transition"
+                  >
+                    🛒 Add to Cart
+                  </button>
+                </div>
+              ))
+              : <p className="text-center text-gray-600">⚠️ No products available.</p>
+          }
         </div>
       </main>
-
       <Footer />
     </div>
   );

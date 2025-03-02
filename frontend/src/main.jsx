@@ -12,6 +12,7 @@ import OwnerCreate from "./pages/UserFolder/OwnerCreate";
 import OwnerLogin from "./pages/UserFolder/OwnerLogin";
 import OwnerDashboard from "./pages/OwnerFolder/OwnerDashboard";
 import UserProfileEdit from "./pages/UserFolder/UserProfileEdit";
+import UserCart from "./pages/UserFolder/getCartItems";
 import Logout from "./Logout";
 import "./index.css";
 import RouteProtection from "./pages/UserFolder/RouteProtection"
@@ -28,6 +29,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/" element={<Home />} />
       <Route path="/users/register" element={<UserCreate />} />
       <Route path="/users/login" element={<UserLogin />} />
+      <Route path="/users/getCartItems" element={<UserCart />} />
       <Route path="/products/:id" element={<ProductsDetails />} />
       <Route path="/owner/register" element={<OwnerCreate />} />
       <Route path="/owner/login" element={<OwnerLogin />} />

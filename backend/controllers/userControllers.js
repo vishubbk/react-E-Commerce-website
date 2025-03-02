@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const validator = require("email-validator");
 const userModel = require("../models/userModel");
+const cartModel = require("../models/productModel");
 
 const userControllers = {};
 
@@ -120,6 +121,125 @@ userControllers.logoutUser = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+// 📌 remove cart
+userControllers.removeCart = async (req, res) => {
+  try {
+    console.log("🔹 Hit removeCart API");
+
+    // ✅ Fetch token from cookies
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ message: "Unauthorized: No token provided" });
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (error) {
+      return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    }
+
+    const { productId } = req.body;
+    if (!productId) {
+      return res.status(400).json({ message: "Product ID is required" });
+    }
+    if (!user.cart.includes(productId)) {
+      return res.status(400).json({ message: "Product is not in the cart" });
+    }
+    // �� Remove the product from the user's cart using Mongoose's update operation
+
+
+
+    const user = await userModel.findOneAndUpdate(
+      { email: decoded.email },
+      { $pull: { cart: { _id: productId } } }, // 🔥 Remove only the matching product
+      { new: true }
+    );
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    return res.status(200).json({ message: "Item removed from cart", cart: user.cart });
+
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
+};
+
+
+
+userControllers.Addtocart = async (req, res) => {
+  try {
+    console.log("addtocart API hit");
+    const token = req.cookies.token;
+    console.log("tokenaaa", token);
+    const productIda = req.params.id;
+    console.log("productIdaaa", productIda);
+
+
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized: No token provided" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const email = decoded.email;
+
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { productId } = req.body;
+    console.log("productIdaaa", productId);
+    if (!productId) {
+      return res.status(400).json({ message: "Product ID is required" });
+    }
+
+    if (!user.cart.includes(productId)) {
+      user.cart.push(productId);
+      await user.save();
+    }
+
+    return res.status(200).json({ message: "Product added to cart successfully", cart: user.cart });
+
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
+};
+
+userControllers.getCartItems = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    const productId =req.params.itemId;
+
+    console.log("token getCartItems", token);
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized: No token provided" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const email = decoded.email;
+
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const cartItems = await cartModel.find({ _id: { $in: user.cart } });
+
+    if (!cartItems || cartItems.length === 0) {
+      console.warn("⚠️ No items in cart for user:", email);
+      return res.status(200).json([]); // Send an empty array if no items
+    }
+
+
+
+    return res.status(200).json(cartItems); // ✅ Send the array directly
+  } catch (error) {
+    console.error("Error in getCartItems:", error.message);
+    return res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
+};
+
+
+
 
 
 // 📌 Get User Profile
