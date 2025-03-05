@@ -40,22 +40,6 @@ app.get("/", (req, res) => {
   res.send("Backend is Live & Running! 🚀");
 });
 
-// 🔹 Set Cookie Route (For Authentication)
-app.get("/set-cookie", (req, res) => {
-  res.cookie("token", process.env.JWT_SECRET, {
-    httpOnly: true,
-    secure: true,   // ✅ Secure for HTTPS
-    sameSite: "None", // ✅ Needed for cross-domain requests
-  });
-  res.json({ message: "Cookie has been set!" });
-});
-
-// 🔹 Get Cookie Route (For Debugging)
-app.get("/get-cookie", (req, res) => {
-  console.log("Cookies received from client:", req.cookies);
-  res.json({ cookies: req.cookies });
-});
-
 // 🔹 Define Routes
 app.use("/products", productRoutes);
 app.use("/owner", ownerRoutes);

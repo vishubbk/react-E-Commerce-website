@@ -26,17 +26,9 @@ userControllers.registerUser = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new userModel({
-      firstname,
-      lastname,
-      email,
-      contact,
-      password: hashedPassword,
-    });
-
+    const newUser = new userModel({ firstname, lastname, email, contact, password: hashedPassword });
     await newUser.save();
 
     // ✅ Generate Token with 7 Days Expiry
@@ -46,23 +38,18 @@ userControllers.registerUser = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-      sameSite: "Strict", // Better CSRF protection
-      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days expiry
+      sameSite: "None", // ✅ Important for cross-domain cookies
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days expiry
     });
 
     res.status(201).json({
       message: "User registered successfully",
-      user: {
-        firstname,
-        lastname,
-        email,
-        contact,
-      },
+      user: { firstname, lastname, email, contact },
       token,
     });
   } catch (error) {
     console.error("Registration Error:", error.message);
-    return res.status(500).json({ message: "Internal Server Error", error: error.message });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -92,7 +79,7 @@ userControllers.loginUser = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
+      sameSite: "None", // ✅ Cross-domain compatibility
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
