@@ -23,7 +23,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/products");
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/products`);
         setProducts(response.data);
       } catch (error) {
         console.error("❌ Error fetching products:", error);
@@ -43,7 +43,7 @@ const Home = () => {
 
   const addToCart = async (productId, productName) => {
     try {
-      await axios.post("http://localhost:4000/users/addtocart", { productId }, { withCredentials: true });
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/users/addtocart`, { productId }, { withCredentials: true });
       Toastify({
         text: `🛒 ${productName} added to cart!`,
         duration: 3000,

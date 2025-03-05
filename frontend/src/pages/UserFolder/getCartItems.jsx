@@ -15,7 +15,7 @@ const GetCartItems = () => {
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/users/getCartItems", {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/getCartItems`, {
           withCredentials: true,
         });
         setCartItems(response.data || []);
@@ -32,7 +32,7 @@ const GetCartItems = () => {
 
   const handleRemoveItem = async (itemId, itemName) => {
     try {
-      await axios.post(`http://localhost:4000/users/removeCart/${itemId}`, {}, { withCredentials: true });
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/users/removeCart/${itemId}`, {}, { withCredentials: true });
       setCartItems((prevCart) => prevCart.filter((item) => item._id !== itemId));
       toast.success(`❌ ${itemName} removed from cart!`);
     } catch (error) {
@@ -43,7 +43,7 @@ const GetCartItems = () => {
 
   const handleBuyNow = async (itemId) => {
     try {
-      await axios.post(`http://localhost:8000/api/orders/buy-now/${itemId}`, {}, { withCredentials: true });
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/api/orders/buy-now/${itemId}`, {}, { withCredentials: true });
       toast.success("✅ Purchase successful!");
       navigate("/checkout");
     } catch (error) {
@@ -54,7 +54,7 @@ const GetCartItems = () => {
 
   const handleBuyAllItems = async () => {
     try {
-      await axios.post("http://localhost:8000/api/orders/buy-all", {}, { withCredentials: true });
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/api/orders/buy-all`, {}, { withCredentials: true });
       toast.success("🎉 All items purchased successfully!");
       navigate("/checkout");
     } catch (error) {

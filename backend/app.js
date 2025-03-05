@@ -1,4 +1,4 @@
-require("dotenv").config(); // Load environment variables first
+require("dotenv").config(); // Load environment variables
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
@@ -11,16 +11,21 @@ const productRoutes = require("./routes/productRoutes");
 const ownerRoutes = require("./routes/ownerRoutes");
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 // 🔹 Middleware Setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// 🔹 CORS Setup for Frontend
 app.use(
   cors({
-    origin: "http://localhost:5173", // Change this to your frontend URL
-    credentials: true, // Allows cookies to be sent with requests
+    origin: [
+      "http://localhost:5173", // ✅ Local frontend
+      "https://your-frontend-url.com" // ✅ Replace with your deployed frontend URL
+    ],
+    credentials: true, // ✅ Allows cookies with requests
   })
 );
 
@@ -32,20 +37,20 @@ connectdb().catch((err) => {
 
 // 🔹 Testing Route
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Backend is Live & Running! 🚀");
 });
 
-// 🔹 Set Cookie Route (Fixed)
+// 🔹 Set Cookie Route (For Authentication)
 app.get("/set-cookie", (req, res) => {
   res.cookie("token", process.env.JWT_SECRET, {
-    httpOnly: false, // Change to `true` if you don't want frontend access
-    secure: false,   // Set to `true` in production with HTTPS
-    sameSite: "Lax", // Use "None" for cross-domain requests with `Secure`
+    httpOnly: true,
+    secure: true,   // ✅ Secure for HTTPS
+    sameSite: "None", // ✅ Needed for cross-domain requests
   });
   res.json({ message: "Cookie has been set!" });
 });
-``
-// 🔹 Get Cookie Route
+
+// 🔹 Get Cookie Route (For Debugging)
 app.get("/get-cookie", (req, res) => {
   console.log("Cookies received from client:", req.cookies);
   res.json({ cookies: req.cookies });
@@ -66,5 +71,5 @@ app.use((err, req, res, next) => {
 // 🔹 Start Server
 const server = http.createServer(app);
 server.listen(port, () => {
-  console.log(`✅ Server running on http://localhost:${port}`);
+  console.log(`✅ Server running on port ${port}`);
 });

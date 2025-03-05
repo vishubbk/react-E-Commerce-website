@@ -20,7 +20,7 @@ const UserProfileEdit = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/owner/dashboard", {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/owner/dashboard`, {
           withCredentials: true,
         });
 

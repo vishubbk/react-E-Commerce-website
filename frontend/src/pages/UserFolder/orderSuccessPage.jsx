@@ -13,7 +13,7 @@ const OrderSuccessPage = () => {
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/products/${id}`);
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/products/${id}`);
         setProduct(response.data);
         console.log("Order Details:", response.data);
       } catch (error) {
@@ -24,7 +24,7 @@ const OrderSuccessPage = () => {
     const placeOrder = async () => {
       try {
         await axios.post(
-          `http://localhost:4000/users/buynowSuccessful/${id}`,
+          `${import.meta.env.VITE_BASE_URL}/users/buynowSuccessful/${id}`,
           {},
           { withCredentials: true }
         );

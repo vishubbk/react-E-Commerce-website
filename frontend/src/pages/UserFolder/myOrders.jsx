@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Navbar from "../../components/Navbar";
@@ -12,7 +13,7 @@ const MyOrders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/users/myorders`, { withCredentials: true });
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/myorders`, { withCredentials: true });
         setOrders(response.data);
       } catch (error) {
         setError(error.response ? error.response.data.message : "Failed to fetch orders");
@@ -25,7 +26,7 @@ const MyOrders = () => {
 
   const handleCancelOrder = async (orderId) => {
     try {
-      await axios.delete(`http://localhost:4000/users/myorders/${orderId}`, { withCredentials: true });
+      await axios.delete(`${import.meta.env.VITE_BASE_URL}/users/myorders/${orderId}`, { withCredentials: true });
       setOrders(orders.filter(order => order._id !== orderId));
     } catch (error) {
       setError("Failed to cancel order");
