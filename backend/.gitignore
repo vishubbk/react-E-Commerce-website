@@ -1,15 +1,10 @@
 # Dependencies
 node_modules/
-package-lock.json
+
 
 # Environment variables
 .env
-utiles
 
 
-# Logs
-logs
-*.log
-npm-debug.log*
 
 
