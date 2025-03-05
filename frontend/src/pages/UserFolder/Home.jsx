@@ -6,6 +6,7 @@ import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
+import { Search, PackageX } from "lucide-react";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -70,8 +71,8 @@ const Home = () => {
     <div className="bg-gray-100 min-h-screen">
       <Navbar />
       {/* Banner Section */}
-      <div className="relative w-full h-56 bg-gradient-to-r from-purple-700 to-pink-600 text-white flex items-center justify-center shadow-md">
-        <div className="text-center">
+      <div className="relative w-full  h-56 bg-gradient-to-r from-purple-700 to-pink-600 text-white flex items-center justify-center shadow-md">
+        <div className="text-center mt-15 ">
           <h1 className="text-3xl font-bold">{banners[bannerIndex].title}</h1>
           <p className="text-lg mt-2">{banners[bannerIndex].subtitle}</p>
         </div>
@@ -128,7 +129,12 @@ const Home = () => {
                   </button>
                 </div>
               ))
-              : <p className="text-center text-gray-600">⚠️ No products available.</p>
+              :   <div className="flex flex-col justify-center w-[83vw]  items-center text-gray-600 mt-7">
+              <PackageX size={48} className="text-red-500" />
+              <p className="text-lg font-semibold mt-2">Sorry, this product is not found.</p>
+              <p className="text-sm">It will be available shortly.</p>
+
+            </div>
           }
         </div>
       </main>

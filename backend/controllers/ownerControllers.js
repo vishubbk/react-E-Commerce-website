@@ -118,6 +118,7 @@ ownerControllers.logoutOwner = async (req, res) => {
   }
 };
 
+
 // 📌 Get Owner Profile
 ownerControllers.getOwnerProfile = async (req, res) => {
   try {
@@ -285,6 +286,36 @@ ownerControllers.editProfile = async (req, res) => {
   } catch (error) {
     console.error("Error updating owner profile:", error.message);
     return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+ownerControllers.OwnerAllOrders = async (req, res) => {
+  try {
+    const users = await userModel.find().populate({
+      path: "orders.productId",
+      model: "Product",
+      select: "name price", // Fetching product name, price, and image
+    });
+
+    const orders = users.flatMap((user) =>
+      user.orders.map((order) => ({
+        orderId: order._id,
+        userId: user._id,
+        userName: `${user.firstname} ${user.lastname}`,
+        email: user.email,
+        contact: user.contact || "Not provided", // Ensure contact is included
+        orderName: order.productId ? order.productId.name : "Unknown", // Ensure order name is displayed
+
+        price: order.price,
+        status: order.status,
+        orderDate: order.orderDate,
+      }))
+    );
+
+    res.status(200).json({ success: true, orders });
+  } catch (error) {
+    console.error("Error fetching orders:", error.message);
+    res.status(500).json({ success: false, message: "Error fetching orders" });
   }
 };
 

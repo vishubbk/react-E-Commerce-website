@@ -10,7 +10,6 @@ const homeRoutes = require("./routes/homeRoutes");
 const productRoutes = require("./routes/productRoutes");
 const ownerRoutes = require("./routes/ownerRoutes");
 
-
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -63,10 +62,6 @@ app.use((err, req, res, next) => {
   console.error("Error:", err.stack);
   res.status(500).json({ message: "Internal Server Error" });
 });
-
-const paymentRoutes = require("./routes/paymentRoutes");
-app.use("/api/payments", paymentRoutes);
-
 
 // 🔹 Start Server
 const server = http.createServer(app);

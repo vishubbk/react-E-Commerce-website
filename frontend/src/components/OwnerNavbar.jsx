@@ -55,6 +55,10 @@ const OwnerNavbar = () => {
               <List size={20} />
               <span>All Items</span>
             </Link>
+            <Link to="/owner/AllOrders" className={`nav-link flex items-center gap-2 ${location.pathname === '/owner/All-Items' ? 'active' : ''}`}>
+              <List size={20} />
+              <span>All Orders</span>
+            </Link>
             <Link to="/owner/profile" className={`nav-link flex items-center gap-2 ${location.pathname === '/owner/profile' ? 'active' : ''}`}>
               <User size={20} />
               <span>Profile</span>
@@ -93,6 +97,10 @@ const OwnerNavbar = () => {
               <span>Add Items</span>
             </Link>
             <Link to="/owner/All-Items" className={`mobile-nav-link flex items-center gap-3 ${location.pathname === '/owner/All-Items' ? 'active' : ''}`}>
+              <List size={20} />
+              <span>All Items</span>
+            </Link>
+            <Link to="/owner/AllOrders" className={`mobile-nav-link flex items-center gap-3 ${location.pathname === '/owner/All-Items' ? 'active' : ''}`}>
               <List size={20} />
               <span>All Items</span>
             </Link>

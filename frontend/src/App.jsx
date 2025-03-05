@@ -5,6 +5,7 @@ import UserLogin from './pages/UserFolder/userLogin'
 import UserCreate from './pages/UserFolder/userCreate'
 import UserProfile from './pages/UserFolder/userProfile'
 import UserProfileEdit from './pages/UserFolder/userProfileEdit'
+import MyOrders from './pages/UserFolder/MyOrders'
 import ProductsDetails from './pages/UserFolder/productsDetails'
 import OwnerLogin from './pages/OwnerFolder/OwnerLogin'
 import OwnerCreate from './pages/OwnerFolder/OwnerCreate'
@@ -21,6 +22,7 @@ const App = () => {
       <Route path="/" element={<Home />} />
       <Route path="/users/login" element={<UserLogin />} />
       <Route path="/users/register" element={<UserCreate />} />
+      <Route path="/users/Order" element={<MyOrders />} />
       <Route path="/users/profile" element={<UserProfile />} />
       <Route path="/users/profile/edit" element={<UserProfileEdit />} />
       <Route path="/products/:id" element={<ProductsDetails />} />

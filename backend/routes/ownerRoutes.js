@@ -9,7 +9,8 @@ const {
   logoutOwner,
   getOwnerProfile,
   Ownerdashboard,
-  editProfile
+  editProfile,
+  OwnerAllOrders
 } = require("../controllers/ownerControllers");
 
 const router = express.Router();
@@ -23,6 +24,7 @@ router.post("/logout", logoutOwner);
 // Protected routes
 router.get("/profile", authentication, getOwnerProfile);
 router.get("/dashboard", authentication, Ownerdashboard);
+router.get("/orders", OwnerAllOrders);
 router.post("/editprofile",
   authentication,
   upload.single("profilePicture"),

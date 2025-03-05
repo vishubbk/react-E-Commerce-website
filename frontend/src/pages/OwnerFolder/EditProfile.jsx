@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "../../components/Navbar";
 import { ArrowLeft } from "lucide-react";
+
 const UserProfileEdit = () => {
   const [userData, setUserData] = useState({
     firstname: "",
@@ -12,18 +13,18 @@ const UserProfileEdit = () => {
     profilePicture: null,
   });
 
-  const [previewImage, setPreviewImage] = useState(""); // 🔹 Base64 preview ke liye
+  const [previewImage, setPreviewImage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // ✅ Navigate yaha hona chahiye
 
-  // ✅ Fetch user details when the component loads
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.get("http://localhost:4000/owner/dashboard", {
-
           withCredentials: true,
-        }); console.log(response.data.owner.firstname);
+        });
+
+        console.log(response.data.owner.firstname);
 
         setUserData({
           firstname: response.data.owner.firstname || "",
@@ -33,20 +34,23 @@ const UserProfileEdit = () => {
           profilePicture: response.data.owner.profilePicture || null,
         });
 
-        // ✅ Agar backend se image mili toh use Base64 me convert karo
-        if (response.data.profilePicture?.data) {
-          const base64Image = `data:${response.data.profilePicture.contentType};base64,${Buffer.from(
-            response.data.profilePicture.data
+        // ✅ Base64 image conversion
+        if (response.data.owner.profilePicture?.data) {
+          const base64Image = `data:${response.data.owner.profilePicture.contentType};base64,${Buffer.from(
+            response.data.owner.profilePicture.data
           ).toString("base64")}`;
           setPreviewImage(base64Image);
         }
       } catch (error) {
         console.error("Error fetching user profile:", error);
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          navigate("/owner/login");
+        }
       }
     };
 
     fetchUserProfile();
-  }, []);
+  }, [navigate]); // ✅ Dependency array me `navigate` add karein
 
   // ✅ Handle form input changes
   const handleChange = (e) => {
@@ -126,63 +130,26 @@ const UserProfileEdit = () => {
               name="profilePicture"
               accept="image/*"
               onChange={handleFileChange}
-              className="hidden" // 🔹 Hide default file input
+              className="hidden"
             />
           </div>
 
-          <div className="flex flex-col gap-2">
-            <label htmlFor="firstname" className="text-gray-700 font-medium">First Name</label>
-            <input
-              type="text"
-              name="firstname"
-              value={userData.firstname}
-              onChange={handleChange}
-              className="border p-2 rounded-md"
-              required
-            />
-          </div>
+          {/* 🔹 Form Fields */}
+          {["firstname", "lastname", "email", "contact"].map((field) => (
+            <div key={field} className="flex flex-col gap-2">
+              <label className="text-gray-700 font-medium">{field.charAt(0).toUpperCase() + field.slice(1)}</label>
+              <input
+                type="text"
+                name={field}
+                value={userData[field]}
+                onChange={handleChange}
+                className="border p-2 rounded-md"
+                required
+              />
+            </div>
+          ))}
 
-          <div className="flex flex-col gap-2">
-            <label htmlFor="lastname" className="text-gray-700 font-medium">Last Name</label>
-            <input
-              type="text"
-              name="lastname"
-              value={userData.lastname}
-              onChange={handleChange}
-              className="border p-2 rounded-md"
-              required
-            />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <label htmlFor="email" className="text-gray-700 font-medium">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={userData.email}
-              onChange={handleChange}
-              className="border p-2 rounded-md"
-              required
-            />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <label htmlFor="contact" className="text-gray-700 font-medium">Contact</label>
-            <input
-              type="text"
-              name="contact"
-              value={userData.contact}
-              onChange={handleChange}
-              className="border p-2 rounded-md"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className={`p-2 rounded-md text-white ${isLoading ? "bg-gray-500" : "bg-green-600 hover:bg-green-700"}`}
-            disabled={isLoading}
-          >
+          <button type="submit" className={`p-2 rounded-md text-white ${isLoading ? "bg-gray-500" : "bg-green-600 hover:bg-green-700"}`} disabled={isLoading}>
             {isLoading ? "Saving..." : "Save Changes"}
           </button>
         </form>

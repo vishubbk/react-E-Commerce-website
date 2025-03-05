@@ -4,14 +4,18 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ShoppingCart, Home, LogOut, User, Menu, X, Package } from "lucide-react";
+import { ShoppingCart, Home, LogOut, ShoppingBag ,User, Menu, X, Package } from "lucide-react";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+
     try {
       await axios.post(`${import.meta.env.VITE_BASE_URL}/users/logout`, {}, { withCredentials: true });
 
@@ -25,10 +29,12 @@ const Navbar = () => {
       setTimeout(() => {
         navigate("/users/logout");
         window.location.reload();
-      }, 2000); // ✅ Delay navigation to allow toast message to display
+      }, 2000);
     } catch (error) {
       toast.error("Logout Failed. Try Again!");
       console.error("Logout error:", error.response?.data?.message);
+    } finally {
+      setIsLoggingOut(false);
     }
   };
 
@@ -45,45 +51,29 @@ const Navbar = () => {
             <h1 className="text-xl font-bold text-gray-800">Shop Mart</h1>
           </div>
 
+          {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-6">
-            <Link
-              to="/"
-              className={`nav-link flex items-center gap-2 ${location.pathname === '/' ? 'active' : ''}`}
-            >
-              <Home size={20} />
-              <span>Home</span>
-            </Link>
-            <Link
-              to="/users/getCartItems"
-              className={`nav-link flex items-center gap-2 ${location.pathname === '/users/getCartItems' ? 'active' : ''}`}
-            >
-              <ShoppingCart size={20} />
-              <span>My Cart</span>
-            </Link>
-            <Link
-              to="/users/profile"
-              className={`nav-link flex items-center gap-2 ${location.pathname === '/users/profile' ? 'active' : ''}`}
-            >
-              <User size={20} />
-              <span>Profile</span>
-            </Link>
-            <Link
-              to="/owner/dashboard"
-              className={`nav-link flex items-center gap-2 ${location.pathname === '/owner/dashboard' ? 'active' : ''}`}
-            >
-              <Package size={20} />
-              <span>Owner</span>
-            </Link>
+            {[
+              { path: "/", label: "Home", icon: Home },
+              { path: "/users/getCartItems", label: "My Cart", icon: ShoppingBag  },
+              { path: "/users/Order", label: "Orders", icon: ShoppingCart   },
+              { path: "/users/profile", label: "Profile", icon: User },
+
+            ].map(({ path, label, icon: Icon }) => (
+              <Link key={path} to={path} className={`nav-link flex items-center gap-2 ${location.pathname === path ? "active" : ""}`}>
+                <Icon size={20} />
+                <span>{label}</span>
+              </Link>
+            ))}
+
             <button onClick={handleLogout} className="logout-btn flex items-center gap-2">
               <LogOut size={20} />
               <span>LogOut</span>
             </button>
           </nav>
 
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden focus:outline-none"
-          >
+          {/* Mobile Menu Button */}
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden focus:outline-none">
             <Menu size={24} />
           </button>
         </div>
@@ -102,29 +92,23 @@ const Navbar = () => {
             </button>
           </div>
 
+          {/* Mobile Navigation */}
           <nav className="flex flex-col gap-4">
-            <Link
-              to="/"
-              className={`mobile-nav-link flex items-center gap-3 ${location.pathname === '/' ? 'active' : ''}`}
-            >
-              <Home size={20} />
-              <span>Home</span>
-            </Link>
-            <Link
-              to="/users/getCartItems"
-              className={`mobile-nav-link flex items-center gap-3 ${location.pathname === '/users/getCartItems' ? 'active' : ''}`}
-            >
-              <ShoppingCart size={20} />
-              <span>My Cart</span>
-            </Link>
-            <Link
-              to="/users/profile"
-              className={`mobile-nav-link flex items-center gap-3 ${location.pathname === '/users/profile' ? 'active' : ''}`}
-            >
-              <User size={20} />
-              <span>Profile</span>
-            </Link>
-            <button onClick={handleLogout} className="mobile-logout-btn flex items-center gap-2 ">
+            {[
+              { path: "/", label: "Home", icon: Home },
+              { path: "/users/getCartItems", label: "My Cart", icon: ShoppingBag },
+
+              { path: "/users/Order", label: "Order", icon: ShoppingCart },
+
+              { path: "/users/profile", label: "Profile", icon: User }
+            ].map(({ path, label, icon: Icon }) => (
+              <Link key={path} to={path} className={`mobile-nav-link flex items-center gap-3 ${location.pathname === path ? "active" : ""}`}>
+                <Icon size={20} />
+                <span>{label}</span>
+              </Link>
+            ))}
+
+            <button onClick={handleLogout} className="mobile-logout-btn flex items-center gap-2">
               <LogOut size={20} />
               <span>LogOut</span>
             </button>
@@ -192,13 +176,7 @@ const Navbar = () => {
             color: #b91c1c;
           }
 
-          .nav-link.active {
-            color: #2563eb;
-            background-color: #eff6ff;
-            font-weight: 600;
-          }
-
-          .mobile-nav-link.active {
+          .nav-link.active, .mobile-nav-link.active {
             color: #2563eb;
             background-color: #eff6ff;
             font-weight: 600;

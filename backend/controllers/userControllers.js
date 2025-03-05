@@ -5,6 +5,7 @@ const validator = require("email-validator");
 const userModel = require("../models/userModel");
 const cartModel = require("../models/productModel");
 
+
 const userControllers = {};
 
 // 📌 Register User
@@ -121,6 +122,8 @@ userControllers.logoutUser = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+
 // 📌 remove cart
 userControllers.removeCart = async (req, res) => {
   try {
@@ -207,7 +210,7 @@ userControllers.Addtocart = async (req, res) => {
 userControllers.getCartItems = async (req, res) => {
   try {
     const token = req.cookies.token;
-    const productId =req.params.itemId;
+    const productId = req.params.itemId;
 
 
     if (!token) {
@@ -261,6 +264,8 @@ userControllers.getUserProfile = async (req, res) => {
       lastname: user.lastname,
       email: user.email,
       contact: user.contact,
+      address: user.address,
+
       profilePicture: profilePictureBase64, // ✅ Base64 format me send ho rahi hai
     });
   } catch (error) {
@@ -281,7 +286,7 @@ userControllers.getUserProfile = async (req, res) => {
 //Post Update user profile page
 userControllers.updateUserProfile = async (req, res) => {
   try {
-    const { firstname, lastname, contact, email } = req.body;
+    const { firstname, lastname, contact, email, address } = req.body;
 
     // ✅ Token fetch karo cookies se
     const token = req.cookies.token;
@@ -333,6 +338,17 @@ userControllers.updateUserProfile = async (req, res) => {
       };
     }
 
+    // ✅ Update Address
+    if (address) {
+      const parsedAddress = JSON.parse(address);
+      user.address = {
+        street: parsedAddress.street || user.address.street,
+        city: parsedAddress.city || user.address.city,
+        state: parsedAddress.state || user.address.state,
+        country: parsedAddress.country || user.address.country,
+      };
+    }
+
     await user.save();
 
     return res.status(200).json({
@@ -343,6 +359,110 @@ userControllers.updateUserProfile = async (req, res) => {
 
   } catch (error) {
     console.error("Error updating user profile:", error.message);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
+
+
+// 📌 Buynow User
+userControllers.buynowSuccessful = async (req, res) => {
+  try {
+    const { id: productId } = req.params; // Get product ID from URL
+    const { quantity } = req.body; // Get quantity from request body
+
+    // Check if token exists
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized: No token provided" });
+    }
+
+    // Verify JWT and extract user email
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userEmail = decoded.email;
+
+    // Find the user
+    const user = await userModel.findOne({ email: userEmail });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Find the product details
+    const product = await cartModel.findById(productId);
+    console.log("��� Product:", product);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Calculate total price
+    const totalPrice = product.price * (quantity || 1);
+
+    // Create order object
+    const newOrder = {
+      productId,
+      quantity: quantity || 1, // Default 1 if not provided
+      price: totalPrice,
+      status: "pending",
+      orderDate: new Date(),
+    };
+
+    // Add order to the user's order list
+    user.orders.push(newOrder);
+    await user.save(); // Save the updated user
+
+    return res.status(201).json({
+      message: "Order placed successfully!",
+      order: newOrder,
+    });
+
+  } catch (error) {
+    console.error("🚨 Order Error:", error.message);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+//MyOrders
+
+const Product = require("../models/productModel"); // Import Product model
+
+userControllers.MyOrders = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized: No token provided" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userEmail = decoded.email;
+
+    const user = await userModel.findOne({ email: userEmail }).populate("orders");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Fetch product details for each order using productId
+    const ordersWithProductDetails = await Promise.all(
+      user.orders.map(async (order) => {
+        const product = await Product.findById(order.productId);
+
+
+        return {
+          _id: order._id,
+          name: product?.name || "Unknown Product",
+          image: product?.image || "",
+          price: product?.price || order.price, // If price isn't in product, fallback to order price
+          quantity: order.quantity,
+          status: order.status,
+          orderDate: order.orderDate,
+        };
+      })
+    );
+
+    return res.status(200).json(ordersWithProductDetails);
+  } catch (error) {
+    console.error("MyOrders Error:", error.message);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };

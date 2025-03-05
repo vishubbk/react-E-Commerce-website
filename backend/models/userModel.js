@@ -1,41 +1,45 @@
 const mongoose = require("mongoose");
 
-const userSchema  = new mongoose.Schema({
-    firstname:{
-        type:String,
-        required:true,
-
+const userSchema = new mongoose.Schema({
+    firstname: {
+        type: String,
+        required: true,
     },
-    lastname:{
-        type:String,
-
+    lastname: {
+        type: String,
     },
-    email:{
-        type:String,
-        required:true,
-        unique:true,
+    email: {
+        type: String,
+        required: true,
+        unique: true,
     },
     cart: [{ type: mongoose.Schema.Types.ObjectId, ref: "product" }],
-        orders: {
-        type: Array,
-        default: [],
-
+    orders: [{
+        productId: { type: mongoose.Schema.Types.ObjectId, ref: "product" },
+        quantity: Number,
+        price: Number,
+        status: { type: String, default: "pending" },
+        orderDate: { type: Date, default: Date.now }
+    }],
+    password: {
+        type: String,
+        required: true,
     },
-     password:{
-        type:String,
-        required:true,
-    },
-    contact:{
-        type:String,
-
+    contact: {
+        type: String,
     },
     profilePicture: {
         data: Buffer, // Binary data for the image
         contentType: String, // MIME type (e.g., 'image/png', 'image/jpeg')
     },
+    address: {
+        street: String,
+        city: String,
+        state: String,
+        country: String
+    }
+});
 
-})
-
-const userModel = mongoose.model("User",userSchema);
+const userModel = mongoose.model("User", userSchema);
 
 module.exports = userModel;

@@ -5,16 +5,18 @@ import Header from "../../components/Navbar";
 import { ArrowLeft, Mail, Phone, User, Edit2 } from "lucide-react";
 
 const Profile = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/profile`, {
-          withCredentials: true,
-        });
-        setUser(response.data);
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/users/profile`,
+          { withCredentials: true }
+        );
+        console.log("User Data:", response.data);
+        setUser(response.data || {}); // Ensure we don't set `null`
       } catch (error) {
         console.error("Error fetching profile:", error.response?.data?.message);
         if (error.response?.status === 401 || error.response?.status === 403) {
@@ -54,9 +56,9 @@ const Profile = () => {
 
               <div className="flex-1 text-center md:text-left">
                 <h1 className="text-4xl font-bold text-gray-800 mb-2">
-                  {user?.firstname} {user?.lastname}
+                  {user?.firstname || "N/A"} {user?.lastname || ""}
                 </h1>
-                <p className="text-gray-500 mb-6">{user?.email}</p>
+                <p className="text-gray-500 mb-6">{user?.email || "No email provided"}</p>
                 <button
                   onClick={() => navigate("/users/profile/edit")}
                   className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg
@@ -73,35 +75,23 @@ const Profile = () => {
           <div className="bg-white rounded-2xl shadow-xl p-8">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6">Personal Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="flex items-center p-4 bg-gray-50 rounded-xl">
-                <User className="w-6 h-6 text-blue-500 mr-4" />
-                <div>
-                  <p className="text-sm text-gray-500">First Name</p>
-                  <p className="text-lg font-medium text-gray-800">{user?.firstname || "N/A"}</p>
-                </div>
-              </div>
+              <ProfileDetail icon={User} label="First Name" value={user?.firstname} />
+              <ProfileDetail icon={User} label="Last Name" value={user?.lastname} />
+              <ProfileDetail icon={Mail} label="Email Address" value={user?.email} />
+              <ProfileDetail icon={Phone} label="Contact Number" value={user?.contact} />
 
-              <div className="flex items-center p-4 bg-gray-50 rounded-xl">
-                <User className="w-6 h-6 text-blue-500 mr-4" />
-                <div>
-                  <p className="text-sm text-gray-500">Last Name</p>
-                  <p className="text-lg font-medium text-gray-800">{user?.lastname || "N/A"}</p>
-                </div>
-              </div>
-
-              <div className="flex items-center p-4 bg-gray-50 rounded-xl">
-                <Mail className="w-6 h-6 text-blue-500 mr-4" />
-                <div>
-                  <p className="text-sm text-gray-500">Email Address</p>
-                  <p className="text-lg font-medium text-gray-800">{user?.email || "N/A"}</p>
-                </div>
-              </div>
-
+              {/* Address Handling (Avoid Object Rendering Error) */}
               <div className="flex items-center p-4 bg-gray-50 rounded-xl">
                 <Phone className="w-6 h-6 text-blue-500 mr-4" />
                 <div>
-                  <p className="text-sm text-gray-500">Contact Number</p>
-                  <p className="text-lg font-medium text-gray-800">{user?.contact || "N/A"}</p>
+                  <p className="text-sm text-gray-500">Address</p>
+                  <p className="text-lg font-medium text-gray-800">
+                    {typeof user?.address === "string"
+                      ? user.address
+                      : user?.address?.city
+                      ? `${user.address.city}, ${user.address.state || ""}`
+                      : "No address provided"}
+                  </p>
                 </div>
               </div>
             </div>
@@ -111,5 +101,16 @@ const Profile = () => {
     </div>
   );
 };
+
+// Reusable Profile Detail Component
+const ProfileDetail = ({ icon: Icon, label, value }) => (
+  <div className="flex items-center p-4 bg-gray-50 rounded-xl">
+    <Icon className="w-6 h-6 text-blue-500 mr-4" />
+    <div>
+      <p className="text-sm text-gray-500">{label}</p>
+      <p className="text-lg font-medium text-gray-800">{value || "N/A"}</p>
+    </div>
+  </div>
+);
 
 export default Profile;
