@@ -23,7 +23,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173", // ✅ Local frontend
-      "https://your-frontend-url.com" // ✅ Replace with your deployed frontend URL
+      "https://react-e-commerce-website-1.onrender.com" // ✅ Replace with your deployed frontend URL
     ],
     credentials: true, // ✅ Allows cookies with requests
   })
