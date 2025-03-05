@@ -122,7 +122,7 @@ const UserProfileEdit = () => {
   return (
     <>
       <Header />
-      <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 px-5">
         <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl">
           {/* Back Button */}
           <button
