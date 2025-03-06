@@ -27,7 +27,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://react-e-commerce-website-knsc.onrender.com",
+      // "https://react-e-commerce-website-knsc.onrender.com",
     ],
     credentials: true, // ✅ Allow cookies from frontend
   })
