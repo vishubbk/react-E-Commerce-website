@@ -18,16 +18,8 @@ productControllers.addProduct = async (req, res) => {
     }
 
     // ✅ Upload to Cloudinary
-    const result = await new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
-        { folder: "products" },
-        (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        }
-      );
-      stream.end(image.buffer); // ✅ Send buffer instead of image.path
-    });
+    const result = await cloudinary.uploader.upload_stream({ folder: "products" })
+      .end(image.buffer);
 
     // ✅ Save Product to Database
     const product = new productModel({

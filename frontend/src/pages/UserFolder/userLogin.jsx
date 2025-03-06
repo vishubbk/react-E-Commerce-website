@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ArrowLeft } from "lucide-react";
@@ -28,15 +27,10 @@ const UserLogin = () => {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/users/login`,
         { email, password },
-        { withCredentials: true }
+        { withCredentials: true } // ✅ Ensures token is stored in cookies
       );
 
       if (response.status === 200) {
-        const data = response.data;
-        console.log("data", data);
-
-        Cookies.set("token", data.token, { expires: 7, secure: true, sameSite: "Strict" });
-
         toast.success("✅ Login Successful!", { autoClose: 2000 });
 
         setTimeout(() => {

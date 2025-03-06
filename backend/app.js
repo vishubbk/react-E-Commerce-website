@@ -1,4 +1,4 @@
-require("dotenv").config(); // Load environment variables first
+require("dotenv").config();
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
@@ -8,12 +8,11 @@ const connectdb = require("./db/db");
 
 // Import Routes
 const userRoutes = require("./routes/userRoutes");
-const homeRoutes = require("./routes/homeRoutes");
 const productRoutes = require("./routes/productRoutes");
 const ownerRoutes = require("./routes/ownerRoutes");
 
 // Import Middleware
-const authMiddleware = require("./middlewares/authMiddleware"); // Ensure token validation
+const authMiddleware = require("./middlewares/authMiddleware");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -23,13 +22,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// 🔹 CORS Configuration
+// 🔹 CORS Configuration (✅ Fix for cookies in frontend)
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://react-e-commerce-website-1.onrender.com"],
-    credentials: true,
-   
-
+    origin: [
+      "http://localhost:5173",
+      "https://react-e-commerce-website-knsc.onrender.com",
+    ],
+    credentials: true, // ✅ Allow cookies from frontend
   })
 );
 
@@ -47,14 +47,14 @@ app.get("/", (req, res) => {
 // 🔹 Set Cookie Route (For Testing)
 app.get("/set-cookie", (req, res) => {
   res.cookie("token", process.env.JWT_SECRET, {
-    httpOnly: true,  // Secure: prevents client-side access
-    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+    secure: true,
     sameSite: "None",
   });
   res.json({ message: "Cookie has been set!" });
 });
 
-// 🔹 Get Cookie Route
+// 🔹 Get Cookie Route (To Debug Token)
 app.get("/get-cookie", (req, res) => {
   console.log("Cookies received from client:", req.cookies);
   res.json({ cookies: req.cookies });
@@ -63,8 +63,7 @@ app.get("/get-cookie", (req, res) => {
 // 🔹 Define Routes
 app.use("/products", productRoutes);
 app.use("/owner", ownerRoutes);
-app.use("/users", userRoutes); // Secure user routes
-app.use("/home", homeRoutes);
+app.use("/users", userRoutes);
 
 // 🔹 Protected Profile Route (Requires Auth)
 app.get("/users/profile", authMiddleware, (req, res) => {
@@ -75,11 +74,6 @@ app.get("/users/profile", authMiddleware, (req, res) => {
 app.use((err, req, res, next) => {
   console.error("Error:", err.stack);
   res.status(500).json({ message: "Internal Server Error" });
-});
-
-// 🔹 Catch-All Route
-app.get("*", (req, res) => {
-  res.status(404).send("404 - Page Not Found");
 });
 
 // 🔹 Start Server
