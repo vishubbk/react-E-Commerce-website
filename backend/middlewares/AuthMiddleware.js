@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
 
-const authMiddleware = (req, res, next) => {
+const AuthMiddleware = (req, res, next) => {
   const token = req.cookies.token;
+
 
   if (!token) {
     return res.status(401).json({ message: "Unauthorized: No token provided" });
@@ -9,6 +10,8 @@ const authMiddleware = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+
     req.user = decoded;
     next();
   } catch (error) {
@@ -17,4 +20,4 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-module.exports = authMiddleware;
+module.exports = AuthMiddleware;
