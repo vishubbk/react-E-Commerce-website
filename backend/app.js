@@ -27,7 +27,11 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
+<<<<<<< HEAD
       // "https://react-e-commerce-website-knsc.onrender.com",
+=======
+      "https://candid-kataifi-af6395.netlify.app/",
+>>>>>>> d9dcab8ebbb479ee456d8ad711cc0d007bc9ba70
     ],
     credentials: true, // ✅ Allow cookies from frontend
   })
