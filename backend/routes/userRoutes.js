@@ -1,7 +1,7 @@
 const express = require("express");
 const { registerUser, loginUser, logoutUser, getUserProfile ,buynowSuccessful,MyOrders,updateUserProfile,Addtocart,getCartItems,} = require("../controllers/userControllers");
 const upload = require("../config/multer-config");
-const authMiddleware = require("../middlewares/userAuthMiddleware");
+const authMiddleware = require("../middlewares/AuthMiddleware");
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/userModel");
 require("dotenv").config();

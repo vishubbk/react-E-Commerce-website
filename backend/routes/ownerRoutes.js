@@ -1,7 +1,7 @@
 const express = require("express");
 const { body, validationResult } = require("express-validator");
 const cookieParser = require("cookie-parser");
-const authentication = require("../middlewares/userAuthMiddleware");
+const authentication = require("../middlewares/AuthMiddleware");
 const upload = require("../config/multer-config");
 const {
   registerOwner,
