@@ -5,6 +5,7 @@ const validator = require("email-validator");
 const userModel = require("../models/userModel");
 const cartModel = require("../models/productModel");
 
+
 const userControllers = {};
 
 // 📌 Register User
@@ -273,7 +274,7 @@ userControllers.getUserProfile = async (req, res) => {
     // ✅ Clear invalid token on error
     res.clearCookie("token", {
       httpOnly: true,
-      
+      secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
     });
 
@@ -389,6 +390,7 @@ userControllers.buynowSuccessful = async (req, res) => {
 
     // Find the product details
     const product = await cartModel.findById(productId);
+    console.log("��� Product:", product);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -421,27 +423,49 @@ userControllers.buynowSuccessful = async (req, res) => {
 };
 
 //MyOrders
+
+const Product = require("../models/productModel"); // Import Product model
+
 userControllers.MyOrders = async (req, res) => {
   try {
     const token = req.cookies.token;
     if (!token) {
       return res.status(401).json({ message: "Unauthorized: No token provided" });
     }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userEmail = decoded.email;
-    const user = await userModel.findOne({ email: userEmail }).populate("orders.productId");
+
+    const user = await userModel.findOne({ email: userEmail }).populate("orders");
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    return res.status(200).json(user.orders);
-  }
-  catch (error) {
-    console.error("Logout Error:", error.message);
+
+    // Fetch product details for each order using productId
+    const ordersWithProductDetails = await Promise.all(
+      user.orders.map(async (order) => {
+        const product = await Product.findById(order.productId);
+
+
+        return {
+          _id: order._id,
+          name: product?.name || "Unknown Product",
+          image: product?.image || "",
+          price: product?.price || order.price, // If price isn't in product, fallback to order price
+          quantity: order.quantity,
+          status: order.status,
+          orderDate: order.orderDate,
+        };
+      })
+    );
+
+    return res.status(200).json(ordersWithProductDetails);
+  } catch (error) {
+    console.error("MyOrders Error:", error.message);
     return res.status(500).json({ message: "Internal Server Error" });
   }
-
-
-}
+};
 
 
 
