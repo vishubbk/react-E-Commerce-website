@@ -26,12 +26,13 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", 
-      "https://react-e-commerce-website-1.onrender.com"
+      "http://localhost:5173",  // Local development
+      "https://react-e-commerce-website-knsc.onrender.com", // ✅ Render deployed frontend
     ],
     credentials: true, // ✅ Allow cookies from frontend
   })
 );
+
 
 
 // 🔹 Connect to Database
