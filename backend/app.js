@@ -6,6 +6,17 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const connectdb = require("./db/db");
 
+
+const path = require("path");
+
+// 🟢 Serve Static Files from React Build Folder
+app.use(express.static(path.join(__dirname, "frontend/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend/dist", "index.html"));
+});
+
+
 // Import Routes
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
