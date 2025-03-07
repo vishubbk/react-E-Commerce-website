@@ -9,7 +9,7 @@ import UserProfile from "./pages/UserFolder/userProfile";
 import UserProfileEdit from "./pages/UserFolder/UserProfileEdit";
 import UserCart from "./pages/UserFolder/getCartItems";
 import Buynow from "./pages/UserFolder/buynowSummery";
-import MyOrders from './pages/UserFolder/myOrders'
+import MyOrders from './pages/UserFolder/MyOrders'
 import Home from "./pages/UserFolder/Home";
 import ProductsDetails from "./pages/UserFolder/ProductsDetails";
 import OrderSuccess from "./pages/UserFolder/orderSuccessPage";
