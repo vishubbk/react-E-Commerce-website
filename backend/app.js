@@ -26,16 +26,13 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
-
-      // "https://react-e-commerce-website-knsc.onrender.com",
-
-      // "https://candid-kataifi-af6395.netlify.app/",
-
+      "http://localhost:5173", 
+      "https://react-e-commerce-website-1.onrender.com"
     ],
     credentials: true, // ✅ Allow cookies from frontend
   })
 );
+
 
 // 🔹 Connect to Database
 connectdb().catch((err) => {
