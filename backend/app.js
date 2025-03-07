@@ -5,35 +5,23 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const connectdb = require("./db/db");
-
-
 const path = require("path");
 
-// 🟢 Serve Static Files from React Build Folder
-app.use(express.static(path.join(__dirname, "frontend/dist")));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend/dist", "index.html"));
-});
-
-
-// Import Routes
-const userRoutes = require("./routes/userRoutes");
-const productRoutes = require("./routes/productRoutes");
-const ownerRoutes = require("./routes/ownerRoutes");
-
-// Import Middleware
-const authMiddleware = require("./middlewares/AuthMiddleware");
-
-const app = express();
+const app = express(); // ✅ App initialization
 const port = process.env.PORT || 4000;
+
+// 🔹 Connect to Database
+connectdb().catch((err) => {
+  console.error("❌ Database connection failed:", err);
+  process.exit(1);
+});
 
 // 🔹 Middleware Setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// ✅ Improved CORS Setup
+// ✅ CORS Setup
 const allowedOrigins = [
   "http://localhost:5173", // Local development
   "https://react-e-commerce-website-1.onrender.com", // Deployed Frontend
@@ -42,7 +30,7 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: allowedOrigins,
-    credentials: true, // ✅ Allow cookies & authentication
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -51,7 +39,7 @@ app.use(
 // ✅ Handle Preflight Requests
 app.options("*", cors());
 
-// ✅ Manually Set CORS Headers (Extra security)
+// ✅ Custom CORS Headers (Extra Security)
 app.use((req, res, next) => {
   const origin = allowedOrigins.includes(req.headers.origin)
     ? req.headers.origin
@@ -63,18 +51,23 @@ app.use((req, res, next) => {
   next();
 });
 
-// 🔹 Connect to Database
-connectdb().catch((err) => {
-  console.error("❌ Database connection failed:", err);
-  process.exit(1);
-});
+// 🔹 Import Routes
+const userRoutes = require("./routes/userRoutes");
+const productRoutes = require("./routes/productRoutes");
+const ownerRoutes = require("./routes/ownerRoutes");
+const authMiddleware = require("./middlewares/AuthMiddleware");
+
+// 🔹 Define Routes
+app.use("/products", productRoutes);
+app.use("/owner", ownerRoutes);
+app.use("/users", userRoutes);
 
 // 🔹 Basic Testing Route
 app.get("/", (req, res) => {
   res.send("✅ Server is running!");
 });
 
-// 🔹 Set Cookie Route (For Debugging)
+// 🔹 Set & Get Cookie Routes (For Debugging)
 app.get("/set-cookie", (req, res) => {
   res.cookie("token", process.env.JWT_SECRET, {
     httpOnly: true,
@@ -84,20 +77,21 @@ app.get("/set-cookie", (req, res) => {
   res.json({ message: "✅ Cookie has been set!" });
 });
 
-// 🔹 Get Cookie Route (To Debug Token)
 app.get("/get-cookie", (req, res) => {
   console.log("🍪 Cookies received from client:", req.cookies);
   res.json({ cookies: req.cookies });
 });
 
-// 🔹 Define Routes
-app.use("/products", productRoutes);
-app.use("/owner", ownerRoutes);
-app.use("/users", userRoutes);
-
 // 🔹 Protected Profile Route (Requires Auth)
 app.get("/users/profile", authMiddleware, (req, res) => {
   res.json({ message: "🔒 Profile data", user: req.user });
+});
+
+// 🔹 Serve Static Files (React Frontend Build)
+app.use(express.static(path.join(__dirname, "frontend/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend/dist", "index.html"));
 });
 
 // 🔹 Global Error Handling Middleware
