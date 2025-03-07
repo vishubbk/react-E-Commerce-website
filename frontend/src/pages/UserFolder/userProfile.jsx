@@ -6,6 +6,7 @@ import { ArrowLeft, Mail, Phone, User, Edit2 } from "lucide-react";
 
 const Profile = () => {
   const [user, setUser] = useState({});
+  const [loading, setLoading] = useState(true); // State to handle loading
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,11 +23,22 @@ const Profile = () => {
         if (error.response?.status === 401 || error.response?.status === 403) {
           navigate("/users/login");
         }
+      } finally {
+        setLoading(false); // Set loading to false once data is fetched
       }
     };
 
     fetchProfile();
   }, [navigate]);
+
+  if (loading) {
+    // Return a loader until the data is fetched
+    return (
+      <div className="min-h-screen bg-gray-50 flex justify-center items-center">
+        <div className="spinner-border animate-spin inline-block w-12 h-12 border-4 border-solid border-blue-600 rounded-full" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
