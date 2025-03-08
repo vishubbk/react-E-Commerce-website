@@ -14,19 +14,25 @@ const Profile = () => {
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_BASE_URL}/users/profile`,
-          { withCredentials: true }
+          {
+            withCredentials: true, // 🔹 Ensures cookies are sent
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
         console.log("User Data:", response.data);
         setUser(response.data || {}); // Ensure we don't set `null`
       } catch (error) {
-        console.error("Error fetching profile:", error.response?.data?.message);
+        console.error("Error fetching profile:", error.response?.data?.message || error.message);
         if (error.response?.status === 401 || error.response?.status === 403) {
           navigate("/users/login");
         }
       } finally {
-        setLoading(false); // Set loading to false once data is fetched
+        setLoading(false);
       }
     };
+
 
     fetchProfile();
   }, [navigate]);

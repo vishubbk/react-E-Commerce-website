@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const validator = require("email-validator");
 const userModel = require("../models/userModel");
-const cartModel = require("../models/productModel");
+const productModel = require("../models/productModel");
 
 const userControllers = {};
 
@@ -28,76 +28,34 @@ userControllers.registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = new userModel({
-      firstname,
-      lastname,
-      email,
-      contact,
-      password: hashedPassword,
-    });
-
+    const newUser = new userModel({ firstname, lastname, email, contact, password: hashedPassword });
     await newUser.save();
 
-    // ✅ Generate Token with 7 Days Expiry
     const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "None", maxAge: 7 * 24 * 60 * 60 * 1000 });
 
-    // ✅ Secure Cookie Settings
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "None",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-
-    res.status(201).json({
-      message: "User registered successfully",
-      user: {
-        firstname,
-        lastname,
-        email,
-        contact,
-      },
-      token,
-    });
+    res.status(201).json({ message: "User registered successfully", user: { firstname, lastname, email, contact }, token });
   } catch (error) {
     console.error("Registration Error:", error.message);
     return res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
+
 // 📌 Login User
 userControllers.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
+    if (!email || !password) return res.status(400).json({ message: "All fields are required" });
 
     const user = await userModel.findOne({ email });
-    if (!user) {
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid email or password" });
-    }
-
-    // ✅ Generate Secure Token
     const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "None", maxAge: 7 * 24 * 60 * 60 * 1000 });
 
-    // ✅ Store token in HTTP-only cookie
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "None",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-
-    res.status(200).json({
-      message: "User logged in successfully",
-      user: { firstname: user.firstname, lastname: user.lastname, email: user.email, contact: user.contact },
-    });
+    res.status(200).json({ message: "User logged in successfully", user: { firstname: user.firstname, lastname: user.lastname, email: user.email, contact: user.contact } });
   } catch (error) {
     console.error("Login Error:", error.message);
     return res.status(500).json({ message: "Internal Server Error" });
