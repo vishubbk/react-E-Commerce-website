@@ -104,7 +104,7 @@ const UserProfileEdit = () => {
         formData.append("profilePicture", userData.profilePicture);
       }
 
-      const response = await axios.post("http://localhost:4000/users/profile/edit", formData, {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/profile/edit`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
       });
