@@ -33,7 +33,7 @@ const OwnerLogin = () => {
 
         // ✅ Corrected token assignment
        const hh= Cookies.set("token", response.data.token, { expires: 7, secure: true, sameSite: "Strict" });
-       console.log(hh);
+      
 
 
 
