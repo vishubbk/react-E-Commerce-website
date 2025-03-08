@@ -23,15 +23,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-
+// 🔹 CORS Configuration
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://react-e-commerce-website-1.onrender.com"],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-
 
 // 🔹 Connect to Database
 connectdb().catch((err) => {

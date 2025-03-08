@@ -3,7 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const validator = require("email-validator");
 const userModel = require("../models/userModel");
-const productModel = require("../models/productModel");
+const cartModel = require("../models/productModel");
+
 
 const userControllers = {};
 
@@ -28,13 +29,37 @@ userControllers.registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = new userModel({ firstname, lastname, email, contact, password: hashedPassword });
+    const newUser = new userModel({
+      firstname,
+      lastname,
+      email,
+      contact,
+      password: hashedPassword,
+    });
+
     await newUser.save();
 
+    // ✅ Generate Token with 7 Days Expiry
     const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "7d" });
-    res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "None", maxAge: 7 * 24 * 60 * 60 * 1000 });
 
-    res.status(201).json({ message: "User registered successfully", user: { firstname, lastname, email, contact }, token });
+    // ✅ Secure Cookie Settings
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      sameSite: "Strict", // Better CSRF protection
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days expiry
+    });
+
+    res.status(201).json({
+      message: "User registered successfully",
+      user: {
+        firstname,
+        lastname,
+        email,
+        contact,
+      },
+      token,
+    });
   } catch (error) {
     console.error("Registration Error:", error.message);
     return res.status(500).json({ message: "Internal Server Error", error: error.message });
@@ -45,17 +70,36 @@ userControllers.registerUser = async (req, res) => {
 userControllers.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ message: "All fields are required" });
+
+    if (!email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
     const user = await userModel.findOne({ email });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "7d" });
-    res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "None", maxAge: 7 * 24 * 60 * 60 * 1000 });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
 
-    res.status(200).json({ message: "User logged in successfully", user: { firstname: user.firstname, lastname: user.lastname, email: user.email, contact: user.contact } });
+    // ✅ Generate Secure Token
+    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "7d" });
+
+    // ✅ Store token in HTTP-only cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(200).json({
+      message: "User logged in successfully",
+      user: { firstname: user.firstname, lastname: user.lastname, email: user.email, contact: user.contact },
+    });
   } catch (error) {
     console.error("Login Error:", error.message);
     return res.status(500).json({ message: "Internal Server Error" });
@@ -230,7 +274,7 @@ userControllers.getUserProfile = async (req, res) => {
     // ✅ Clear invalid token on error
     res.clearCookie("token", {
       httpOnly: true,
-
+      secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
     });
 
@@ -346,6 +390,7 @@ userControllers.buynowSuccessful = async (req, res) => {
 
     // Find the product details
     const product = await cartModel.findById(productId);
+    console.log("��� Product:", product);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -421,7 +466,6 @@ userControllers.MyOrders = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 
 
 

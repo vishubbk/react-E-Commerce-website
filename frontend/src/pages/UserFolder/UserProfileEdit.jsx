@@ -104,7 +104,7 @@ const UserProfileEdit = () => {
         formData.append("profilePicture", userData.profilePicture);
       }
 
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/profile/edit`, formData, {
+      const response = await axios.post("http://localhost:4000/users/profile/edit", formData, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
       });
@@ -122,7 +122,7 @@ const UserProfileEdit = () => {
   return (
     <>
       <Header />
-      <div className="flex items-center justify-center min-h-screen bg-gray-100 px-5">
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
         <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl">
           {/* Back Button */}
           <button
