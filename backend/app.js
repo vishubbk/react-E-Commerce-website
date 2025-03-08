@@ -26,12 +26,19 @@ app.use(cookieParser());
 // 🔹 CORS Configuration
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://shopmart-e-commerce-website-1.vercel.app"],
+    origin: (origin, callback) => {
+      if (!origin || origin.includes("vercel.app") || origin.includes("localhost")) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
 
 // 🔹 Connect to Database
 connectdb().catch((err) => {
