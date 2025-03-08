@@ -29,6 +29,7 @@ app.use(
     origin: (origin, callback) => {
       const allowedOrigins = [
         "http://localhost:5173", // Vite frontend
+        "https://react-e-commerce-website-1.onrender.com" //server deployment
       ];
 
       if (!origin || allowedOrigins.includes(origin)) {
