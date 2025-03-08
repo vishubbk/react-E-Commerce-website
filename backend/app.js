@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config(); // Load environment variables first
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
@@ -8,14 +8,15 @@ const connectdb = require("./db/db");
 
 // Import Routes
 const userRoutes = require("./routes/userRoutes");
+const homeRoutes = require("./routes/homeRoutes");
 const productRoutes = require("./routes/productRoutes");
 const ownerRoutes = require("./routes/ownerRoutes");
 
 // Import Middleware
-const authMiddleware = require("./middlewares/AuthMiddleware");
+const authMiddleware = require("./middlewares/AuthMiddleware"); // Ensure token validation
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 // 🔹 Middleware Setup
 app.use(express.json());
