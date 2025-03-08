@@ -26,7 +26,7 @@ app.use(cookieParser());
 // 🔹 CORS Configuration
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://react-e-commerce-website-1.onrender.com"],
+    origin: ["http://localhost:5173", "shopmart-e-commerce-website-1.vercel.app"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
