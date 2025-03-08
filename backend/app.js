@@ -34,10 +34,12 @@ app.use(
 );
 
 // 🔹 Connect to Database
-connectdb().catch((err) => {
-  console.error("Database connection failed:", err);
-  process.exit(1);
-});
+connectdb()
+  .then(() => console.log("✅ Database connected successfully!"))
+  .catch((err) => {
+    console.error("❌ Database connection failed:", err);
+    process.exit(1);
+  });
 
 // 🔹 Basic Testing Route
 app.get("/", (req, res) => {
@@ -47,9 +49,9 @@ app.get("/", (req, res) => {
 // 🔹 Set Cookie Route (For Testing)
 app.get("/set-cookie", (req, res) => {
   res.cookie("token", process.env.JWT_SECRET, {
-    httpOnly: true,  // Secure: prevents client-side access
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "None",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production" ? true : false,
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
   });
   res.json({ message: "Cookie has been set!" });
 });
@@ -63,7 +65,7 @@ app.get("/get-cookie", (req, res) => {
 // 🔹 Define Routes
 app.use("/products", productRoutes);
 app.use("/owner", ownerRoutes);
-app.use("/users", userRoutes); // Secure user routes
+app.use("/users", userRoutes);
 app.use("/home", homeRoutes);
 
 // 🔹 Protected Profile Route (Requires Auth)

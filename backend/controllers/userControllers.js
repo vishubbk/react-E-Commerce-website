@@ -269,6 +269,8 @@ userControllers.getUserProfile = async (req, res) => {
       profilePicture: profilePictureBase64, // ✅ Base64 format me send ho rahi hai
     });
   } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error" });
+
     console.error("Error fetching user profile:", error.message);
 
     // ✅ Clear invalid token on error
