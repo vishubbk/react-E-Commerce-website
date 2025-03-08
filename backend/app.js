@@ -16,7 +16,7 @@ const ownerRoutes = require("./routes/ownerRoutes");
 const authMiddleware = require("./middlewares/AuthMiddleware"); // Ensure token validation
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 // 🔹 Middleware Setup
 app.use(express.json());
@@ -26,12 +26,24 @@ app.use(cookieParser());
 // 🔹 CORS Configuration
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://react-e-commerce-website-1.onrender.com"],
-    credentials: true,
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        "http://localhost:5173", // Vite frontend
+        "https://react-e-commerce-website-1.onrender.com/"  // OnRender frontend
+      ];
+
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // Allow cookies
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
 
 // 🔹 Connect to Database
 connectdb().catch((err) => {
