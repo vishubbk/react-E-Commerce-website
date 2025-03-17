@@ -50,8 +50,6 @@ app.get("/", (req, res) => {
 app.get("/set-cookie", (req, res) => {
   res.cookie("token", process.env.JWT_SECRET, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production" ? true : false,
-    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
   });
   res.json({ message: "Cookie has been set!" });
 });
