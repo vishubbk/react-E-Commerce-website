@@ -13,6 +13,8 @@ const MyOrders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+        const token = localStorage.getItem("token");
+        console.log("token hai ye",token)
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/myorders`, { withCredentials: true });
         setOrders(response.data);
       } catch (error) {

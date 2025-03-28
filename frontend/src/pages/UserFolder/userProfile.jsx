@@ -7,26 +7,33 @@ import { ArrowLeft, Mail, Phone, User, Edit2 } from "lucide-react";
 const Profile = () => {
   const [user, setUser] = useState({});
   const navigate = useNavigate();
-
   useEffect(() => {
     const fetchProfile = async () => {
       try {
+        const token = localStorage.getItem("token"); // ✅ Token ko useEffect ke andar fetch karein
+
         const response = await axios.get(
           `${import.meta.env.VITE_BASE_URL}/users/profile`,
-          { withCredentials: true }
+          {
+            headers: { Authorization: `Bearer ${token}` }, // ✅ Headers me token send karein
+            withCredentials: true,
+          }
         );
-        console.log("User Data:", response.data);
-        setUser(response.data || {}); // Ensure we don't set `null`
+
+        setUser(response.data || {}); // ✅ Ensure safe state update
       } catch (error) {
         console.error("Error fetching profile:", error.response?.data?.message);
-        if (error.response?.status === 401 || error.response?.status === 403) {
-          navigate("/users/login");
+
+        if (error.response?.status === 401) {
+          localStorage.removeItem("token"); // ❌ Expired token hatao
+          navigate("/users/login"); // ✅ Redirect to login
         }
       }
     };
 
     fetchProfile();
   }, [navigate]);
+
 
   return (
     <div className="min-h-screen bg-gray-50">

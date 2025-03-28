@@ -40,14 +40,12 @@ userControllers.registerUser = async (req, res) => {
     await newUser.save();
 
     // ✅ Generate Token with 7 Days Expiry
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign({ email }, process.env.JWT_SECRET);
 
     // ✅ Secure Cookie Settings
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-      sameSite: "Strict", // Better CSRF protection
-      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days expiry
+
     });
 
     res.status(201).json({
@@ -87,14 +85,11 @@ userControllers.loginUser = async (req, res) => {
     }
 
     // ✅ Generate Secure Token
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign({ email }, process.env.JWT_SECRET);
 
     // ✅ Store token in HTTP-only cookie
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
-      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days expiry
     });
 
     res.status(200).json({
@@ -277,7 +272,7 @@ userControllers.getUserProfile = async (req, res) => {
 
     // ✅ Clear invalid token on error
     res.clearCookie("token", {
-      httpOnly: true,
+      httpOnly: true,nnnnnnnnnnnnnnnnn
       secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
     });
