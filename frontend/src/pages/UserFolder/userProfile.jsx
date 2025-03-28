@@ -25,7 +25,7 @@ const Profile = () => {
         console.error("Error fetching profile:", error.response?.data?.message);
 
         if (error.response?.status === 401) {
-          localStorage.removeItem("token"); // ❌ Expired token hatao
+         
           navigate("/users/login"); // ✅ Redirect to login
         }
       }

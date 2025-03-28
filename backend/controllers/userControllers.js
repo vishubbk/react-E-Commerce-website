@@ -272,7 +272,7 @@ userControllers.getUserProfile = async (req, res) => {
 
     // ✅ Clear invalid token on error
     res.clearCookie("token", {
-      httpOnly: true,nnnnnnnnnnnnnnnnn
+      httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
     });

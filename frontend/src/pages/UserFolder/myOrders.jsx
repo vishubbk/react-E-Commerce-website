@@ -15,8 +15,11 @@ const MyOrders = () => {
       try {
         const token = localStorage.getItem("token");
         console.log("token hai ye",token)
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/myorders`, { withCredentials: true });
-        setOrders(response.data);
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/myorders`,
+          {
+            headers: { Authorization: `Bearer ${token}` }, // ✅ Headers me token send karein
+            withCredentials: true,
+          }
       } catch (error) {
         setError(error.response ? error.response.data.message : "Failed to fetch orders");
       } finally {
