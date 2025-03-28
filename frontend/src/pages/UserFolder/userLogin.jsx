@@ -20,18 +20,20 @@ const UserLogin = () => {
     }
 
     toast.info("🔄 Logging in...", { autoClose: 1000 });
-
     setLoading(true);
 
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/users/login`,
         { email, password },
-        { withCredentials: true } // ✅ Ensures token is stored in cookies
+        { withCredentials: true } // ✅ Sends and stores cookies
       );
 
       if (response.status === 200) {
         toast.success("✅ Login Successful!", { autoClose: 2000 });
+
+        // ✅ Store token in localStorage
+        localStorage.setItem("token", response.data.token);
 
         setTimeout(() => {
           setLoading(false);
@@ -50,6 +52,7 @@ const UserLogin = () => {
       }
     }
   };
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
