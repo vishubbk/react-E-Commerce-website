@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { motion } from 'framer-motion';
@@ -9,25 +10,31 @@ const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+        setLoading(true);
         const token = localStorage.getItem("token");
-        console.log("token hai ye",token)
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/myorders`,
-          {
-            headers: { Authorization: `Bearer ${token}` }, // ✅ Headers me token send karein
-            withCredentials: true,
-          }
+        console.log("token hai ye", token)
+        if (!token) {
+          navigate("/users/login");
+          return;
+        }
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/myorders`, {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
+        });
+        setOrders(response.data.orders);
       } catch (error) {
-        setError(error.response ? error.response.data.message : "Failed to fetch orders");
+        setError(error.response?.data?.message || "Failed to fetch orders");
       } finally {
         setLoading(false);
       }
     };
     fetchOrders();
-  }, []);
+  }, [navigate]);
 
   const handleCancelOrder = async (orderId) => {
     try {

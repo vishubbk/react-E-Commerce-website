@@ -17,8 +17,8 @@ router.get("/myorders", MyOrders);
 
 
 router.post("/logout", logoutUser);
-router.get("/profile", authMiddleware, getUserProfile); // ✅ Protected Route
-router.get("/getCartItems", authMiddleware, getCartItems); // ✅ Protected Route
+router.get("/profile", getUserProfile); // ✅ Protected Route
+router.get("/getCartItems", getCartItems); // ✅ Protected Route
 router.post("/removeCart/:itemId", async (req, res) => {
   try {
     console.log("✅ Hit removeCart API");
