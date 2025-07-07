@@ -6,8 +6,19 @@ const productControllers = {};
 // ✅ Add Product Controller
 productControllers.addProduct = async (req, res) => {
   try {
+    console.log(`hit the add item api`);
+
     const { name, price, discount, bgcolor, panelcolor, textcolor, Details } = req.body;
-    const image = req.file; // Get uploaded image
+
+    console.log(`name is a --${name}`);
+    console.log(`price is a --${price}`);
+    console.log(`discount is a --${discount}`);
+    console.log(`bgcolor is a --${bgcolor}`);
+    console.log(`panelcolor is a --${panelcolor}`);
+    console.log(`textcolor is a --${textcolor}`);
+    console.log(`Details is a --${Details}`);
+
+    const image = req.file;
 
     if (!image) {
       return res.status(400).json({ message: "Image is required" });
@@ -17,9 +28,19 @@ productControllers.addProduct = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // ✅ Upload to Cloudinary
-    const result = await cloudinary.uploader.upload_stream({ folder: "products" })
-      .end(image.buffer);
+    // ✅ Upload to Cloudinary with Promise
+    const result = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: "products" },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+      stream.end(image.buffer);
+    });
+
+    console.log(`result is a -- ${JSON.stringify(result)}`);
 
     // ✅ Save Product to Database
     const product = new productModel({
@@ -44,7 +65,9 @@ productControllers.addProduct = async (req, res) => {
   }
 };
 
+
 // ✅ Get All Products
+
 productControllers.getAllProducts = async (req, res) => {
   try {
     const products = await productModel.find();

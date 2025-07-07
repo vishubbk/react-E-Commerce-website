@@ -33,7 +33,10 @@ const UserLogin = () => {
         toast.success("✅ Login Successful!", { autoClose: 2000 });
 
         // ✅ Store token in localStorage
-        localStorage.setItem("token", response.data.token);
+
+         localStorage.setItem("token", response.data.token);
+         const token1 = localStorage.getItem("token")
+       
 
         setTimeout(() => {
           setLoading(false);

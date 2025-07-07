@@ -56,7 +56,7 @@ const BuyNowSummary = () => {
         return;
       }
 
-      const response = await axios.post("http://localhost:4000/users/create-order", {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/create-order`, {
         amount: product.price * 100, // Convert ₹ to paise
       });
 
@@ -76,7 +76,7 @@ const BuyNowSummary = () => {
         order_id: id,
         handler: async (paymentResponse) => {
           try {
-            const verifyRes = await axios.post("http://localhost:4000/users/verify-payment", {
+            const verifyRes = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/verify-payment`, {
               razorpay_order_id: id,
               razorpay_payment_id: paymentResponse.razorpay_payment_id,
               razorpay_signature: paymentResponse.razorpay_signature,

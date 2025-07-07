@@ -90,11 +90,13 @@ userControllers.loginUser = async (req, res) => {
     // ✅ Store token in HTTP-only cookie
     res.cookie("token", token, {
       httpOnly: true,
+      secure: false, // true if using https
+      maxAge: 24 * 60 * 60 * 1000 // 1 day
     });
 
     res.status(200).json({
       message: "User logged in successfully",
-      user: { firstname: user.firstname, lastname: user.lastname, email: user.email, contact: user.contact },
+      user: { firstname: user.firstname, lastname: user.lastname, email: user.email, contact: user.contact, token },
       token, // ✅ Send token in response so frontend can store it in localStorage
     });
   } catch (error) {
@@ -102,7 +104,6 @@ userControllers.loginUser = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 
 
 // 📌 Logout User
@@ -242,42 +243,50 @@ userControllers.getCartItems = async (req, res) => {
 // 📌 Get User Profile
 userControllers.getUserProfile = async (req, res) => {
   try {
+    // ✅ Extract token from Authorization header
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "Unauthorized: No token provided" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      return res.status(401).json({ message: "Unauthorized: Invalid or expired token" });
+    }
+
     const user = await userModel
-      .findOne({ email: req.user.email })
-      .select("-password"); // Password hata diya response se
+      .findOne({ email: decoded.email })
+      .select("-password");
+
+
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // ✅ Convert Buffer to Base64 (agar image buffer format me ho)
+    // ✅ Convert profile picture to Base64 if exists
     let profilePictureBase64 = null;
     if (user.profilePicture && user.profilePicture.data) {
       profilePictureBase64 = `data:${user.profilePicture.contentType};base64,${user.profilePicture.data.toString("base64")}`;
     }
 
-    res.status(200).json({
+    // ✅ Send response
+    return res.status(200).json({
       firstname: user.firstname,
       lastname: user.lastname,
       email: user.email,
       contact: user.contact,
       address: user.address,
-
-      profilePicture: profilePictureBase64, // ✅ Base64 format me send ho rahi hai
+      profilePicture: profilePictureBase64,
     });
+
   } catch (error) {
-    return res.status(500).json({ message: "Internal Server Error" });
-
-    console.error("Error fetching user profile:", error.message);
-
-    // ✅ Clear invalid token on error
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
-    });
-
-    return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    console.error("❌ Error fetching user profile:", error.message);
+    return res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
 
@@ -285,10 +294,15 @@ userControllers.getUserProfile = async (req, res) => {
 //Post Update user profile page
 userControllers.updateUserProfile = async (req, res) => {
   try {
+    console.log('call the api edit profile');
+
     const { firstname, lastname, contact, email, address } = req.body;
 
+
+
+
     // ✅ Token fetch karo cookies se
-    const token = req.cookies.token;
+    const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
       return res.status(401).json({ message: "Unauthorized: No token provided" });
     }
@@ -427,13 +441,16 @@ const Product = require("../models/productModel"); // Import Product model
 
 userControllers.MyOrders = async (req, res) => {
   try {
+    console.log(`you hit the my order api`);
     const token = req.cookies.token;
+    console.log(`your token is ${token}`);
     if (!token) {
       return res.status(401).json({ message: "Unauthorized: No token provided" });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userEmail = decoded.email;
+    console.log(`your userEmail is ${userEmail}`);
 
     const user = await userModel.findOne({ email: userEmail }).populate("orders");
 
@@ -458,13 +475,54 @@ userControllers.MyOrders = async (req, res) => {
         };
       })
     );
+    console.log("Your Orders With Product Details:", ordersWithProductDetails);;
 
-    return res.status(200).json(ordersWithProductDetails);
+      return res.status(200).json({ orders: ordersWithProductDetails });
   } catch (error) {
     console.error("MyOrders Error:", error.message);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+userControllers.cancelOrder = async (req, res) => {
+  try {
+    console.log("You hit the cancel order API");
+
+    const token = req.cookies.token;
+    console.log(`Your token is ${token}`);
+
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized: No token provided" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userEmail = decoded.email;
+
+    const user = await userModel.findOne({ email: userEmail });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { orderId } = req.params;
+
+    // ✅ Check if order exists
+    const orderIndex = user.orders.findIndex(order => order._id.toString() === orderId);
+
+    if (orderIndex === -1) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // ✅ Remove order from user's orders array
+    user.orders.splice(orderIndex, 1);
+    await user.save();
+
+    return res.status(200).json({ message: "Order cancelled successfully" });
+  } catch (error) {
+    console.error("Cancel Order Error:", error.message);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 
 
 

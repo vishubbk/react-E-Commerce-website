@@ -7,26 +7,41 @@ import { ArrowLeft, Mail, Phone, User, Edit2 } from "lucide-react";
 const Profile = () => {
   const [user, setUser] = useState({});
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const token = localStorage.getItem("token"); // ✅ Token ko useEffect ke andar fetch karein
+        const token =localStorage.getItem("token")
+
 
         const response = await axios.get(
           `${import.meta.env.VITE_BASE_URL}/users/profile`,
           {
-            headers: { Authorization: `Bearer ${token}` }, // ✅ Headers me token send karein
-            withCredentials: true,
+            headers: { Authorization: `Bearer ${token}` }, // ✅ Token should go inside headers
+            withCredentials: true, // ✅ If your backend uses cookies also
           }
         );
 
-        setUser(response.data || {}); // ✅ Ensure safe state update
-      } catch (error) {
-        console.error("Error fetching profile:", error.response?.data?.message);
+        console.log("Profile Data:", response.data);
+        setUser(response.data || {}); // ✅ Update state safely
 
-        if (error.response?.status === 401) {
-         
-          navigate("/users/login"); // ✅ Redirect to login
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+
+        if (error.response) {
+          console.error("Error Response:", error.response.data);
+          if (error.response.status === 401) {
+            alert("Session expired. Please login again.");
+            navigate("/users/login"); // ✅ Redirect to login
+          } else {
+            alert(error.response.data.message || "Something went wrong.");
+          }
+        } else if (error.request) {
+          console.error("Error Request:", error.request);
+          alert("No response from server. Please try again later.");
+        } else {
+          console.error("Error:", error.message);
+          alert("An unexpected error occurred.");
         }
       }
     };

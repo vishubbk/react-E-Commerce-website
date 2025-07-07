@@ -26,8 +26,10 @@ const UserProfileEdit = () => {
 
   useEffect(() => {
     const fetchUserProfile = async () => {
+      const token = localStorage.getItem("token");
       try {
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
 
@@ -78,6 +80,12 @@ const UserProfileEdit = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      // ✅ File size validation
+      if (file.size > 10 * 1024 * 1024) {
+        alert("File size should not exceed 10MB.");
+        return;
+      }
+
       setUserData({ ...userData, profilePicture: file });
 
       const reader = new FileReader();
@@ -93,6 +101,7 @@ const UserProfileEdit = () => {
     setIsLoading(true);
 
     try {
+      const token = localStorage.getItem("token");
       const formData = new FormData();
       formData.append("firstname", userData.firstname);
       formData.append("lastname", userData.lastname);
@@ -104,8 +113,8 @@ const UserProfileEdit = () => {
         formData.append("profilePicture", userData.profilePicture);
       }
 
-      const response = await axios.post("http://localhost:4000/users/profile/edit", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/profile/edit`, formData, {
+        headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
 
