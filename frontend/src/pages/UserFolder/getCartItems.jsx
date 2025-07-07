@@ -35,7 +35,11 @@ const GetCartItems = () => {
 
   const handleRemoveItem = async (itemId, itemName) => {
     try {
-      await axios.post(`${import.meta.env.VITE_BASE_URL}/users/removeCart/${itemId}`, {}, { withCredentials: true });
+      const token =localStorage.getItem("token")
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/users/removeCart/${itemId}`, {},  {
+        headers: { Authorization: `Bearer ${token}` }, // ✅ Token should go inside headers
+        withCredentials: true, // ✅ If your backend uses cookies also
+      });
       setCartItems((prevCart) => prevCart.filter((item) => item._id !== itemId));
       toast.success(`❌ ${itemName} removed from cart!`);
     } catch (error) {
@@ -46,7 +50,11 @@ const GetCartItems = () => {
 
   const handleBuyNow = async (itemId) => {
     try {
-      await axios.post(`${import.meta.env.VITE_BASE_URL}/api/orders/buy-now/${itemId}`, {}, { withCredentials: true });
+      const token =localStorage.getItem("token")
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/api/orders/buy-now/${itemId}`, {},  {
+        headers: { Authorization: `Bearer ${token}` }, // ✅ Token should go inside headers
+        withCredentials: true, // ✅ If your backend uses cookies also
+      });
       toast.success("✅ Purchase successful!");
       navigate("/checkout");
     } catch (error) {
@@ -57,7 +65,11 @@ const GetCartItems = () => {
 
   const handleBuyAllItems = async () => {
     try {
-      await axios.post(`${import.meta.env.VITE_BASE_URL}/api/orders/buy-all`, {}, { withCredentials: true });
+      const token =localStorage.getItem("token")
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/api/orders/buy-all`, {},  {
+        headers: { Authorization: `Bearer ${token}` }, // ✅ Token should go inside headers
+        withCredentials: true, // ✅ If your backend uses cookies also
+      });
       toast.success("🎉 All items purchased successfully!");
       navigate("/checkout");
     } catch (error) {
@@ -147,7 +159,7 @@ const GetCartItems = () => {
           <div className="flex flex-col items-center justify-center text-center py-20">
             <ShoppingCart className="w-16 h-16 text-gray-400 mb-4" />
             <h2 className="text-2xl font-semibold text-gray-800">Your cart is empty!</h2>
-            <Link to="/" className="mt-5 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Continue Shopping <ArrowRight /></Link>
+            <Link to="/" className="flex gap-4 mt-5 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Continue Shopping <ArrowRight /></Link>
           </div>
         )}
       </div>

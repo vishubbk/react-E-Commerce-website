@@ -125,10 +125,10 @@ userControllers.logoutUser = async (req, res) => {
 // 📌 remove cart
 userControllers.removeCart = async (req, res) => {
   try {
-    console.log("🔹 Hit removeCart API");
+
 
     // ✅ Fetch token from cookies
-    const token = req.cookies.token;
+    const token = req.headers.authorization.split(" ")[1];
     if (!token) return res.status(401).json({ message: "Unauthorized: No token provided" });
 
     let decoded;
@@ -169,7 +169,7 @@ userControllers.removeCart = async (req, res) => {
 userControllers.Addtocart = async (req, res) => {
   try {
 
-    const token = req.cookies.token;
+    const token =req.headers.authorization.split(" ")[1];
 
     const productIda = req.params.id;
 
@@ -385,7 +385,7 @@ userControllers.buynowSuccessful = async (req, res) => {
     const { quantity } = req.body; // Get quantity from request body
 
     // Check if token exists
-    const token = req.cookies.token;
+    const token = req.headers.authorization.split(" ")[1];
     if (!token) {
       return res.status(401).json({ message: "Unauthorized: No token provided" });
     }
@@ -440,7 +440,7 @@ const Product = require("../models/productModel"); // Import Product model
 
 userControllers.MyOrders = async (req, res) => {
   try {
-    console.log(`you hit the my order api`);
+
     const token = req.headers.authorization.split(" ")[1];;
     console.log(`your token is ${token}`);
     if (!token) {
@@ -487,7 +487,7 @@ userControllers.cancelOrder = async (req, res) => {
   try {
     console.log("You hit the cancel order API");
 
-    const token = req.cookies.token;
+    const token = req.headers.authorization.split(" ")[1];
     console.log(`Your token is ${token}`);
 
     if (!token) {

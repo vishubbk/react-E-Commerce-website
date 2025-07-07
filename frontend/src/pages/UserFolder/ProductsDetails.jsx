@@ -27,10 +27,14 @@ const ProductsDetails = () => {
 
   const addToCart = async () => {
     try {
+      const token =localStorage.getItem("token")
       await axios.post(
        `${import.meta.env.VITE_BASE_URL}/users/addtocart`,
         { productId: id },
-        { withCredentials: true }
+        {
+          headers: { Authorization: `Bearer ${token}` }, // ✅ Token should go inside headers
+          withCredentials: true, // ✅ If your backend uses cookies also
+        }
       );
 
       toast.success("Product added to cart successfully! ✅");

@@ -23,10 +23,12 @@ const MyOrders = () => {
           return;
         }
 
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/myorders`, {
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true,
-        });
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/myorders`,
+          {
+            headers: { Authorization: `Bearer ${token}` }, // ✅ Token should go inside headers
+            withCredentials: true, // ✅ If your backend uses cookies also
+          }
+        );
         setOrders(response?.data?.orders || []);
       } catch (error) {
         if (error.response?.status === 401) {
@@ -46,7 +48,10 @@ const MyOrders = () => {
 
   const handleCancelOrder = async (orderId) => {
     try {
-      await axios.delete(`${import.meta.env.VITE_BASE_URL}/users/myorders/${orderId}`, { withCredentials: true });
+      await axios.delete(`${import.meta.env.VITE_BASE_URL}/users/myorders/${orderId}`,  {
+        headers: { Authorization: `Bearer ${token}` }, // ✅ Token should go inside headers
+        withCredentials: true, // ✅ If your backend uses cookies also
+      });
       setOrders(orders.filter(order => order._id !== orderId));
       alert('Order cancelled successfully');
     } catch (error) {
