@@ -23,9 +23,9 @@ const GetCartItems = () => {
         setCartItems(response.data || []);
       } catch (error) {
         console.error("Error fetching cart items:", error);
-        toast.error("You need to login first. ❌");
-        navigate("/users/login")
-        i
+        toast.error("You need to login first.");
+        setTimeout(() => navigate("/users/login"), 1000);
+        
 
       }
     };
