@@ -22,12 +22,10 @@ const BuyNowSummary = () => {
   }, [id]);
 
   const handleCOD = () => {
-    toast.success("Order placed successfully with Cash on Delivery!");
+    // ✅ No API call here
     navigate(`/users/orderSuccess/${id}`);
-
   };
 
-  // ✅ Fixed: Define `loadRazorpayScript`
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
       if (window.Razorpay) {
@@ -41,7 +39,6 @@ const BuyNowSummary = () => {
       document.body.appendChild(script);
     });
   };
-
 
   const handleOnlinePayment = async () => {
     try {
@@ -57,7 +54,7 @@ const BuyNowSummary = () => {
       }
 
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/create-order`, {
-        amount: product.price * 100, // Convert ₹ to paise
+        amount: product.price * 100,
       });
 
       if (!response.data || !response.data.id) {
@@ -110,7 +107,6 @@ const BuyNowSummary = () => {
       toast.error("❌ Error processing online payment.");
     }
   };
-
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">

@@ -48,6 +48,7 @@ const MyOrders = () => {
 
   const handleCancelOrder = async (orderId) => {
     try {
+      const token = localStorage.getItem("token");
       await axios.delete(`${import.meta.env.VITE_BASE_URL}/users/myorders/${orderId}`,  {
         headers: { Authorization: `Bearer ${token}` }, // ✅ Token should go inside headers
         withCredentials: true, // ✅ If your backend uses cookies also

@@ -1,30 +1,40 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Navbar";
 import { ArrowLeft, Mail, Phone, User, Edit2 } from "lucide-react";
 
+// ✅ Skeleton Loader Component
+const SkeletonLoader = () => (
+  <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+    <div className="w-40 h-40 bg-gray-300 rounded-full animate-pulse mb-6"></div>
+    <div className="w-1/3 h-6 bg-gray-300 rounded animate-pulse mb-4"></div>
+    <div className="w-1/4 h-6 bg-gray-300 rounded animate-pulse mb-8"></div>
+
+    <div className="w-1/4 h-10 bg-gray-300 rounded animate-pulse"></div>
+  </div>
+);
+
 const Profile = () => {
   const [user, setUser] = useState({});
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const token =localStorage.getItem("token")
-
-
+        const token = localStorage.getItem("token");
         const response = await axios.get(
           `${import.meta.env.VITE_BASE_URL}/users/profile`,
           {
-            headers: { Authorization: `Bearer ${token}` }, // ✅ Token should go inside headers
-            withCredentials: true, // ✅ If your backend uses cookies also
+            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
           }
         );
 
         console.log("Profile Data:", response.data);
-        setUser(response.data || {}); // ✅ Update state safely
-
+        setUser(response.data || {});
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching profile:", error);
 
@@ -32,7 +42,7 @@ const Profile = () => {
           console.error("Error Response:", error.response.data);
           if (error.response.status === 401) {
             alert("Session expired. Please login again.");
-            navigate("/users/login"); // ✅ Redirect to login
+            navigate("/users/login");
           } else {
             alert(error.response.data.message || "Something went wrong.");
           }
@@ -43,12 +53,15 @@ const Profile = () => {
           console.error("Error:", error.message);
           alert("An unexpected error occurred.");
         }
+
+        setLoading(false);
       }
     };
 
     fetchProfile();
   }, [navigate]);
 
+  if (loading) return <SkeletonLoader />;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -102,7 +115,6 @@ const Profile = () => {
               <ProfileDetail icon={Mail} label="Email Address" value={user?.email} />
               <ProfileDetail icon={Phone} label="Contact Number" value={user?.contact} />
 
-              {/* Address Handling (Avoid Object Rendering Error) */}
               <div className="flex items-center p-4 bg-gray-50 rounded-xl">
                 <Phone className="w-6 h-6 text-blue-500 mr-4" />
                 <div>
@@ -124,7 +136,6 @@ const Profile = () => {
   );
 };
 
-// Reusable Profile Detail Component
 const ProfileDetail = ({ icon: Icon, label, value }) => (
   <div className="flex items-center p-4 bg-gray-50 rounded-xl">
     <Icon className="w-6 h-6 text-blue-500 mr-4" />

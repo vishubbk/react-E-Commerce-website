@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,9 +8,15 @@ const OrderSuccessPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [countdown, setCountdown] = useState(10); // Timer starts at 10 seconds
+  const [countdown, setCountdown] = useState(10);
+
+  // ✅ This flag will block double API calls in React 18 StrictMode
+  const hasMounted = useRef(false);
 
   useEffect(() => {
+    if (hasMounted.current) return;
+    hasMounted.current = true;
+
     const fetchOrderDetails = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/products/${id}`);
@@ -23,10 +29,14 @@ const OrderSuccessPage = () => {
 
     const placeOrder = async () => {
       try {
+        const token = localStorage.getItem("token");
         await axios.post(
           `${import.meta.env.VITE_BASE_URL}/users/buynowSuccessful/${id}`,
           {},
-          { withCredentials: true }
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
+          }
         );
         toast.success("🎉 Order placed successfully!", {
           position: "top-center",
@@ -40,7 +50,6 @@ const OrderSuccessPage = () => {
 
     fetchOrderDetails().then(() => placeOrder());
 
-    // Countdown Timer
     const interval = setInterval(() => {
       setCountdown((prev) => {
         if (prev === 1) {
@@ -64,7 +73,6 @@ const OrderSuccessPage = () => {
         </h2>
         <p className="text-gray-700 mb-2">Thank you for your purchase.</p>
 
-        {/* Order Summary */}
         {product ? (
           <div className="border p-4 rounded-md shadow-sm bg-gray-50 mt-4">
             <h3 className="text-lg font-semibold mb-2">Order Summary</h3>
@@ -76,12 +84,10 @@ const OrderSuccessPage = () => {
           <p className="text-gray-500">Loading order details...</p>
         )}
 
-        {/* Live Countdown */}
         <p className="text-gray-500 text-sm mt-4">
           Redirecting to home page in <strong>{countdown}</strong> seconds...
         </p>
 
-        {/* Back Button */}
         <button
           onClick={() => navigate(-1)}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"

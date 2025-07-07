@@ -7,18 +7,21 @@ import "./CartItems.css";
 import Navbar from "../../components/Navbar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { motion } from "framer-motion";
 
 const GetCartItems = () => {
   const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        const token =localStorage.getItem("token")
+        setLoading(true);
+        const token = localStorage.getItem("token");
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/getCartItems`, {
-          headers: { Authorization: `Bearer ${token}` }, // ✅ Token should go inside headers
-          withCredentials: true, // ✅ If your backend uses cookies also
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
         });
         setCartItems(response.data || []);
       } catch (error) {
@@ -26,8 +29,8 @@ const GetCartItems = () => {
         toast.error("You need to login first.");
         localStorage.removeItem("token");
         setTimeout(() => navigate("/users/login"), 1000);
-
-
+      } finally {
+        setLoading(false);
       }
     };
     fetchCartItems();
@@ -35,10 +38,10 @@ const GetCartItems = () => {
 
   const handleRemoveItem = async (itemId, itemName) => {
     try {
-      const token =localStorage.getItem("token")
-      await axios.post(`${import.meta.env.VITE_BASE_URL}/users/removeCart/${itemId}`, {},  {
-        headers: { Authorization: `Bearer ${token}` }, // ✅ Token should go inside headers
-        withCredentials: true, // ✅ If your backend uses cookies also
+      const token = localStorage.getItem("token");
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/users/removeCart/${itemId}`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       });
       setCartItems((prevCart) => prevCart.filter((item) => item._id !== itemId));
       toast.success(`❌ ${itemName} removed from cart!`);
@@ -48,27 +51,12 @@ const GetCartItems = () => {
     }
   };
 
-  const handleBuyNow = async (itemId) => {
-    try {
-      const token =localStorage.getItem("token")
-      await axios.post(`${import.meta.env.VITE_BASE_URL}/api/orders/buy-now/${itemId}`, {},  {
-        headers: { Authorization: `Bearer ${token}` }, // ✅ Token should go inside headers
-        withCredentials: true, // ✅ If your backend uses cookies also
-      });
-      toast.success("✅ Purchase successful!");
-      navigate("/checkout");
-    } catch (error) {
-      console.error("Error processing buy now:", error);
-      toast.error("❌ Purchase failed!");
-    }
-  };
-
   const handleBuyAllItems = async () => {
     try {
-      const token =localStorage.getItem("token")
-      await axios.post(`${import.meta.env.VITE_BASE_URL}/api/orders/buy-all`, {},  {
-        headers: { Authorization: `Bearer ${token}` }, // ✅ Token should go inside headers
-        withCredentials: true, // ✅ If your backend uses cookies also
+      const token = localStorage.getItem("token");
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/api/orders/buy-all`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       });
       toast.success("🎉 All items purchased successfully!");
       navigate("/checkout");
@@ -85,9 +73,28 @@ const GetCartItems = () => {
 
   return (
     <>
-      <Navbar className="absolute" />
+      <Navbar />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {cartItems.length > 0 ? (
+        {loading ? (
+          <div className="flex justify-center items-center min-h-[50vh]">
+            <motion.div
+  animate={{
+    rotate: [0, 360],
+    scale: [1, 1.2, 1],
+  }}
+  transition={{
+    repeat: Infinity,
+    duration: 1.5,
+    ease: "easeInOut",
+  }}
+  className="text-blue-600"
+>
+  <ShoppingCart size={80} />
+</motion.div>
+
+            <p className="ml-4 text-xl font-semibold text-gray-600">Loading your cart...</p>
+          </div>
+        ) : cartItems.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="md:col-span-2 space-y-4">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
@@ -159,7 +166,9 @@ const GetCartItems = () => {
           <div className="flex flex-col items-center justify-center text-center py-20">
             <ShoppingCart className="w-16 h-16 text-gray-400 mb-4" />
             <h2 className="text-2xl font-semibold text-gray-800">Your cart is empty!</h2>
-            <Link to="/" className="flex gap-4 mt-5 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Continue Shopping <ArrowRight /></Link>
+            <Link to="/" className="flex gap-4 mt-5 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+              Continue Shopping <ArrowRight />
+            </Link>
           </div>
         )}
       </div>

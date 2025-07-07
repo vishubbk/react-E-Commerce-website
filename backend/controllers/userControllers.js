@@ -168,11 +168,7 @@ userControllers.removeCart = async (req, res) => {
 //Add to cart route
 userControllers.Addtocart = async (req, res) => {
   try {
-
-    const token =req.headers.authorization.split(" ")[1];
-
-    const productIda = req.params.id;
-
+    const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
       return res.status(401).json({ message: "Unauthorized: No token provided" });
@@ -192,6 +188,7 @@ userControllers.Addtocart = async (req, res) => {
       return res.status(400).json({ message: "Product ID is required" });
     }
 
+    // Add to cart only if not already added
     if (!user.cart.includes(productId)) {
       user.cart.push(productId);
       await user.save();
@@ -203,6 +200,7 @@ userControllers.Addtocart = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
+
 
 // Get Add to cart Route
 userControllers.getCartItems = async (req, res) => {
