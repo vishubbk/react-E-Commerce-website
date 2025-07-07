@@ -1,15 +1,16 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import Home from './pages/UserFolder/Home.jsx';
-import UserLogin from './pages/UserFolder/userLogin.jsx';
-import UserCreate from './pages/UserFolder/userCreate.jsx';
-import UserProfile from './pages/UserFolder/userProfile.jsx';
-import UserProfileEdit from './pages/UserFolder/userProfileEdit.jsx';
-import MyOrders from './pages/UserFolder/MyOrders.jsx';
-import ProductsDetails from './pages/UserFolder/productsDetails.jsx';
-import UserCart from './pages/UserFolder/getCartItems.jsx';
 import Buynow from './pages/UserFolder/buynowSummery.jsx';
+import UserCart from './pages/UserFolder/getCartItems.jsx';
+import Home from './pages/UserFolder/Home.jsx';
+import MyOrders from './pages/UserFolder/MyOrders.jsx';
 import OrderSuccess from './pages/UserFolder/orderSuccessPage.jsx';
+import ProductsDetails from './pages/UserFolder/ProductsDetails.jsx';
+import RouteProtection from './pages/UserFolder/RouteProtection.jsx';
+import UserCreate from './pages/UserFolder/userCreate.jsx';
+import UserLogin from './pages/UserFolder/userLogin.jsx';
+import UserProfile from './pages/UserFolder/userProfile.jsx';
+import UserProfileEdit from './pages/UserFolder/UserProfileEdit.jsx';
 import Logout from './Logout.jsx';
 
 import OwnerLogin from './pages/OwnerFolder/OwnerLogin.jsx';
@@ -21,7 +22,6 @@ import OwnerProfile from './pages/OwnerFolder/Profile.jsx';
 import OwnerProfileEdit from './pages/OwnerFolder/EditProfile.jsx';
 import OwnerAllOrders from './pages/OwnerFolder/AllOrdersShow.jsx';
 
-import RouteProtection from './pages/UserFolder/RouteProtection.jsx';
 
 const App = () => {
   return (
