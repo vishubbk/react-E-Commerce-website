@@ -1,27 +1,27 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import Home from './pages/UserFolder/Home';
-import UserLogin from './pages/UserFolder/userLogin';
-import UserCreate from './pages/UserFolder/userCreate';
-import UserProfile from './pages/UserFolder/userProfile';
-import UserProfileEdit from './pages/UserFolder/userProfileEdit';
-import MyOrders from './pages/UserFolder/MyOrders';
-import ProductsDetails from './pages/UserFolder/productsDetails';
-import UserCart from './pages/UserFolder/getCartItems';
-import Buynow from './pages/UserFolder/buynowSummery';
-import OrderSuccess from './pages/UserFolder/orderSuccessPage';
-import Logout from './Logout';
+import Home from './pages/UserFolder/Home.jsx';
+import UserLogin from './pages/UserFolder/userLogin.jsx';
+import UserCreate from './pages/UserFolder/userCreate.jsx';
+import UserProfile from './pages/UserFolder/userProfile.jsx';
+import UserProfileEdit from './pages/UserFolder/userProfileEdit.jsx';
+import MyOrders from './pages/UserFolder/MyOrders.jsx';
+import ProductsDetails from './pages/UserFolder/productsDetails.jsx';
+import UserCart from './pages/UserFolder/getCartItems.jsx';
+import Buynow from './pages/UserFolder/buynowSummery.jsx';
+import OrderSuccess from './pages/UserFolder/orderSuccessPage.jsx';
+import Logout from './Logout.jsx';
 
-import OwnerLogin from './pages/OwnerFolder/OwnerLogin';
-import OwnerCreate from './pages/OwnerFolder/OwnerCreate';
-import OwnerDashboard from './pages/OwnerFolder/OwnerDashboard';
-import OwnerAllItems from './pages/OwnerFolder/AllItems';
-import OwnerAddItems from './pages/OwnerFolder/AddItems';
-import OwnerProfile from './pages/OwnerFolder/Profile';
-import OwnerProfileEdit from './pages/OwnerFolder/EditProfile';
-import OwnerAllOrders from './pages/OwnerFolder/AllOrdersShow';
+import OwnerLogin from './pages/OwnerFolder/OwnerLogin.jsx';
+import OwnerCreate from './pages/OwnerFolder/OwnerCreate.jsx';
+import OwnerDashboard from './pages/OwnerFolder/OwnerDashboard.jsx';
+import OwnerAllItems from './pages/OwnerFolder/AllItems.jsx';
+import OwnerAddItems from './pages/OwnerFolder/AddItems.jsx';
+import OwnerProfile from './pages/OwnerFolder/Profile.jsx';
+import OwnerProfileEdit from './pages/OwnerFolder/EditProfile.jsx';
+import OwnerAllOrders from './pages/OwnerFolder/AllOrdersShow.jsx';
 
-import RouteProtection from './pages/UserFolder/RouteProtection';
+import RouteProtection from './pages/UserFolder/RouteProtection.jsx';
 
 const App = () => {
   return (
