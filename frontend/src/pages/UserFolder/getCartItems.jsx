@@ -24,8 +24,9 @@ const GetCartItems = () => {
       } catch (error) {
         console.error("Error fetching cart items:", error);
         toast.error("You need to login first.");
+        localStorage.removeItem("token");
         setTimeout(() => navigate("/users/login"), 1000);
-        
+
 
       }
     };

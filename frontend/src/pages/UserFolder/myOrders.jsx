@@ -31,7 +31,8 @@ const MyOrders = () => {
       } catch (error) {
         if (error.response?.status === 401) {
           localStorage.removeItem("token");
-          navigate("/users/login");
+          toast.error("You need to login first.");
+          setTimeout(() => navigate("/users/login"), 1000);
         } else {
           setError(error.response?.data?.message || "Failed to fetch orders");
         }
