@@ -23,10 +23,10 @@ const GetCartItems = () => {
         setCartItems(response.data || []);
       } catch (error) {
         console.error("Error fetching cart items:", error);
-        toast.error("Failed to fetch cart items! ❌");
-        if (error.response?.status === 401 || error.response?.status === 403) {
-          navigate("/users/login");
-        }
+        toast.error("You need to login first. ❌");
+        navigate("/users/login")
+        i
+
       }
     };
     fetchCartItems();
