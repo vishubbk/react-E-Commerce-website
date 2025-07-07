@@ -207,7 +207,7 @@ userControllers.Addtocart = async (req, res) => {
 // Get Add to cart Route
 userControllers.getCartItems = async (req, res) => {
   try {
-    const token = req.cookies.token;
+    const token = req.headers.authorization.split(" ")[1];
     const productId = req.params.itemId;
 
 
@@ -241,7 +241,7 @@ userControllers.getCartItems = async (req, res) => {
 
 
 // 📌 Get User Profile
-userControllers.getUserProfile = async (req, res) => {
+  userControllers.getUserProfile = async (req, res) => {
   try {
     // ✅ Extract token from Authorization header
     const authHeader = req.headers.authorization;
@@ -294,7 +294,6 @@ userControllers.getUserProfile = async (req, res) => {
 //Post Update user profile page
 userControllers.updateUserProfile = async (req, res) => {
   try {
-    console.log('call the api edit profile');
 
     const { firstname, lastname, contact, email, address } = req.body;
 
@@ -442,7 +441,7 @@ const Product = require("../models/productModel"); // Import Product model
 userControllers.MyOrders = async (req, res) => {
   try {
     console.log(`you hit the my order api`);
-    const token = req.cookies.token;
+    const token = req.headers.authorization.split(" ")[1];;
     console.log(`your token is ${token}`);
     if (!token) {
       return res.status(401).json({ message: "Unauthorized: No token provided" });

@@ -15,8 +15,10 @@ const GetCartItems = () => {
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
+        const token =localStorage.getItem("token")
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/getCartItems`, {
-          withCredentials: true,
+          headers: { Authorization: `Bearer ${token}` }, // ✅ Token should go inside headers
+          withCredentials: true, // ✅ If your backend uses cookies also
         });
         setCartItems(response.data || []);
       } catch (error) {
