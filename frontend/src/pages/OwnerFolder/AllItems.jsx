@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import OwnerNavbar from "../../components/OwnerNavbar";
+import OwnerNavbar from "../../components/OwnerNavbar.jsx";
 
 
 const AllItems = () => {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../../components/OwnerNavbar";
+import Navbar from "../../components/OwnerNavbar.jsx";
 
 const AllOrdersShow = () => {
   const navigate = useNavigate();

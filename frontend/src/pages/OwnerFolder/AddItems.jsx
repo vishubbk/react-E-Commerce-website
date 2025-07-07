@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import Navbar from "../../components/OwnerNavbar";
+import Navbar from "../../components/OwnerNavbar.jsx";
 
 const colorOptions = [
   { name: "White", value: "#ffffff" },

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Header from "../../components/Navbar.js";
+import Header from "../../components/Navbar.jsx";
 import { ArrowLeft } from "lucide-react";
 
 const UserProfileEdit = () => {
