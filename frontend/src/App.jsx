@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Buynow from './pages/UserFolder/buynowSummery.jsx';
 import UserCart from './pages/UserFolder/getCartItems.jsx';
 import Home from './pages/UserFolder/Home.jsx';
-import MyOrders from './pages/UserFolder/MyOrders.jsx';
+import MyOrders from './pages/UserFolder/myOrders.jsx';
 import OrderSuccess from './pages/UserFolder/orderSuccessPage.jsx';
 import ProductsDetails from './pages/UserFolder/ProductsDetails.jsx';
 import RouteProtection from './pages/UserFolder/RouteProtection.jsx';
