@@ -135,14 +135,14 @@ const Home = () => {
             ? filteredProducts.map((product, index) => (
                 <motion.div
                   key={product._id}
-                  className="bg-white p-4 rounded-lg shadow-lg hover:shadow-xl transition cursor-pointer"
+                  className="bg-white p-4 min-h-9  rounded-lg shadow-lg hover:shadow-xl transition cursor-pointer"
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1, type: "spring", stiffness: 100 }}
-                  whileHover={{ scale: 1.05, rotate: 1 }}
+                  whileHover={{ scale: 1.05 }}
                 >
                   <Link to={`/products/${product._id}`}>
-                    <div className="relative h-48 overflow-hidden rounded-md">
+                    <div className="relative  h-48 overflow-hidden rounded-md">
                       <img
                         src={product.image?.url || "https://via.placeholder.com/150"}
                         alt={product.name}
@@ -153,7 +153,11 @@ const Home = () => {
                         }}
                       />
                     </div>
-                    <h2 className="text-lg font-semibold mt-2">{product.name}</h2>
+                    <h2 className="text-lg font-semibold mt-2  ">
+  {product.name.length > 65
+    ? `${product.name.substring(0, 65)}...`
+    : product.name}
+</h2>
                     <p className="text-gray-600 mt-1">
                       {product.discount ? (
                         <>
