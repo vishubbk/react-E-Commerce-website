@@ -148,7 +148,7 @@ const UserProfileEdit = () => {
             <div className="flex flex-col items-center">
               <label htmlFor="profilePicture" className="cursor-pointer">
                 <img
-                  src={previewImage || "https://via.placeholder.com/150"}
+                  src={previewImage || "https://cdn-icons-png.flaticon.com/128/9930/9930370.png"}
                   alt="Profile Preview"
                   className="w-24 h-24 rounded-full border-2 border-gray-300 shadow-md object-cover"
                 />

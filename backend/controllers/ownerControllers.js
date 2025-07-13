@@ -122,7 +122,7 @@ ownerControllers.logoutOwner = async (req, res) => {
 // 📌 Get Owner Profile
 ownerControllers.getOwnerProfile = async (req, res) => {
   try {
-    const token = req.cookies.token;
+    const token =  req.headers.authorization?.split(" ")[1];;
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" });
     }
@@ -170,7 +170,7 @@ const ownerData = {
 // 📌 Owner Dashboard
 ownerControllers.Ownerdashboard = async (req, res) => {
   try {
-    const token = req.cookies.token;
+    const token =  req.headers.authorization?.split(" ")[1];;
     if (!token) {
       return res.status(401).json({ message: "Unauthorized. Please log in first." });
     }
@@ -225,7 +225,7 @@ ownerControllers.editProfile = async (req, res) => {
 
 
     // ✅ Fetch token from cookies
-    const token = req.cookies.token;
+    const token = req.headers.authorization?.split(" ")[1];;
     if (!token) {
       return res.status(401).json({ message: "Unauthorized: No token provided" });
     }

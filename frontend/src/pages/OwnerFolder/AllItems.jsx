@@ -11,7 +11,12 @@ const AllItems = () => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_BASE_URL}/owner/dashboard`,
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
       setItems(response.data.products || []); // Ensure products exist
       setLoading(false);

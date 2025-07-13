@@ -30,10 +30,10 @@ const OwnerLogin = () => {
 
       if (response.status === 200) {
         toast.success("Login successful!");
-
+        localStorage.setItem("token", response.data.token);
         // ✅ Corrected token assignment
-       const hh= Cookies.set("token", response.data.token, { expires: 7, secure: true, sameSite: "Strict" });
-      
+       
+
 
 
 

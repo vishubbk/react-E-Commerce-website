@@ -14,8 +14,12 @@ const OwnerDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const token = localStorage.getItem("token")
         setLoading(true);
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/owner/dashboard`, { withCredentials: true });
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/owner/dashboard`, {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
+        });
 
         if (!response.data.token) {
           toast.error("Token missing! Redirecting to login...");

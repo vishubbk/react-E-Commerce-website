@@ -22,6 +22,9 @@ const UserProfileEdit = () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/owner/dashboard`, {
           withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         });
 
         console.log(response.data.owner.firstname);

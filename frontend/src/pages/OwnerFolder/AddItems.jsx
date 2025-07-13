@@ -57,7 +57,12 @@ const AddItems = () => {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/products/addProduct`,
         data,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        }
       );
 
       setSuccess(response.data.message);

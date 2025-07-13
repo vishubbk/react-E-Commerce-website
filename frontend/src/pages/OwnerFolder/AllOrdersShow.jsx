@@ -11,9 +11,13 @@ const AllOrdersShow = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+        const token = localStorage.getItem("token")
         const response = await axios.get(
           `${import.meta.env.VITE_BASE_URL}/owner/orders`,
-          { withCredentials: true }
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
+          }
         );
         setOrders(response.data.orders);
       } catch (error) {
