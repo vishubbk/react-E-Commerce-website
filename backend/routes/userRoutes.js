@@ -22,9 +22,9 @@ router.get("/profile", getUserProfile); // ✅ Protected Route
 router.get("/getCartItems", getCartItems); // ✅ Protected Route
 router.post("/removeCart/:itemId", async (req, res) => {
   try {
-    console.log("✅ Hit removeCart API");
+   
 
-    const token = req.cookies.token;
+    const token =  req.headers.authorization?.split(" ")[1];
     const cartItemId = req.params.itemId; // Ye cart item ka _id hai, productId nahi
 
     if (!token || !cartItemId) {
