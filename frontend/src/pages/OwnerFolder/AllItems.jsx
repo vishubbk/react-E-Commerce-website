@@ -38,7 +38,9 @@ const AllItems = () => {
       <h2 className="text-3xl font-bold text-center mb-6">All Items</h2>
 
       {loading ? (
-        <p className="text-center text-gray-500">Loading items...</p>
+       <div className="flex items-center justify-center h-[60vh]">
+       <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+     </div>
       ) : items.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {items.map((item) => (
@@ -46,11 +48,14 @@ const AllItems = () => {
               key={item._id}
               className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300"
             >
-              <img
+              <div className="relative  h-48 overflow-hidden rounded-md">
+                <img
                 src={item.image?.url || "https://via.placeholder.com/150"}
                 alt={item.name}
-                className="w-full h-48 object-cover"
+                className="absolute inset-0 w-full h-full object-contain hover:scale-110 transition duration-500"
               />
+              </div>
+
               <div className="p-4">
                 <h3 className="text-xl font-semibold">{item.name}</h3>
                 <p className="text-gray-600 text-sm mt-2">{item.description}</p>

@@ -3,18 +3,25 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { toast, ToastContainer } from "react-toastify";
+import { useEffect } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { LayoutDashboard, Package, LogOut, User, Menu, X, PlusCircle, List } from "lucide-react";
 
 const OwnerNavbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token); // this is where !!token is useful
+  }, []);
 
   const handleLogout = async () => {
     try {
       await axios.post(`${import.meta.env.VITE_BASE_URL}/users/logout`, {}, { withCredentials: true });
-
+      setIsLoggedIn(true)
       Cookies.remove("token");
       localStorage.clear();
       sessionStorage.clear();
@@ -30,6 +37,15 @@ const OwnerNavbar = () => {
       console.error("Logout error:", error.response?.data?.message);
     }
   };
+  const handlelogin = async ()=> {
+    const token = localStorage.getItem("token")
+    if (!token) {
+      setIsLoggedIn(true)
+    }
+    setIsLoggedIn(false)
+    navigate("/owner/login");
+
+  }
 
   return (
     <>
@@ -63,10 +79,21 @@ const OwnerNavbar = () => {
               <User size={20} />
               <span>Profile</span>
             </Link>
-            <button onClick={handleLogout} className="logout-btn flex items-center gap-2">
-              <LogOut size={20} />
-              <span>LogOut</span>
-            </button>
+
+            {isLoggedIn ? (
+  <button onClick={handleLogout} className="mobile-logout-btn flex items-center gap-2">
+    <LogOut size={20} />
+    <span>LogOut</span>
+  </button>
+) : (
+  <button onClick={handlelogin} className="mobile-logout-btn flex items-center gap-2">
+    <LogOut size={20} />
+    <span>LogIn</span>
+  </button>
+)}
+
+
+
           </nav>
 
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden focus:outline-none">

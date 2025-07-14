@@ -42,7 +42,9 @@ const AllOrdersShow = () => {
         </h1>
 
         {loading ? (
-          <p className="text-center text-gray-600">Loading orders...</p>
+          <div className="flex items-center justify-center h-[60vh]">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
         ) : orders.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full border border-gray-300 shadow-lg rounded-lg overflow-hidden">

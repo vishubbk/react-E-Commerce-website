@@ -93,8 +93,9 @@ const UserProfileEdit = () => {
       const response = await axios.post("http://localhost:4000/owner/editprofile", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+           Authorization: `Bearer ${localStorage.getItem("token")}`
         },
-        withCredentials: true,
+       
       });
 
       if (response.status === 200) {
@@ -120,7 +121,7 @@ const UserProfileEdit = () => {
           {/* 🔹 Profile Picture Preview */}
           <div className="flex flex-col  items-center">
             <img
-              src={previewImage || "https://via.placeholder.com/150"}
+              src={previewImage || "https://cdn-icons-png.freepik.com/512/11136/11136505.png?ga=GA1.1.1734003033.1743057794"}
               alt="Profile Preview"
               className="w-24 h-24 rounded-full border-4 border-gray-300 shadow-lg object-cover"
             />

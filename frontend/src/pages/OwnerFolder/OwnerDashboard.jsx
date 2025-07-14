@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import OwnerNavbar from "../../components/OwnerNavbar";
@@ -14,29 +13,34 @@ const OwnerDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          toast.error("Token missing! Redirecting to login...", { toastId: "token-missing" });
+          navigate("/owner/login");
+          return;
+        }
+
         setLoading(true);
+
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/owner/dashboard`, {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
 
-        if (!response.data.token) {
-          toast.error("Token missing! Redirecting to login...");
-          navigate("/owner/login");
-          return;
+        if (!toast.isActive("dashboard-success")) {
+          toast.success("Dashboard loaded successfully!", { toastId: "dashboard-success" });
         }
 
-        toast.success("Dashboard loaded successfully!");
         setData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
 
         if (error.response?.status === 401) {
-          toast.warn("Unauthorized! Please log in.");
+          toast.warn("Unauthorized! Please log in.", { toastId: "unauthorized" });
           navigate("/owner/login");
         } else {
-          toast.error("Failed to load dashboard.");
+          toast.error("Failed to load dashboard.", { toastId: "dashboard-error" });
         }
       } finally {
         setLoading(false);
@@ -49,10 +53,10 @@ const OwnerDashboard = () => {
   return (
     <>
       <OwnerNavbar />
+
       <div className="container mx-auto p-4">
         <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Owner Dashboard</h1>
 
-        {/* 🔄 Loader */}
         {loading ? (
           <div className="flex justify-center items-center h-60">
             <div className="w-16 h-16 border-4 border-dashed border-blue-500 rounded-full animate-spin"></div>
@@ -61,13 +65,11 @@ const OwnerDashboard = () => {
           <div className="bg-white shadow-lg rounded-lg p-6 max-w-4xl mx-auto">
             <h2 className="text-xl font-semibold text-gray-700 mb-4">📊 Dashboard Stats</h2>
 
-            {/* 🔹 Styled Data */}
             <p className="text-gray-600"><span className="font-semibold text-blue-500">● Owner-Name:</span> {data.owner.firstname} {data.owner.lastname}</p>
             <p className="text-gray-600"><span className="font-semibold text-blue-500">● Owner-Email:</span> {data.owner.email}</p>
             <p className="text-gray-600"><span className="font-semibold text-blue-500">● Total Users:</span> {data.totalUsers}</p>
             <p className="text-gray-600"><span className="font-semibold text-blue-500">● Total Products:</span> {data.totalProducts}</p>
 
-            {/* 🧑‍💻 Users List */}
             <h3 className="text-lg font-semibold text-gray-800 mt-6">👥 Users:</h3>
             {data.users?.length > 0 ? (
               <div className="overflow-x-auto mt-4">
@@ -96,7 +98,6 @@ const OwnerDashboard = () => {
               <p className="text-center text-gray-500">No users available.</p>
             )}
 
-            {/* 📦 Products List */}
             <h3 className="text-lg font-semibold text-gray-800 mt-6">📦 Products:</h3>
             {data.products?.length > 0 ? (
               <ul className="list-disc list-inside text-gray-600">
