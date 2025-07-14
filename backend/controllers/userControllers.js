@@ -462,6 +462,7 @@ userControllers.MyOrders = async (req, res) => {
 
 
         return {
+          productId: order.productId,
           _id: order._id,
           name: product?.name || "Unknown Product",
           image: product?.image || "",

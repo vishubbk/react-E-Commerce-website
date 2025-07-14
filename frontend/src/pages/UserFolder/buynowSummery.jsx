@@ -62,7 +62,7 @@ const BuyNowSummary = () => {
         return;
       }
 
-      const { id, currency, amount } = response.data;
+      const { id, currency, amount,_id } = response.data;
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY || "rzp_test_yourKeyHere",

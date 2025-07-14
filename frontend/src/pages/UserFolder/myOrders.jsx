@@ -97,7 +97,7 @@ const MyOrders = () => {
                 className="flex items-center border border-gray-300 p-4 rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out"
               >
                 {/* Wrap image and product name inside the Link */}
-                <Link to={`/products/${order._id}`} className="flex items-center flex-grow hover:underline">
+                <Link to={`/products/${order.productId}`} className="flex items-center flex-grow hover:underline">
                   <img src={order.image?.url || "https://via.placeholder.com/150"} alt={order.name} className="w-24 h-24 object-cover rounded-md mr-4 shadow-lg transition-transform transform hover:scale-105" />
                   <div>
                     <h3 className="text-lg font-semibold text-gray-800">{order.name}</h3>
