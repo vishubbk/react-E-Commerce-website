@@ -118,11 +118,11 @@ const AddItems = () => {
             />
 
             {/* Discount */}
-            <label className="font-semibold text-gray-700">Discount (%):</label>
+            <label className="font-semibold text-gray-700">Discount Amount:</label>
             <input
               type="number"
               name="discount"
-              placeholder="Enter Discount (%)"
+              placeholder="Enter Discount Amount"
               value={formData.discount}
               onChange={handleChange}
               className="border p-2 rounded-md"

@@ -10,13 +10,6 @@ productControllers.addProduct = async (req, res) => {
 
     const { name, price, discount, bgcolor, panelcolor, textcolor, Details } = req.body;
 
-    console.log(`name is a --${name}`);
-    console.log(`price is a --${price}`);
-    console.log(`discount is a --${discount}`);
-    console.log(`bgcolor is a --${bgcolor}`);
-    console.log(`panelcolor is a --${panelcolor}`);
-    console.log(`textcolor is a --${textcolor}`);
-    console.log(`Details is a --${Details}`);
 
     const image = req.file;
 
@@ -50,7 +43,7 @@ productControllers.addProduct = async (req, res) => {
       bgcolor,
       panelcolor,
       textcolor,
-      Details,
+      details:Details,
       image: {
         public_id: result.public_id,
         url: result.secure_url,

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Header from "../../components/OwnerNavbar.jsx";
+import Header from "../../components/Navbar.jsx";
 import { ArrowLeft } from "lucide-react";
 
 const UserProfileEdit = () => {
@@ -22,9 +22,6 @@ const UserProfileEdit = () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/owner/dashboard`, {
           withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
         });
 
         console.log(response.data.owner.firstname);
@@ -93,9 +90,8 @@ const UserProfileEdit = () => {
       const response = await axios.post("http://localhost:4000/owner/editprofile", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-           Authorization: `Bearer ${localStorage.getItem("token")}`
         },
-
+        withCredentials: true,
       });
 
       if (response.status === 200) {
@@ -121,7 +117,7 @@ const UserProfileEdit = () => {
           {/* 🔹 Profile Picture Preview */}
           <div className="flex flex-col  items-center">
             <img
-              src={previewImage || "https://cdn-icons-png.freepik.com/512/11136/11136505.png?ga=GA1.1.1734003033.1743057794"}
+              src={previewImage || "https://via.placeholder.com/150"}
               alt="Profile Preview"
               className="w-24 h-24 rounded-full border-4 border-gray-300 shadow-lg object-cover"
             />
