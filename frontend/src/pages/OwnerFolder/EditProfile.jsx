@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Header from "../../components/Navbar.jsx";
+import Header from "../../components/OwnerNavbar.jsx";
 import { ArrowLeft } from "lucide-react";
 
 const UserProfileEdit = () => {
@@ -95,7 +95,7 @@ const UserProfileEdit = () => {
           "Content-Type": "multipart/form-data",
            Authorization: `Bearer ${localStorage.getItem("token")}`
         },
-       
+
       });
 
       if (response.status === 200) {
