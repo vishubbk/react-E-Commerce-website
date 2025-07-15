@@ -161,7 +161,7 @@ const Home = () => {
                     <p className="text-gray-600 mt-1">
                       {product.discount ? (
                         <>
-                          <s className="text-red-500">₹{product.price}</s>{" "}
+                          ₹<s className="text-red-500">{product.price}</s>{" "}
                           <span className="text-green-600 font-bold">₹{product.discount}</span>
                         </>
                       ) : (
