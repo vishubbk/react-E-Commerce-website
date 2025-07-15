@@ -63,10 +63,11 @@ const Navbar = () => {
       {/* Navbar Header */}
       <header className="backdrop-blur-md shadow-md fixed w-full z-10 bg-white/90">
         <div className="container mx-auto flex justify-between items-center p-4">
-          <div className="flex items-center gap-2">
+          <Link to={`/`}><div className="flex items-center gap-2">
             <Package className="w-8 h-8 text-green-600" />
             <h1 className="text-xl font-bold text-gray-800">Shop Mart</h1>
-          </div>
+          </div></Link>
+
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center space-x-6">
