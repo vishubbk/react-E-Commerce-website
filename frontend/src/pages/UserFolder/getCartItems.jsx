@@ -112,13 +112,15 @@ const GetCartItems = () => {
                     className="w-24 h-24  rounded-md"
                   />
 
-                  <div className="flex-1 space-y-2 text-center sm:text-left">
+                  <div className="flex-1 space-y-2 text-center sm:text-left ml-8">
                     <h3 className="text-lg font-semibold text-gray-900">{item.name|| "No Name"}</h3>
                     <div className="flex justify-center sm:justify-start items-center space-x-2">
                       ₹<del className="text-gray-500">{item.price}</del>
                       <span className="text-xl font-bold text-gray-900">₹{item.discount || item.price}</span>
                     </div>
-                    <p className="text-gray-600">Detail: {item.Details}</p>
+                    <p className="text-gray-600 max-h-18 overflow-hidden">
+  Detail: {item.details.length > 99 ? `${item.details.substring(0, 99)}...` : item.details}
+</p>
                     <div className="flex space-x-3 justify-center sm:justify-start mt-4">
                       <Link
                         to={`/users/buynow/${item._id}`}

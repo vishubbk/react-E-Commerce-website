@@ -89,6 +89,9 @@ const Navbar = () => {
               </Link>
             ))}
 
+
+
+
             {isLoggedIn ? (
               <button onClick={handleLogout} className="logout-btn flex items-center gap-2">
                 <LogOut size={20} />

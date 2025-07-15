@@ -100,7 +100,7 @@ const AllOrdersShow = () => {
                 {orders.map((order, index) => (
                   <tr
                     key={index}
-                    className="border-b hover:bg-blue-50 transition duration-200"
+                    className="border-b hover:bg-black-50 transition duration-200"
                   >
                     <td className="border px-4 py-3">{order.userName}</td>
                     <td className="border px-4 py-3">{order.email}</td>

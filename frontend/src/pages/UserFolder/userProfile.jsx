@@ -93,7 +93,6 @@ const Profile = () => {
                       <Edit2 className="w-4 h-4 mr-2" />
                       Edit Profile
                     </button>
-                    <Link className="bg-blue-600 ml-3 text-teal-50 p-2 " to={`/owner/register`}>yash</Link>
                   </div>
                 </div>
               </div>
