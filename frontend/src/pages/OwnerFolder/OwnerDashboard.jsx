@@ -103,7 +103,7 @@ const OwnerDashboard = () => {
               <ul className="list-disc list-inside text-gray-600">
                 {data.products.map((product, index) => (
                   <li key={index} className="pl-2">
-                    {product.name} - <span className="text-sm text-gray-500">${product.price}</span>
+                    {product.name} - <span className="text-sm text-gray-500">₹{product.price}</span>
                   </li>
                 ))}
               </ul>
