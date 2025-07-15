@@ -29,7 +29,7 @@ app.use(
   cors({
     origin: ["http://localhost:5173","https://biggest-shop-mart.onrender.com"],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE","PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
@@ -66,7 +66,7 @@ app.use("/products", productRoutes);
 app.use("/owner", ownerRoutes);
 app.use("/users", userRoutes);
 app.use("/home", homeRoutes);
-app.use("/payment", paymentRoutes); 
+app.use("/payment", paymentRoutes);
 
 // 🔹 Protected Profile Route (Requires Auth)
 app.get("/users/profile", authMiddleware, (req, res) => {

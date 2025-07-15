@@ -108,13 +108,26 @@ const MyOrders = () => {
                     <p className="text-gray-600 mb-2 font-bold">₹{order.price}</p>
                     <div className='flex gap-1.5 justify-center sm:justify-start'>
                       <span className='font-bold'>Status:</span>
-                      <p className='text-red-900 font-semibold'>{order.status}</p>
+                      <p
+  className={`text-sm font-semibold px-3 py-1 rounded-full text-center ${
+    order.status === "pending"
+      ? "bg-red-500 text-white"
+      : order.status === "completed"
+      ? "bg-green-500 text-white"
+      : order.status === "cancelled"
+      ? "bg-gray-500 text-white"
+      : "bg-blue-500 text-white"
+  }`}
+>
+  {order.status}
+</p>
+
                     </div>
                   </div>
                 </Link>
                 <button
                   onClick={() => handleCancelOrder(order._id)}
-                  className="bg-red-500 w-full sm:w-auto hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
+                  className="bg-red-500 w-full min-w-[10vw] sm:w-auto hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
                 >
                   Cancel Order
                 </button>

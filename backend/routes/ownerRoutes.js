@@ -26,7 +26,7 @@ router.post("/logout", logoutOwner);
 router.get("/profile", authentication, getOwnerProfile);
 router.get("/dashboard", authentication, Ownerdashboard);
 router.get("/orders", OwnerAllOrders);
-router.patch("/orders/:id/status", OwnerOrderStatus);
+router.post("/orders/update-status", OwnerOrderStatus);
 router.post("/editprofile",
   authentication,
   upload.single("profilePicture"),

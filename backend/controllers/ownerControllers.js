@@ -320,17 +320,29 @@ ownerControllers.OwnerAllOrders = async (req, res) => {
 };
 ownerControllers.OwnerOrderStatus = async (req, res) => {
   try {
-    console.log(`hit the update order route hello 1`)
-    const{status} =req.body
-    console.log(req.body)
+    console.log(`hit the api`)
+    const { status, orderId } = req.body;
+    console.log(orderId)
+    console.log(status)
 
+    const updatedUser = await userModel.findOneAndUpdate(
+      { "orders._id": orderId },
+      { $set: { "orders.$.status": status } },
+      { new: true }
+    );
 
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    res.json({ success: true, message: "Order updated", updatedUser });
   } catch (error) {
-      console.error("Error fetching orders:", error.message);
-      res.status(500).json({ success: false, message: "Error fetching orders" });
+    console.error("Server Error:", error.message);
+    res.status(500).json({ success: false, message: "Server Error" });
   }
+};
 
-  }
+
 
 
 

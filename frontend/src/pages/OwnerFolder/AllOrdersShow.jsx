@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/OwnerNavbar.jsx";
+import Swal from "sweetalert2";
+import { X, Check } from "lucide-react";
 
 const AllOrdersShow = () => {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch orders from backend
+  // Fetch all orders
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -34,25 +36,39 @@ const AllOrdersShow = () => {
     fetchOrders();
   }, [navigate]);
 
-  // Confirm or cancel order
+  // Update status
   const updateOrderStatus = async (orderId, newStatus) => {
+    const result = await Swal.fire({
+      title: `Confirm to ${newStatus} this order?`,
+      icon: "question",
+      showDenyButton: true,
+      confirmButtonText: "Yes",
+      denyButtonText: "No",
+    });
+
+    if (!result.isConfirmed) return;
+
     try {
       const token = localStorage.getItem("token");
-      await axios.patch(
-        `${import.meta.env.VITE_BASE_URL}/owner/orders/${orderId}/status`,
-        { status: newStatus },{
-        headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true,}
+      await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/owner/orders/update-status`,
+        { orderId, status: newStatus },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
+        }
       );
 
-      // Update order status locally
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order._id === orderId ? { ...order, status: newStatus } : order
+      setOrders((prev) =>
+        prev.map((order) =>
+          order.orderId === orderId ? { ...order, status: newStatus } : order
         )
       );
-    } catch (error) {
-      console.error("Failed to update order status", error);
+
+      Swal.fire("Success", `Order marked as ${newStatus}`, "success");
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error", "Update failed", "error");
     }
   };
 
@@ -60,13 +76,11 @@ const AllOrdersShow = () => {
     <>
       <Navbar />
       <div className="container mx-auto p-6">
-        <h1 className="text-3xl font-bold text-center text-gray-900 mb-6">
-          All Orders
-        </h1>
+        <h1 className="text-3xl font-bold text-center mb-6">All Orders</h1>
 
         {loading ? (
           <div className="flex items-center justify-center h-[60vh]">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            <div className="animate-spin h-12 w-12 border-t-2 border-b-2 border-blue-500 rounded-full"></div>
           </div>
         ) : orders.length > 0 ? (
           <div className="overflow-x-auto">
@@ -97,35 +111,40 @@ const AllOrdersShow = () => {
                     </td>
                     <td className="border px-4 py-3 text-center">
                       <span
-                        className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        className={`px-3 py-1 rounded-full text-sm font-semibold ${
                           order.status === "pending"
                             ? "bg-red-500 text-white"
                             : order.status === "completed"
                             ? "bg-green-500 text-white"
-                            : order.status === "cancelled"
-                            ? "bg-gray-500 text-white"
-                            : "bg-blue-500 text-white"
+                            : "bg-gray-500 text-white"
                         }`}
                       >
                         {order.status}
                       </span>
                     </td>
-
-                    <td className="border px-4 py-3 flex flex-col gap-2">
+                    <td className="  px-4 py-3 flex gap-3 justify-center items-center">
                       {order.status !== "completed" && (
                         <button
-                          onClick={() => updateOrderStatus(order._id, "completed")}
-                          className="bg-green-500 text-white px-3 py-1 rounded text-sm"
+                          onClick={() =>
+                            updateOrderStatus(order.orderId, "completed")
+                          }
+                          className="group p-2 rounded-full bg-green-100 hover:bg-green-500 shadow-lg hover:shadow-xl cursor-pointer transition duration-200"
+                          title="Mark as Completed"
                         >
-                          Complete Order
+                          <Check
+                            className="h-5 w-5 text-green-600 group-hover:text-white"
+                          />
                         </button>
                       )}
                       {order.status !== "cancelled" && (
                         <button
-                          onClick={() => updateOrderStatus(order._id, "cancelled")}
-                          className="bg-red-500 text-white px-3 py-1 rounded text-sm"
+                          onClick={() =>
+                            updateOrderStatus(order.orderId, "cancelled")
+                          }
+                          className="group p-2 rounded-full bg-red-100 hover:bg-red-500 shadow-lg hover:shadow-xl cursor-pointer transition duration-200"
+                          title="Cancel Order"
                         >
-                          Cancel Order
+                          <X className="h-5 w-5 text-red-600 group-hover:text-white" />
                         </button>
                       )}
                     </td>
