@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import Header from "../../components/Navbar";
 import { ArrowLeft, Mail, Phone, User, Edit2 } from "lucide-react";
 
@@ -93,6 +93,7 @@ const Profile = () => {
                       <Edit2 className="w-4 h-4 mr-2" />
                       Edit Profile
                     </button>
+                    <Link className="bg-blue-600 ml-3 text-teal-50 p-2 " to={`/owner/register`}>yash</Link>
                   </div>
                 </div>
               </div>
