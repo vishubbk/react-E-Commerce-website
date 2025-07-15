@@ -127,10 +127,12 @@ const Navbar = () => {
           }`}
         >
           <div className="flex justify-between items-center mb-6">
+            <Link to={`/`}>
             <div className="flex items-center gap-2">
               <Package className="w-6 h-6 text-green-600" />
               <span className="font-semibold">Shop Mart</span>
             </div>
+            </Link>
             <button
               onClick={() => setMobileMenuOpen(false)}
               className="focus:outline-none"
