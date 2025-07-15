@@ -114,7 +114,7 @@ const GetCartItems = () => {
                   <div className="flex-1 space-y-2 text-center sm:text-left">
                     <h3 className="text-lg font-semibold text-gray-900">{item.name|| "No Name"}</h3>
                     <div className="flex justify-center sm:justify-start items-center space-x-2">
-                      <del className="text-gray-500">₹{item.price}</del>
+                      ₹<del className="text-gray-500">{item.price}</del>
                       <span className="text-xl font-bold text-gray-900">₹{item.discount || item.price}</span>
                     </div>
                     <p className="text-gray-600">Detail: {item.Details}</p>
