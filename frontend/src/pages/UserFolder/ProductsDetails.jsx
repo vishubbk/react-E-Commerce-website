@@ -89,8 +89,8 @@ const ProductsDetails = () => {
               <h1 className="text-3xl font-bold mb-4 text-gray-800">{product.name}</h1>
               <p className="text-gray-600 text-lg mb-4">{product.Details}</p>
               <p className="text-gray-700 text-xl font-semibold mb-4 ">
-                Price: <strike className="text-blue-600">₹{product.price}</strike>
-                <span className="text-green-600 ml-2 ">₹{product.discount}</span>
+               Price: <span className="text-green-600 mr-2 ">₹{product.discount}</span>
+                 ₹<strike className="">{product.price}</strike>
               </p>
 
               <div className="flex flex-col gap-4">
