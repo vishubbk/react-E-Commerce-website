@@ -18,7 +18,7 @@ const AddItems = () => {
     bgcolor: "#ffffff",
     panelcolor: "#f0f0f0",
     textcolor: "#000000",
-    Details: "",
+    details: "",
     image: null,
   });
 
@@ -73,7 +73,7 @@ const AddItems = () => {
         bgcolor: "#ffffff",
         panelcolor: "#f0f0f0",
         textcolor: "#000000",
-        Details: "",
+        details: "",
         image: null,
       });
     } catch (error) {
@@ -182,12 +182,12 @@ const AddItems = () => {
               <input type="color" name="textcolor" value={formData.textcolor} onChange={handleChange} />
             </div>
 
-            {/* Details */}
-            <label className="font-semibold text-gray-700">Product Details:</label>
+            {/* details */}
+            <label className="font-semibold text-gray-700">Product details:</label>
             <textarea
-              name="Details"
-              placeholder="Enter Product Details"
-              value={formData.Details}
+              name="details"
+              placeholder="Enter Product details"
+              value={formData.details}
               onChange={handleChange}
               className="border p-2 rounded-md h-20"
             />

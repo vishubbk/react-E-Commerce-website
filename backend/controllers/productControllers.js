@@ -8,7 +8,7 @@ productControllers.addProduct = async (req, res) => {
   try {
     console.log(`hit the add item api`);
 
-    const { name, price, discount, bgcolor, panelcolor, textcolor, Details } = req.body;
+    const { name, price, discount, bgcolor, panelcolor, textcolor, details } = req.body;
 
 
     const image = req.file;
@@ -17,7 +17,7 @@ productControllers.addProduct = async (req, res) => {
       return res.status(400).json({ message: "Image is required" });
     }
 
-    if (!name || !price || !discount || !bgcolor || !panelcolor || !textcolor || !Details) {
+    if (!name || !price || !discount || !bgcolor || !panelcolor || !textcolor || !details) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -43,7 +43,7 @@ productControllers.addProduct = async (req, res) => {
       bgcolor,
       panelcolor,
       textcolor,
-      details:Details,
+      details,
       image: {
         public_id: result.public_id,
         url: result.secure_url,
