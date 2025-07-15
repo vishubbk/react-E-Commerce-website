@@ -25,6 +25,8 @@ import OwnerAllOrders from './pages/OwnerFolder/AllOrdersShow.jsx';
 import Privacy from './pages/Static/Privacy.jsx';
 import Refund from './pages/Static/Refund.jsx';
 import Terms from './pages/Static/Terms.jsx';
+import Contact from './pages/Static/Contact.jsx';
+import Shipping from './pages/Static/Shipping.jsx';
 
 
 const App = () => {
@@ -59,8 +61,10 @@ const App = () => {
         <Route path="/products/:id" element={<ProductsDetails />} />
         {/* payment Protection Routes */}
         <Route path="/terms" element={<Terms />} />
-        <Route path="/Refund" element={<Refund />} />
-        <Route path="/Privacy" element={<Privacy />} />
+        <Route path="/refund" element={<Refund />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/shipping" element={<Shipping />} />
+        <Route path="/contact" element={<Contact />} />
 
         {/* Fallback Route */}
         <Route path="*" element={<RouteProtection />} />

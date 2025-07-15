@@ -7,6 +7,8 @@ const Footer = () => {
         <Link to="/terms" className="hover:text-blue-600 transition">Terms & Conditions</Link>
         <Link to="/privacy" className="hover:text-blue-600 transition">Privacy Policy</Link>
         <Link to="/refund" className="hover:text-blue-600 transition">Refund Policy</Link>
+        <Link to="/contact" className="hover:text-blue-600 transition">Contact Policy</Link>
+        <Link to="/shipping" className="hover:text-blue-600 transition">Shipping Policy</Link>
       </div>
       <p className="text-xs">&copy; 2025 Vishu-A. All rights reserved.</p>
     </footer>
