@@ -104,9 +104,8 @@ const Home = () => {
       <Navbar />
       <motion.div
         className="relative w-full h-56 bg-gradient-to-r from-purple-700 to-pink-600 text-white flex items-center justify-center shadow-md"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
+
+
       >
         <div className="text-center mt-15">
           <h1 className="text-3xl font-bold">{banners[bannerIndex].title}</h1>
@@ -138,8 +137,7 @@ const Home = () => {
                   className="bg-white p-4 min-h-9  rounded-lg shadow-lg hover:shadow-xl transition cursor-pointer"
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1, type: "spring", stiffness: 100 }}
-                  whileHover={{ scale: 1.05 }}
+                
                 >
                   <Link to={`/products/${product._id}`}>
                     <div className="relative  h-48 overflow-hidden rounded-md">

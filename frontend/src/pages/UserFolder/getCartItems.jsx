@@ -105,12 +105,13 @@ const GetCartItems = () => {
               {cartItems.map((item) => (
 
                 <div key={item._id} className="bg-white rounded-lg shadow-md p-4 flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                   <Link className="flex" to={`/products/${item._id}`}>
                   <img
                     src={item.image?.url || "https://via.placeholder.com/150"}
                     alt={item.name}
-                    className="w-24 h-24 object-cover rounded-md"
+                    className="w-24 h-24  rounded-md"
                   />
-                   <Link to={`/products/${item._id}`}>
+
                   <div className="flex-1 space-y-2 text-center sm:text-left">
                     <h3 className="text-lg font-semibold text-gray-900">{item.name|| "No Name"}</h3>
                     <div className="flex justify-center sm:justify-start items-center space-x-2">

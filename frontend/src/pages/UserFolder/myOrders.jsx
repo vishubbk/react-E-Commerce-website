@@ -25,8 +25,8 @@ const MyOrders = () => {
 
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/myorders`,
           {
-            headers: { Authorization: `Bearer ${token}` }, // ✅ Token should go inside headers
-            withCredentials: true, // ✅ If your backend uses cookies also
+            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
           }
         );
         setOrders(response?.data?.orders || []);
@@ -50,8 +50,8 @@ const MyOrders = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.delete(`${import.meta.env.VITE_BASE_URL}/users/myorders/${orderId}`, {
-        headers: { Authorization: `Bearer ${token}` }, // ✅ Token should go inside headers
-        withCredentials: true, // ✅ If your backend uses cookies also
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       });
       setOrders(orders.filter(order => order._id !== orderId));
       alert('Order cancelled successfully');
@@ -63,8 +63,7 @@ const MyOrders = () => {
   return (
     <>
       <Navbar className="absolute" />
-      <div className="p-6 relative top-18 max-w-4xl mx-auto">
-
+      <div className="p-4 sm:p-6 relative top-18 max-w-6xl mx-auto">
         <h2 className="text-center text-2xl font-bold mb-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-2 px-4 rounded-md shadow-lg">
           My Orders
         </h2>
@@ -86,7 +85,7 @@ const MyOrders = () => {
             ></motion.div>
           </div>
         ) : (Array.isArray(orders) && orders.length > 0) ? (
-          <div className="grid gap-6">
+          <div className="grid gap-6 sm:grid-cols-2">
             {orders.map((order) => (
               <motion.div
                 key={order._id}
@@ -94,26 +93,28 @@ const MyOrders = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 layout
-                className="flex items-center border border-gray-300 p-4 rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out"
+                className="flex flex-col sm:flex-row items-center border border-gray-300 p-4 rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out"
               >
-                {/* Wrap image and product name inside the Link */}
-                <Link to={`/products/${order.productId}`} className="flex items-center flex-grow hover:underline">
-                  <img src={order.image?.url || "https://via.placeholder.com/150"} alt={order.name} className="w-30 h-25 object-cover rounded-md mr-4 shadow-lg transition-transform transform hover:scale-105" />
-                  <div>
-                    <h3 className="text-lg  font-semibold text-gray-800"> {order.name.length > 65
-                      ? `${order.name.substring(0, 65)}...`
-                      : order.name}</h3>
+                <Link to={`/products/${order.productId}`} className="flex items-center flex-grow hover:underline mb-4 sm:mb-0 sm:mr-4">
+                  <img
+                    src={order.image?.url || "https://via.placeholder.com/150"}
+                    alt={order.name}
+                    className="w-full sm:w-28 h-28 object-contain rounded-md shadow-lg transition-transform transform hover:scale-105"
+                  />
+                  <div className="ml-0 sm:ml-4 mt-2 sm:mt-0 text-center sm:text-left">
+                    <h3 className="text-lg font-semibold text-gray-800">
+                      {order.name.length > 65 ? `${order.name.substring(0, 65)}...` : order.name}
+                    </h3>
                     <p className="text-gray-600 mb-2 font-bold">₹{order.price}</p>
-                    <div className='flex gap-1.5'>
-                      <span className='font-bold '>Status:</span>
-                      <p className='text-red-900 font-semibold '>Pending</p>
+                    <div className='flex gap-1.5 justify-center sm:justify-start'>
+                      <span className='font-bold'>Status:</span>
+                      <p className='text-red-900 font-semibold'>Pending</p>
                     </div>
-
                   </div>
                 </Link>
                 <button
                   onClick={() => handleCancelOrder(order._id)}
-                  className="bg-red-500 min-w-[13vw] hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
+                  className="bg-red-500 w-full sm:w-auto hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
                 >
                   Cancel Order
                 </button>
@@ -121,7 +122,7 @@ const MyOrders = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center text-gray-500">
+          <div className="text-center text-gray-500 mt-8">
             <img src="https://via.placeholder.com/200x150?text=No+Orders" alt="No Orders" className="mx-auto mb-4" />
             <p>No orders found.</p>
           </div>
