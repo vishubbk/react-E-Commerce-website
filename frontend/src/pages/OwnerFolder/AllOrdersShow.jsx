@@ -8,10 +8,11 @@ const AllOrdersShow = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Fetch orders from backend
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("token");
         const response = await axios.get(
           `${import.meta.env.VITE_BASE_URL}/owner/orders`,
           {
@@ -31,7 +32,29 @@ const AllOrdersShow = () => {
     };
 
     fetchOrders();
-  }, []);
+  }, [navigate]);
+
+  // Confirm or cancel order
+  const updateOrderStatus = async (orderId, newStatus) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.patch(
+        `${import.meta.env.VITE_BASE_URL}/owner/orders/${orderId}/status`,
+        { status: newStatus },{
+        headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,}
+      );
+
+      // Update order status locally
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order._id === orderId ? { ...order, status: newStatus } : order
+        )
+      );
+    } catch (error) {
+      console.error("Failed to update order status", error);
+    }
+  };
 
   return (
     <>
@@ -43,8 +66,8 @@ const AllOrdersShow = () => {
 
         {loading ? (
           <div className="flex items-center justify-center h-[60vh]">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
         ) : orders.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full border border-gray-300 shadow-lg rounded-lg overflow-hidden">
@@ -56,6 +79,7 @@ const AllOrdersShow = () => {
                   <th className="border px-4 py-3">Order-Name</th>
                   <th className="border px-4 py-3">Date</th>
                   <th className="border px-4 py-3">Status</th>
+                  <th className="border px-4 py-3">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -74,15 +98,36 @@ const AllOrdersShow = () => {
                     <td className="border px-4 py-3 text-center">
                       <span
                         className={`px-3 py-1 rounded-full text-sm font-medium ${
-                          order.orderStatus === "pending"
-                            ? "bg-yellow-500 text-white"
-                            : order.orderStatus === "completed"
+                          order.status === "pending"
+                            ? "bg-red-500 text-white"
+                            : order.status === "completed"
                             ? "bg-green-500 text-white"
-                            : "bg-red-500 text-white"
+                            : order.status === "cancelled"
+                            ? "bg-gray-500 text-white"
+                            : "bg-blue-500 text-white"
                         }`}
                       >
-                        {order.orderStatus}
+                        {order.status}
                       </span>
+                    </td>
+
+                    <td className="border px-4 py-3 flex flex-col gap-2">
+                      {order.status !== "completed" && (
+                        <button
+                          onClick={() => updateOrderStatus(order._id, "completed")}
+                          className="bg-green-500 text-white px-3 py-1 rounded text-sm"
+                        >
+                          Complete Order
+                        </button>
+                      )}
+                      {order.status !== "cancelled" && (
+                        <button
+                          onClick={() => updateOrderStatus(order._id, "cancelled")}
+                          className="bg-red-500 text-white px-3 py-1 rounded text-sm"
+                        >
+                          Cancel Order
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}

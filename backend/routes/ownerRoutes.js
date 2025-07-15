@@ -10,7 +10,8 @@ const {
   getOwnerProfile,
   Ownerdashboard,
   editProfile,
-  OwnerAllOrders
+  OwnerAllOrders,
+  OwnerOrderStatus
 } = require("../controllers/ownerControllers");
 
 const router = express.Router();
@@ -25,6 +26,7 @@ router.post("/logout", logoutOwner);
 router.get("/profile", authentication, getOwnerProfile);
 router.get("/dashboard", authentication, Ownerdashboard);
 router.get("/orders", OwnerAllOrders);
+router.patch("/orders/:id/status", OwnerOrderStatus);
 router.post("/editprofile",
   authentication,
   upload.single("profilePicture"),

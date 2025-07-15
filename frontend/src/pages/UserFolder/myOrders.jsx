@@ -108,7 +108,7 @@ const MyOrders = () => {
                     <p className="text-gray-600 mb-2 font-bold">₹{order.price}</p>
                     <div className='flex gap-1.5 justify-center sm:justify-start'>
                       <span className='font-bold'>Status:</span>
-                      <p className='text-red-900 font-semibold'>Pending</p>
+                      <p className='text-red-900 font-semibold'>{order.status}</p>
                     </div>
                   </div>
                 </Link>

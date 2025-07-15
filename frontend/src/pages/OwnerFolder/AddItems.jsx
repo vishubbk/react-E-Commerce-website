@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState,useEffect  } from "react";
 import axios from "axios";
 import Navbar from "../../components/OwnerNavbar.jsx";
+import { useNavigate } from "react-router-dom";
+
 
 const colorOptions = [
   { name: "White", value: "#ffffff" },
@@ -11,6 +13,9 @@ const colorOptions = [
 ];
 
 const AddItems = () => {
+
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     price: "",
@@ -21,6 +26,19 @@ const AddItems = () => {
     details: "",
     image: null,
   });
+
+
+  useEffect(() => {
+    const token  = localStorage.getItem("token")
+    if (!token) {
+      alert("Login first plz... ")
+      navigate("/owner/login")
+
+    }
+
+    }, [navigate])
+
+
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -55,6 +73,7 @@ const AddItems = () => {
       Object.entries(formData).forEach(([key, value]) => data.append(key, value));
 
       const response = await axios.post(
+
         `${import.meta.env.VITE_BASE_URL}/products/addProduct`,
         data,
         {
@@ -87,8 +106,8 @@ const AddItems = () => {
     <>
       <Navbar />
 
-      <div className="flex justify-center items-center bg-gray-100 min-h-screen py-6">
-        <div className="max-w-3xl w-full bg-white shadow-md rounded-lg p-6 overflow-y-auto h-[90vh]">
+      <div className="flex justify-center items-center bg-gray-100 min-h-screen py-6 ">
+        <div className="max-w-3xl w-full bg-white shadow-md rounded-lg p-6 overflow-y-auto mt-12 h-[84vh]">
           <h2 className="text-2xl font-semibold text-gray-700 mb-4 text-center">Add New Product</h2>
 
           {error && <p className="text-red-500">{error}</p>}

@@ -318,6 +318,20 @@ ownerControllers.OwnerAllOrders = async (req, res) => {
     res.status(500).json({ success: false, message: "Error fetching orders" });
   }
 };
+ownerControllers.OwnerOrderStatus = async (req, res) => {
+  try {
+    console.log(`hit the update order route hello 1`)
+    const{status} =req.body
+    console.log(req.body)
+
+
+  } catch (error) {
+      console.error("Error fetching orders:", error.message);
+      res.status(500).json({ success: false, message: "Error fetching orders" });
+  }
+
+  }
+
 
 
 module.exports = ownerControllers;
