@@ -79,7 +79,7 @@ const ProductsDetails = () => {
               <img
                 src={product.image?.url || "https://via.placeholder.com/300"}
                 alt={product.name}
-                className="w-full max-w-lg h-96 object-fill rounded-md shadow-md"
+                className="w-full max-w-lg h-96 object-contain rounded-md shadow-md"
                 loading="lazy"
               />
             </div>
@@ -88,8 +88,9 @@ const ProductsDetails = () => {
             <div className="flex flex-col justify-center text-center md:text-left">
               <h1 className="text-3xl font-bold mb-4 text-gray-800">{product.name}</h1>
               <p className="text-gray-600 text-lg mb-4">{product.Details}</p>
-              <p className="text-gray-700 text-xl font-semibold mb-4">
-                Price: <span className="text-green-600">₹{product.price}</span>
+              <p className="text-gray-700 text-xl font-semibold mb-4 ">
+                Price: <strike className="text-blue-600">₹{product.price}</strike>
+                <span className="text-green-600 ml-2 ">₹{product.discount}</span>
               </p>
 
               <div className="flex flex-col gap-4">

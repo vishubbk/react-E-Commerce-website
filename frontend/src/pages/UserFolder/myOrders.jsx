@@ -49,7 +49,7 @@ const MyOrders = () => {
   const handleCancelOrder = async (orderId) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`${import.meta.env.VITE_BASE_URL}/users/myorders/${orderId}`,  {
+      await axios.delete(`${import.meta.env.VITE_BASE_URL}/users/myorders/${orderId}`, {
         headers: { Authorization: `Bearer ${token}` }, // ✅ Token should go inside headers
         withCredentials: true, // ✅ If your backend uses cookies also
       });
@@ -98,15 +98,22 @@ const MyOrders = () => {
               >
                 {/* Wrap image and product name inside the Link */}
                 <Link to={`/products/${order.productId}`} className="flex items-center flex-grow hover:underline">
-                  <img src={order.image?.url || "https://via.placeholder.com/150"} alt={order.name} className="w-24 h-24 object-cover rounded-md mr-4 shadow-lg transition-transform transform hover:scale-105" />
+                  <img src={order.image?.url || "https://via.placeholder.com/150"} alt={order.name} className="w-30 h-25 object-cover rounded-md mr-4 shadow-lg transition-transform transform hover:scale-105" />
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-800">{order.name}</h3>
-                    <p className="text-gray-600 font-bold">₹{order.price}</p>
+                    <h3 className="text-lg  font-semibold text-gray-800"> {order.name.length > 65
+                      ? `${order.name.substring(0, 65)}...`
+                      : order.name}</h3>
+                    <p className="text-gray-600 mb-2 font-bold">₹{order.price}</p>
+                    <div className='flex gap-1.5'>
+                      <span className='font-bold '>Status:</span>
+                      <p className='text-red-900 font-semibold '>Pending</p>
+                    </div>
+
                   </div>
                 </Link>
                 <button
                   onClick={() => handleCancelOrder(order._id)}
-                  className="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
+                  className="bg-red-500 min-w-[13vw] hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
                 >
                   Cancel Order
                 </button>

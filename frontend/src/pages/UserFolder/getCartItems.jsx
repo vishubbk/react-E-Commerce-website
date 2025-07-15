@@ -23,6 +23,8 @@ const GetCartItems = () => {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
+        console.log(response.data);
+
         setCartItems(response.data || []);
       } catch (error) {
         console.error("Error fetching cart items:", error);
@@ -101,14 +103,16 @@ const GetCartItems = () => {
                 Shopping Cart ({cartItems.length} items)
               </h2>
               {cartItems.map((item) => (
+
                 <div key={item._id} className="bg-white rounded-lg shadow-md p-4 flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
                   <img
                     src={item.image?.url || "https://via.placeholder.com/150"}
                     alt={item.name}
                     className="w-24 h-24 object-cover rounded-md"
                   />
+                   <Link to={`/products/${item._id}`}>
                   <div className="flex-1 space-y-2 text-center sm:text-left">
-                    <h3 className="text-lg font-semibold text-gray-900">{item.name || "No Name"}</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">{item.name|| "No Name"}</h3>
                     <div className="flex justify-center sm:justify-start items-center space-x-2">
                       <del className="text-gray-500">₹{item.price}</del>
                       <span className="text-xl font-bold text-gray-900">₹{item.discount || item.price}</span>
@@ -129,7 +133,7 @@ const GetCartItems = () => {
                         Remove
                       </button>
                     </div>
-                  </div>
+                  </div></Link>
                 </div>
               ))}
             </div>
