@@ -63,8 +63,10 @@ productControllers.addProduct = async (req, res) => {
 
 productControllers.getAllProducts = async (req, res) => {
   try {
-    const products = await productModel.find.sort({ createdAt: -1 });
-    res.status(200).json(products);
+    const products = await productModel.find();
+    const reversedProducts = products.reverse();
+
+    res.status(200).json(reversedProducts);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
