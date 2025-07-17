@@ -137,7 +137,7 @@ const Home = () => {
                   className="bg-white p-4 min-h-9  rounded-lg shadow-lg hover:shadow-xl transition cursor-pointer"
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
-                
+
                 >
                   <Link to={`/products/${product._id}`}>
                     <div className="relative  h-48 overflow-hidden rounded-md">
