@@ -135,12 +135,17 @@ const Home = () => {
                 <motion.div
                   key={product._id}
                   className="bg-white p-4 min-h-9  rounded-lg shadow-lg hover:shadow-xl transition cursor-pointer"
+                  style={{
+                    backgroundColor: product.bgcolor || "#ffffff",
+                    color: product.textcolor || "#000000",
+                    border: `2px solid ${product.panelcolor || "#cccccc"}`,
+                  }}
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
 
                 >
                   <Link to={`/products/${product._id}`}>
-                    <div className="relative  h-48 overflow-hidden rounded-md">
+                    <div className="relative   h-48 overflow-hidden rounded-md">
                       <img
                         src={product.image?.url || "https://via.placeholder.com/150"}
                         alt={product.name}

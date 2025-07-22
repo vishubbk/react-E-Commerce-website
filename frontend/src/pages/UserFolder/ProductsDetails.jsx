@@ -113,7 +113,7 @@ const ProductsDetails = () => {
             {/* More Details */}
             <div className="bg-gray-100 p-6 rounded-md shadow-sm col-span-1 md:col-span-2 w-full">
               <h2 className="text-2xl font-semibold text-gray-800 mb-2">More Details</h2>
-              <p className="text-gray-700">{product.details || "No additional details available."}</p>
+              <p className="text-gray-700">{product.information || "No additional details available."}</p>
             </div>
           </div>
         )}

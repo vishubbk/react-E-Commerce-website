@@ -11,7 +11,9 @@ const {
   Ownerdashboard,
   editProfile,
   OwnerAllOrders,
-  OwnerOrderStatus
+  OwnerOrderStatus,
+  EditProduct,
+  getProductid
 } = require("../controllers/ownerControllers");
 
 const router = express.Router();
@@ -21,10 +23,13 @@ router.use(cookieParser());
 router.post("/register", registerOwner);
 router.post("/login", loginOwner);
 router.post("/logout", logoutOwner);
+router.get("/EditProduct/:id", authentication, getProductid);
+router.put("/EditProduct/:id", authentication, EditProduct);
 
 // Protected routes
 router.get("/profile", authentication, getOwnerProfile);
 router.get("/dashboard", authentication, Ownerdashboard);
+
 router.get("/orders", OwnerAllOrders);
 router.post("/orders/update-status", OwnerOrderStatus);
 router.post("/editprofile",

@@ -21,6 +21,7 @@ import OwnerAddItems from './pages/OwnerFolder/AddItems.jsx';
 import OwnerProfile from './pages/OwnerFolder/Profile.jsx';
 import OwnerProfileEdit from './pages/OwnerFolder/EditProfile.jsx';
 import OwnerAllOrders from './pages/OwnerFolder/AllOrdersShow.jsx';
+import EditProduct from './pages/OwnerFolder/ItemsEdit.jsx';
 
 import Privacy from './pages/Static/Privacy.jsx';
 import Refund from './pages/Static/Refund.jsx';
@@ -56,6 +57,7 @@ const App = () => {
         <Route path="/owner/profile" element={<OwnerProfile />} />
         <Route path="/owner/editProfile" element={<OwnerProfileEdit />} />
         <Route path="/owner/AllOrders" element={<OwnerAllOrders />} />
+        <Route path="/owner/EditProduct/:id" element={<EditProduct />} />
 
         {/* Product Routes */}
         <Route path="/products/:id" element={<ProductsDetails />} />

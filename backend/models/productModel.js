@@ -9,6 +9,7 @@ const productSchema = new mongoose.Schema({
   panelcolor: { type: String },
   textcolor: { type: String },
   details: { type: String },
+  information: { type: String },
   image: {
     public_id: { type: String, required: true },
     url: { type: String, required: true },

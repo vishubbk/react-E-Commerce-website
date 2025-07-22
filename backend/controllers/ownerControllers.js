@@ -118,7 +118,6 @@ ownerControllers.logoutOwner = async (req, res) => {
   }
 };
 
-
 // 📌 Get Owner Profile
 ownerControllers.getOwnerProfile = async (req, res) => {
   try {
@@ -170,7 +169,7 @@ const ownerData = {
 // 📌 Owner Dashboard
 ownerControllers.Ownerdashboard = async (req, res) => {
   try {
-    const token =  req.headers.authorization?.split(" ")[1];;
+    const token =  req.headers.authorization?.split(" ")[1];
     if (!token) {
       return res.status(401).json({ message: "Unauthorized. Please log in first." });
     }
@@ -198,16 +197,17 @@ ownerControllers.Ownerdashboard = async (req, res) => {
 
     // 🔹 Get all products
     const products = await productModel.find();
+    const reverseProducts = products.reverse()
 
     // 🔹 Get total number of products
-    const totalProducts = products.length;
+    const totalProducts = reverseProducts.length;
 
     res.status(200).json({
       message: "Owner dashboard fetched successfully",
       owner,
       totalUsers,
       users,
-      products,
+      reverseProducts,
       totalProducts,
       token,
     });
@@ -318,12 +318,13 @@ ownerControllers.OwnerAllOrders = async (req, res) => {
     res.status(500).json({ success: false, message: "Error fetching orders" });
   }
 };
+
+// OwnerOrderStatus
 ownerControllers.OwnerOrderStatus = async (req, res) => {
   try {
-    console.log(`hit the api`)
+
     const { status, orderId } = req.body;
-    console.log(orderId)
-    console.log(status)
+
 
     const updatedUser = await userModel.findOneAndUpdate(
       { "orders._id": orderId },
@@ -341,6 +342,48 @@ ownerControllers.OwnerOrderStatus = async (req, res) => {
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };
+
+ownerControllers.EditProduct = async (req, res) => {
+  try {
+    console.log(`Hit the EditProduct API`);
+    const { name, price, discount, bgcolor, panelcolor, textcolor, details,information } = req.body;
+
+    const updated = await productModel.findByIdAndUpdate(
+      req.params.id,
+      { name, price, discount, bgcolor, panelcolor, textcolor, details,information },
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.status(200).json({ message: "Product updated successfully", product: updated });
+  } catch (error) {
+    console.error("Server Error:", error.message);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+
+ownerControllers.getProductid = async (req, res) => {
+  try {
+    console.log(`Hit the get product API`);
+
+
+    const product = await productModel.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.status(200).json(product);
+  } catch (error) {
+    console.error("Server Error:", error.message);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+
 
 
 
