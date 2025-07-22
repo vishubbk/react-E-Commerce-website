@@ -46,7 +46,7 @@ const AllItems = () => {
             {items.map((item) => (
               <div
                 key={item._id}
-                className="min-h-100 max-h-150 shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300"
+                className="min-h-100 max-h-150 shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
                 style={{
                   backgroundColor: item.bgcolor || "#ffffff",
                   color: item.textcolor || "#000000",
@@ -57,7 +57,7 @@ const AllItems = () => {
                   <img
                     src={item.image?.url || "https://via.placeholder.com/150"}
                     alt={item.name}
-                    className="absolute inset-0 w-full h-full object-contain hover:scale-110 transition duration-500"
+                    className="absolute inset-0 w-full h-full object-contain hover:scale-50 transition duration-500"
                   />
                 </div>
 
