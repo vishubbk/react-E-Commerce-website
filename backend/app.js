@@ -5,6 +5,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const connectdb = require("./db/db");
+const path = require("path");
+
 
 // Import Routes
 const userRoutes = require("./routes/userRoutes");
@@ -79,9 +81,12 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Internal Server Error" });
 });
 
-// 🔹 Catch-All Route
+// Serve static files from React build folder
+app.use(express.static(path.join(__dirname, "client/build")));
+
+// React fallback route for client-side routing
 app.get("*", (req, res) => {
-  res.status(404).send("404 - Page Not Found");
+  res.sendFile(path.join(__dirname, "client/build", "index.html"));
 });
 
 // 🔹 Start Server

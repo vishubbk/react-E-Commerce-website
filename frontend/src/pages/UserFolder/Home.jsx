@@ -144,6 +144,7 @@ const Home = () => {
                   animate={{ opacity: 1, y: 0 }}
 
                 >
+
                   <Link to={`/products/${product._id}`}>
                     <div className="relative   h-48 overflow-hidden rounded-md">
                       <img
@@ -174,7 +175,7 @@ const Home = () => {
                   </Link>
                   <button
                     onClick={() => addToCart(product._id, product.name)}
-                    className="mt-3 w-full bg-blue-600 text-white py-2 rounded-md flex items-center justify-center gap-2 hover:bg-blue-700 transition"
+                    className="mt-3 w-full bg-blue-600 cursor-pointer text-white py-2 rounded-md flex items-center justify-center gap-2 hover:bg-blue-700 transition"
                   >
                     🛒 Add to Cart
                   </button>
