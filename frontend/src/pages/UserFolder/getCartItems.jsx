@@ -8,24 +8,28 @@ import Navbar from "../../components/Navbar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { motion } from "framer-motion";
+const baseURL = import.meta.env.VITE_BASE_URL
+
 
 const GetCartItems = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
         setLoading(true);
         const token = localStorage.getItem("token");
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/getCartItems`, {
+        const response = await axios.get(`${baseURL}/users/getCartItems`, {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
+
         });
-        console.log(response.data);
 
         setCartItems(response.data || []);
+        console.log(`baseURL ${baseURL}`)
       } catch (error) {
         console.error("Error fetching cart items:", error);
         toast.error("You need to login first.");
