@@ -8,7 +8,7 @@ require("dotenv").config();
 
 const router = express.Router();
 
-router.post("/register", registerUser);
+router.post("/register",authMiddleware, registerUser);
 router.post("/login", loginUser);
 router.post("/addtocart", Addtocart);
 router.post("/buynowSuccessful/:id", buynowSuccessful);
@@ -17,12 +17,12 @@ router.delete("/myorders/:orderId", cancelOrder);
 
 
 
-router.post("/logout", logoutUser);
-router.get("/profile", getUserProfile); // ✅ Protected Route
-router.get("/getCartItems", getCartItems); // ✅ Protected Route
+router.post("/logout",authMiddleware, logoutUser);
+router.get("/profile",authMiddleware, getUserProfile); // ✅ Protected Route
+router.get("/getCartItems",authMiddleware, getCartItems); // ✅ Protected Route
 router.post("/removeCart/:itemId", async (req, res) => {
   try {
-   
+
 
     const token =  req.headers.authorization?.split(" ")[1];
     const cartItemId = req.params.itemId; // Ye cart item ka _id hai, productId nahi
