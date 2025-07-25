@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
+
 
 import Buynow from './pages/UserFolder/buynowSummery.jsx';
 import UserCart from './pages/UserFolder/getCartItems.jsx';
