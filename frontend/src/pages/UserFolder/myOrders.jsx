@@ -5,6 +5,8 @@ import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { motion } from 'framer-motion';
+import Toastify from "toastify-js";
+import "toastify-js/src/toastify.css";
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -16,11 +18,16 @@ const MyOrders = () => {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem("token");
-
+        const token =localStorage.getItem("token")
         if (!token) {
-          navigate("/users/login");
-          return;
+          Toastify({
+            text: ` First Login then So Your Orders ..!! `,
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            style: { background: "red", color: "#fff", borderRadius: "8px", fontWeight: "bold", padding: "12px" },
+          }).showToast();
+         return navigate('/users/login')
         }
 
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/myorders`,

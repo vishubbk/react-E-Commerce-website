@@ -3,16 +3,30 @@ import axios from "axios";
 import { useNavigate,Link } from "react-router-dom";
 import Header from "../../components/Navbar";
 import { ArrowLeft, Mail, Phone, User, Edit2 } from "lucide-react";
+import Toastify from "toastify-js";
+import "toastify-js/src/toastify.css";
 
 const Profile = () => {
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token =localStorage.getItem("token")
+        if (!token) {
+          Toastify({
+            text: `You need to login first.!! `,
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            style: { background: "red", color: "#fff", borderRadius: "8px", fontWeight: "bold", padding: "12px" },
+          }).showToast();
+         return navigate('/users/login')
+        }
         const response = await axios.get(
           `${import.meta.env.VITE_BASE_URL}/users/profile`,
           {

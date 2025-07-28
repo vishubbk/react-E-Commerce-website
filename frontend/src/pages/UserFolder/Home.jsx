@@ -8,6 +8,7 @@ import Lenis from "@studio-freight/lenis";
 import { motion } from "framer-motion";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment, useGLTF } from "@react-three/drei";
+import { useNavigate } from "react-router-dom";
 
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
@@ -25,6 +26,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [bannerIndex, setBannerIndex] = useState(0);
+  const navigate = useNavigate();
 
   const banners = [
     { title: "🔥 Mega Sale - Up to 50% Off!", subtitle: "Shop the best deals before they run out!" },
@@ -81,6 +83,17 @@ const Home = () => {
   const addToCart = async (productId, productName) => {
     try {
       const token =localStorage.getItem("token")
+      if (!token) {
+        Toastify({
+          text: ` First Login then Add to cart ..!! `,
+          duration: 3000,
+          gravity: "top",
+          position: "right",
+          style: { background: "red", color: "#fff", borderRadius: "8px", fontWeight: "bold", padding: "12px" },
+        }).showToast();
+       return navigate('/users/login')
+      }
+
       await axios.post(`${import.meta.env.VITE_BASE_URL}/users/addtocart`, { productId },  {
         headers: { Authorization: `Bearer ${token}` }, // ✅ Token should go inside headers
         withCredentials: true, // ✅ If your backend uses cookies also
