@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import "../../App.css";
 
 const OrderSuccessPage = () => {
   const navigate = useNavigate();
@@ -65,7 +66,11 @@ const OrderSuccessPage = () => {
   }, [id, navigate]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-100"style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }}>
       <ToastContainer />
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-md text-center">
         <h2 className="text-2xl font-bold text-green-600 mb-4">

@@ -32,7 +32,7 @@ const Navbar = () => {
     setIsLoggingOut(true);
 
     try {
-     
+
       localStorage.clear();
       sessionStorage.clear();
 
@@ -51,6 +51,11 @@ const Navbar = () => {
   };
 
   return (
+    <div style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }}>
     <>
       <ToastContainer position="top-right" autoClose={3000} />
 
@@ -241,7 +246,7 @@ const Navbar = () => {
           }
         `}
       </style>
-    </>
+    </></div>
   );
 };
 

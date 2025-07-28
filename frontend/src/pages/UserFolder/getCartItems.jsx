@@ -9,6 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { motion } from "framer-motion";
 const baseURL = import.meta.env.VITE_BASE_URL
+import "../../App.css";
 
 
 const GetCartItems = () => {
@@ -78,6 +79,11 @@ const GetCartItems = () => {
   );
 
   return (
+    <div style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }}>
     <>
       <Navbar />
       <div className="container mx-auto absolute mt-20 px-4 sm:px-6 lg:px-8 py-8">
@@ -184,7 +190,7 @@ const GetCartItems = () => {
         )}
       </div>
       <ToastContainer position="top-right" autoClose={2500} hideProgressBar closeOnClick />
-    </>
+    </></div>
   );
 };
 

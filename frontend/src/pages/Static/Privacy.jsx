@@ -2,7 +2,11 @@ import React from 'react';
 
 const Privacy = () => {
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10 text-gray-800">
+    <div className="max-w-3xl mx-auto px-4 py-10 text-gray-800"style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }}>
       <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">Privacy Policy</h1>
       <p className="mb-4 leading-relaxed">
         We respect your privacy. Any personal information shared with us, including name, email, phone, and address, will be kept confidential.

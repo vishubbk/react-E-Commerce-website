@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import OwnerNavbar from "../../components/OwnerNavbar";
+import "../../App.css";
 
 const OwnerDashboard = () => {
   const [data, setData] = useState(null);
@@ -51,6 +52,11 @@ const OwnerDashboard = () => {
   }, [navigate]);
 
   return (
+    <div style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }}>
     <>
       <OwnerNavbar />
 
@@ -115,7 +121,7 @@ const OwnerDashboard = () => {
           <p className="text-center text-red-500">Failed to load data.</p>
         )}
       </div>
-    </>
+    </></div>
   );
 };
 

@@ -5,13 +5,14 @@ import Header from "../../components/Navbar";
 import { ArrowLeft, Mail, Phone, User, Edit2 } from "lucide-react";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
+import "../../App.css";
 
 const Profile = () => {
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  
+
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -65,7 +66,11 @@ const Profile = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }} className="min-h-screen bg-gray-50">
       <Header />
 
       <button

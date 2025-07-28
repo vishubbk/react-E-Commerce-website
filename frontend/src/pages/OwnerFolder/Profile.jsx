@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import OwnerNavbar from "../../components/OwnerNavbar";
+import "../../App.css";
 
 const Profile = () => {
   const [owner, setOwner] = useState(null);
@@ -37,7 +38,11 @@ const Profile = () => {
   }, [navigate]); // ✅ Added `navigate` in dependency array
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100"style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }}>
       <OwnerNavbar />
       <div className="container mx-auto px-4 py-8">
         {loading ? (

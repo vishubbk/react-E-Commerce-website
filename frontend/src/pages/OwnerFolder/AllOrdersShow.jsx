@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/OwnerNavbar.jsx";
 import Swal from "sweetalert2";
 import { X, Check } from "lucide-react";
+import "../../App.css";
 
 const AllOrdersShow = () => {
   const navigate = useNavigate();
@@ -73,6 +74,11 @@ const AllOrdersShow = () => {
   };
 
   return (
+    <div style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }}>
     <>
       <Navbar />
       <div className="container mx-auto p-6">
@@ -157,7 +163,7 @@ const AllOrdersShow = () => {
           <p className="text-center text-gray-600">No orders available.</p>
         )}
       </div>
-    </>
+    </></div>
   );
 };
 

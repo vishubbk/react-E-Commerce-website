@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
+import "../../App.css";
 
 const BuyNowSummary = () => {
   const navigate = useNavigate();
@@ -105,7 +106,11 @@ const BuyNowSummary = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
+    <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg mt-10" style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }}>
       {loading ? (
         <p className="text-center text-gray-500">Loading product details...</p>
       ) : (

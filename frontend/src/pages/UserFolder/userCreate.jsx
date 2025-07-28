@@ -4,6 +4,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { Mail, Lock, Phone, User } from "lucide-react";
+import "../../App.css";
 
 const UserCreate = () => {
   const [firstname, setFirstname] = useState("");
@@ -13,6 +14,7 @@ const UserCreate = () => {
   const [contact, setContact] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
 
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
   const isValidContact = (contact) => /^[0-9]{10}$/.test(contact);
@@ -67,7 +69,11 @@ const UserCreate = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
+    <div style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }} className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Create User Account</h1>
       <form
         onSubmit={handleSubmit}

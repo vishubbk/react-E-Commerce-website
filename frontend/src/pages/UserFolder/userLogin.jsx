@@ -4,12 +4,14 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ArrowLeft, Lock, Mail } from "lucide-react";
+import "../../App.css";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,7 +53,11 @@ const UserLogin = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-r from-pink-100 via-purple-200 to-blue-300 flex items-center justify-center px-4 relative">
+    <div style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }} className="min-h-screen w-full bg-gradient-to-r from-pink-100 via-purple-200 to-blue-300 flex items-center justify-center px-4 relative">
 
       {/* Back Button */}
       <button

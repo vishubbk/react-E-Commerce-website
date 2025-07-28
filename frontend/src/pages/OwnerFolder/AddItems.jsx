@@ -3,6 +3,7 @@ import axios from "axios";
 import Navbar from "../../components/OwnerNavbar.jsx";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import "../../App.css";
 
 
 const colorOptions = [
@@ -119,6 +120,11 @@ const AddItems = () => {
 
 
   return (
+    <div style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }}>
     <>
       <Navbar />
 
@@ -250,7 +256,7 @@ const AddItems = () => {
           </form>
         </div>
       </div>
-    </>
+    </></div>
   );
 };
 

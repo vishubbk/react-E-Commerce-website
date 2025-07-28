@@ -122,7 +122,14 @@ const Home = () => {
   );
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div
+    className="bg-gray-100 min-h-screen"
+    style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 500,
+      fontStyle: "normal",
+    }}
+  >
       <div className="absolute top-0 "> <Navbar /></div>
 
       <div className="w-full">

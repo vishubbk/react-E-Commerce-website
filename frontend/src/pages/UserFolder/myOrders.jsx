@@ -7,6 +7,7 @@ import Footer from "../../components/Footer";
 import { motion } from 'framer-motion';
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
+import "../../App.css";
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -68,6 +69,11 @@ const MyOrders = () => {
   };
 
   return (
+    <div style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }}>
     <>
       <Navbar className="absolute" />
       <div className="p-4 sm:p-6 relative top-18 max-w-6xl mx-auto">
@@ -143,13 +149,13 @@ const MyOrders = () => {
           </div>
         ) : (
           <div className="text-center text-gray-500 mt-8">
-            <img src="https://via.placeholder.com/200x150?text=No+Orders" alt="No Orders" className="mx-auto mb-4" />
+            <img src="https://cdn-icons-png.flaticon.com/128/1873/1873154.png" alt="No Orders" className="mx-auto mb-4" />
             <p>No orders found.</p>
           </div>
         )}
         <Footer />
       </div>
-    </>
+    </></div>
   );
 };
 

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "../../components/Navbar.jsx";
 import { ArrowLeft } from "lucide-react";
+import "../../App.css";
 
 const UserProfileEdit = () => {
   const [userData, setUserData] = useState({
@@ -109,7 +110,11 @@ const UserProfileEdit = () => {
   };
 
   return (
-    <div>
+    <div style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }}>
       <Header />
       <button
         className="absolute top-20 left-6 flex items-center text-gray-700"

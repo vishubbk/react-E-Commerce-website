@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import OwnerNavbar from "../../components/OwnerNavbar.jsx";
+import "../../App.css";
 
 const AllItems = () => {
   const [items, setItems] = useState([]);
@@ -32,6 +33,11 @@ const AllItems = () => {
   }, []);
 
   return (
+    <div style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }}>
     <>
       <OwnerNavbar />
       <div className="max-w-6xl mx-auto p-6">
@@ -111,7 +117,7 @@ const AllItems = () => {
           <p className="text-center text-gray-500">No items available.</p>
         )}
       </div>
-    </>
+    </></div>
   );
 };
 

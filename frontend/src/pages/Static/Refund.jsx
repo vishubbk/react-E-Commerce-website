@@ -2,7 +2,11 @@ import React from 'react';
 
 const Refund = () => {
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10 text-gray-800">
+    <div className="max-w-3xl mx-auto px-4 py-10 text-gray-800"style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }}>
       <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">Refund & Cancellation Policy</h1>
       <p className="mb-4 leading-relaxed">
         All sales made through our website are final. We do not offer refunds or cancellations once a product or service has been purchased.

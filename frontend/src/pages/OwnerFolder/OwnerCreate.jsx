@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import "../../App.css";
 
 
   const OwnerCreate = () => {
@@ -73,7 +74,11 @@ import axios from "axios";
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100" style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }}>
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Create User Account</h1>
       <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
         <div className="flex flex-col gap-4">

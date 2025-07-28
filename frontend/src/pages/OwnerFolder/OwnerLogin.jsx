@@ -4,6 +4,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "../../App.css";
 
 const OwnerLogin = () => {
   const [email, setEmail] = useState("");
@@ -32,7 +33,7 @@ const OwnerLogin = () => {
         toast.success("Login successful!");
         localStorage.setItem("token", response.data.token);
         // ✅ Corrected token assignment
-       
+
 
 
 
@@ -61,7 +62,11 @@ const OwnerLogin = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100" style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }}>
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Owner Login</h1>
 
       <form className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md" onSubmit={handleSubmit}>

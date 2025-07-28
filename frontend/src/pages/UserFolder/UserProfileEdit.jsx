@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "../../components/Navbar.jsx";
 import { ArrowLeft } from "lucide-react";
+import "../../App.css";
 
 const UserProfileEdit = () => {
   const [userData, setUserData] = useState({
@@ -129,6 +130,11 @@ const UserProfileEdit = () => {
   };
 
   return (
+    <div style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }}>
     <>
       <Header />
       <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
@@ -242,7 +248,7 @@ const UserProfileEdit = () => {
           </form>
         </div>
       </div>
-    </>
+    </></div>
   );
 };
 

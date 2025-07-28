@@ -103,6 +103,11 @@ const ItemsEdit = () => {
   };
 
   return (
+    <div style={{
+      fontFamily: '"Gidole", sans-serif',
+      fontWeight: 400,
+      fontStyle: "normal",
+    }}>
     <>
       <Navbar />
 
@@ -234,7 +239,7 @@ const ItemsEdit = () => {
           </form>
         </div>
       </div>
-    </>
+    </></div>
   );
 };
 
