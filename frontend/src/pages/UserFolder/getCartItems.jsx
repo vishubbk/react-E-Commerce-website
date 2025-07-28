@@ -80,7 +80,7 @@ const GetCartItems = () => {
   return (
     <>
       <Navbar />
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="container mx-auto absolute mt-20 px-4 sm:px-6 lg:px-8 py-8">
         {loading ? (
           <div className="flex justify-center items-center min-h-[50vh]">
             <motion.div
@@ -114,7 +114,7 @@ const GetCartItems = () => {
                     src={item.image?.url || "https://via.placeholder.com/150"}
                     alt={item.name}
                     className="w-24 h-24  rounded-md"
-                  />
+                  /></Link>
 
                   <div className="flex-1 space-y-2 text-center sm:text-left ml-8">
                     <h3 className="text-lg font-semibold text-gray-900">{item.name|| "No Name"}</h3>
@@ -135,12 +135,12 @@ const GetCartItems = () => {
 
                       <button
                         onClick={() => handleRemoveItem(item._id, item.name)}
-                        className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition"
+                        className="px-4 py-2 cursor-pointer border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition"
                       >
                         Remove
                       </button>
                     </div>
-                  </div></Link>
+                  </div>
                 </div>
               ))}
             </div>

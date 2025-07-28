@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Lock, Mail } from "lucide-react";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
@@ -26,17 +26,12 @@ const UserLogin = () => {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/users/login`,
         { email, password },
-        { withCredentials: true } // ✅ Sends and stores cookies
+        { withCredentials: true }
       );
 
       if (response.status === 200) {
         toast.success("✅ Login Successful!", { autoClose: 2000 });
-
-        // ✅ Store token in localStorage
-
-         localStorage.setItem("token", response.data.token);
-         const token1 = localStorage.getItem("token")
-       
+        localStorage.setItem("token", response.data.token);
 
         setTimeout(() => {
           setLoading(false);
@@ -45,7 +40,6 @@ const UserLogin = () => {
       }
     } catch (error) {
       setLoading(false);
-
       if (error.response) {
         toast.error(`❌ ${error.response.data.message || "Login failed!"}`);
       } else if (error.request) {
@@ -56,34 +50,78 @@ const UserLogin = () => {
     }
   };
 
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <button className="absolute top-6 left-6 flex items-center text-gray-700" onClick={() => navigate("/")}>
-        <ArrowLeft className="w-5 h-5 mr-2" /> Back
+    <div className="min-h-screen w-full bg-gradient-to-r from-pink-100 via-purple-200 to-blue-300 flex items-center justify-center px-4 relative">
+
+      {/* Back Button */}
+      <button
+        className="absolute top-6 left-6 flex items-center text-gray-800 font-medium hover:text-black"
+        onClick={() => navigate("/")}
+      >
+        <ArrowLeft className="w-5 h-5 mr-2" />
+        Back
       </button>
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Login</h1>
-      <form className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md" onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-4">
-          <label className="text-gray-700 font-medium">
-            Email
-            <input className="w-full mt-1 border border-gray-300 rounded-md p-3" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          </label>
 
-          <label className="text-gray-700 font-medium">
-            Password
-            <input className="w-full mt-1 border border-gray-300 rounded-md p-3" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          </label>
-        </div>
-
-        <button type="submit" disabled={loading} className="w-full mt-6 bg-blue-600 text-white py-3 rounded-md">
-          {loading ? "Logging in..." : "Login"}
-        </button>
-
-        <p className="text-gray-700 font-medium mt-3">
-          Don't have an account? <Link className="text-blue-500" to="/users/register">Create Account</Link>
+      {/* Form Container */}
+      <div className="backdrop-blur-lg bg-white/40 shadow-2xl rounded-2xl p-8 w-full max-w-md z-10">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">
+          Welcome Back 👋
+        </h1>
+        <p className="text-center text-gray-600 mb-6">
+          Login to continue shopping
         </p>
-      </form>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {/* Email Field */}
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+          </div>
+
+          {/* Password Field */}
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+          </div>
+
+          {/* Login Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-purple-600 hover:bg-purple-700 transition text-white py-3 rounded-lg font-semibold shadow-md"
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+
+          {/* Register Link */}
+          <p className="text-center text-gray-700 mt-3">
+            Don't have an account?{" "}
+            <Link to="/users/register" className="text-purple-600 font-medium hover:underline">
+              Sign up
+            </Link>
+          </p>
+        </form>
+      </div>
+
+      {/* Background Illustration (Optional) */}
+      <img
+        src="https://media.publit.io/file/w_646,h_548,c_fit,q_80/chrmpWebsite/group-8-2.svg"
+        alt="Illustration"
+        className="absolute bottom-0 right-0 w-[300px] opacity-40 hidden md:block"
+      />
+
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );

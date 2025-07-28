@@ -32,13 +32,7 @@ const Navbar = () => {
     setIsLoggingOut(true);
 
     try {
-      await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/users/logout`,
-        {},
-        { withCredentials: true }
-      );
-
-      Cookies.remove("token");
+     
       localStorage.clear();
       sessionStorage.clear();
 
@@ -61,7 +55,7 @@ const Navbar = () => {
       <ToastContainer position="top-right" autoClose={3000} />
 
       {/* Navbar Header */}
-      <header className="backdrop-blur-md shadow-md fixed w-full z-10 bg-white/90">
+      <header className="backdrop-blur-md shadow-md fixed w-full z-10 bg-gradient-to-r from-transparent- to-white/50 ">
         <div className="container mx-auto flex justify-between items-center p-4">
           <Link to={`/`}><div className="flex items-center gap-2">
             <Package className="w-8 h-8 text-green-600" />
@@ -80,7 +74,7 @@ const Navbar = () => {
               <Link
                 key={path}
                 to={path}
-                className={`nav-link flex items-center gap-2 ${
+                 className={`nav-link flex items-center gap-2 transform transition duration-300 ease-in-out hover:scale-110 hover ${
                   location.pathname === path ? "active" : ""
                 }`}
               >
@@ -120,12 +114,12 @@ const Navbar = () => {
 
       {/* Mobile Nav */}
       <div
-        className={`fixed inset-0 bg-black/20 backdrop-blur-sm z-20 transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black/20 backdrop-blur-sm z-20 bg-gradient-to-r from-transparent-  duration-300 ${
           mobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       >
         <div
-          className={`w-72 h-full bg-white shadow-lg p-6 transition-transform duration-300 ${
+          className={`w-72 h-full bg-blue-100 shadow-lg p-6 transition-transform duration-300 ${
             mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >

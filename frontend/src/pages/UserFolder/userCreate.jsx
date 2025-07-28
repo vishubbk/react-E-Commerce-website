@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import { Mail, Lock, Phone, User } from "lucide-react";
 
 const UserCreate = () => {
   const [firstname, setFirstname] = useState("");
@@ -37,12 +38,10 @@ const UserCreate = () => {
     }
 
     toast.info("🔄 Creating account...", { autoClose: 1000 });
-
     setLoading(true);
 
     try {
       const userData = { firstname, lastname, email, password, contact };
-
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/users/register`,
         userData
@@ -50,7 +49,6 @@ const UserCreate = () => {
 
       if (response.status === 201) {
         toast.success("✅ User created successfully!", { autoClose: 2000 });
-
         setTimeout(() => {
           setFirstname("");
           setLastname("");
@@ -69,85 +67,101 @@ const UserCreate = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Create User Account</h1>
-      <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md"
+      >
         <div className="flex flex-col gap-4">
-          <div className="fullname flex w-full gap-3">
-            <label className="text-gray-700 font-medium w-1/2">
-              First Name
+          {/* First and Last Name */}
+          <div className="flex gap-3">
+            {/* First Name */}
+            <div className="relative w-1/2">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <input
-                className="w-full mt-1 border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-blue-500"
                 type="text"
-                placeholder="Enter your first name"
+                placeholder="First Name"
+                className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
                 value={firstname}
                 onChange={(e) => setFirstname(e.target.value)}
-                required
               />
-            </label>
+            </div>
 
-            <label className="text-gray-700 font-medium w-1/2">
-              Last Name
+            {/* Last Name */}
+            <div className="relative w-1/2">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <input
-                className="w-full mt-1 border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-blue-500"
                 type="text"
-                placeholder="Enter your last name"
+                placeholder="Last Name"
+                className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
                 value={lastname}
                 onChange={(e) => setLastname(e.target.value)}
-                required
               />
-            </label>
+            </div>
           </div>
 
-          <label className="text-gray-700 font-medium">
-            Email
+          {/* Email */}
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             <input
-              className="w-full mt-1 border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-blue-500"
               type="email"
-              placeholder="Enter your email"
+              placeholder="Email"
+              className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
             />
-          </label>
+          </div>
 
-          <label className="text-gray-700 font-medium">
-            Password
+          {/* Password */}
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             <input
-              className="w-full mt-1 border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-blue-500"
               type="password"
-              placeholder="Enter your password"
+              placeholder="Password"
+              className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
             />
-          </label>
+          </div>
 
-          <label className="text-gray-700 font-medium">
-            Contact
+          {/* Contact */}
+          <div className="relative">
+            <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             <input
-              className="w-full mt-1 border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-blue-500"
               type="text"
-              placeholder="Enter your contact number"
+              placeholder="Contact Number"
+              className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
               value={contact}
               onChange={(e) => setContact(e.target.value)}
-              required
             />
-          </label>
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition-all duration-300"
+          >
+            {loading ? "Creating..." : "Create Account"}
+          </button>
+
+          {/* Link to Login */}
+          <p className="text-gray-700 font-medium text-center">
+            Already have an account?
+            <Link className="text-blue-500 ml-1" to="/users/login">
+              Login
+            </Link>
+          </p>
         </div>
-
-        <button
-          type="submit"
-          className="w-full mt-6 bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition-all duration-300"
-          disabled={loading}
-        >
-          {loading ? "Creating..." : "Create Account"}
-        </button>
-
-        <p className="text-gray-700 font-medium mt-3 flex justify-center">
-          Already have an account? <Link className="text-blue-500 ml-1" to="/users/login">Login</Link>
-        </p>
       </form>
+
+       {/* Background Illustration (Optional) */}
+       <img
+        src="https://media.publit.io/file/w_646,h_548,c_fit,q_80/chrmpWebsite/group-8-2.svg"
+        alt="Illustration"
+        className="absolute bottom-0 right-0 w-[300px] opacity-40 hidden md:block"
+      />
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );

@@ -8,7 +8,7 @@ require("dotenv").config();
 
 const router = express.Router();
 
-router.post("/register",authMiddleware, registerUser);
+router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/addtocart", Addtocart);
 router.post("/buynowSuccessful/:id", buynowSuccessful);
