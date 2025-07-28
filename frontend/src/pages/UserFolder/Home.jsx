@@ -123,18 +123,34 @@ const Home = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen">
-      <Navbar />
-      <div className="">
-      <motion.div
-        className="relative  w-full h-145 bg-gradient-to-r from-white-100 via-red-300 to-blue-600  text-black flex items-center justify-center shadow-md md-grid">
-          <div className="left w-1/3 ml-10">
-          <h1 className="text-3xl font-semibold">{banners[bannerIndex].title}</h1>
-          <p className="text-lg mt-2">{banners[bannerIndex].subtitle}</p></div>
-          <div className=" right mr-10 w-1/2">
-             <img className="w-200" src={bannersImage[bannerIndex].image} alt="" />
+      <div className="absolute top-0 "> <Navbar /></div>
 
-          </div>
-      </motion.div></div>
+      <div className="w-full">
+  <motion.div
+    className="relative mt-5 w-full min-h-[480px] bg-gradient-to-r from-white via-red-300 to-blue-600 text-black shadow-md flex flex-col md:flex-row items-center justify-between px-4 py-8 gap-6"
+  >
+    {/* Left Section */}
+    <div className="w-full md:w-1/2 mt-15 md:mt-0 text-center md:text-left px-4">
+
+      <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold">
+        {banners[bannerIndex].title}
+      </h1>
+      <p className="text-base md:text-lg mt-2">
+        {banners[bannerIndex].subtitle}
+      </p>
+    </div>
+
+    {/* Right Section */}
+    <div className="w-full md:w-1/2 flex justify-center px-4">
+      <img
+        className="w-full max-w-[300px] md:max-w-[400px] h-auto object-contain"
+        src={bannersImage[bannerIndex].image}
+        alt="Banner"
+      />
+    </div>
+  </motion.div>
+</div>
+
 
       <div className="container mx-auto mt-6 px-4">
         <input
