@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../components/OwnerNavbar.jsx";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
+
 
 const colorOptions = [
   { name: "White", value: "#ffffff" },
@@ -83,6 +87,16 @@ const ItemsEdit = () => {
     setSuccess("");
 
     try {
+
+      const result = await Swal.fire({
+        title: `Are you sure To edit this Item ${formData.name}?`,
+        icon: "question",
+        showDenyButton: true,
+        confirmButtonText: "Yes",
+        denyButtonText: "No",
+      });
+
+      if (!result.isConfirmed) return;
       const res = await axios.put(
         `${import.meta.env.VITE_BASE_URL}/owner/EditProduct/${id}`,
         formData,
@@ -101,6 +115,39 @@ const ItemsEdit = () => {
       setLoading(false);
     }
   };
+
+  const handleRemoveItem = async (e) => {
+    try {
+
+      const result = await Swal.fire({
+        title: `Are you sure delete this Item ${formData.name}?`,
+        icon: "question",
+        showDenyButton: true,
+        confirmButtonText: "Yes",
+        denyButtonText: "No",
+      });
+
+      if (!result.isConfirmed) return;
+
+      const del = await axios.delete(
+        `${import.meta.env.VITE_BASE_URL}/owner/delete/${id}`,
+        {
+
+
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      toast.success(`Product deleted SucessFully! `);
+      navigate(-1);
+
+    } catch (error) {
+      toast.error(`Something went wrong! `);
+      console.error(`Can't delete this item. Something went wrong: ${error}`);
+    }
+  };
+
 
   return (
     <div style={{
@@ -236,7 +283,15 @@ const ItemsEdit = () => {
             >
               {loading ? "Updating..." : "Update Product"}
             </button>
+            {/* Delete Button */}
+
           </form>
+          <button
+                        onClick={() => handleRemoveItem(formData._id,formData.name)}
+                        className="px-4 w-full mt-3 py-2 bg-red-500 cursor-pointer border border-gray-300 text-black rounded-md hover:bg-gray-50 transition"
+                      >
+                        Remove Item
+                      </button>
         </div>
       </div>
     </></div>

@@ -13,7 +13,8 @@ const {
   OwnerAllOrders,
   OwnerOrderStatus,
   EditProduct,
-  getProductid
+  getProductid,
+  DeleteProduct
 } = require("../controllers/ownerControllers");
 
 const router = express.Router();
@@ -25,6 +26,7 @@ router.post("/login", loginOwner);
 router.post("/logout", logoutOwner);
 router.get("/EditProduct/:id", authentication, getProductid);
 router.put("/EditProduct/:id", authentication, EditProduct);
+router.delete("/delete/:id", authentication, DeleteProduct);
 
 // Protected routes
 router.get("/profile", authentication, getOwnerProfile);

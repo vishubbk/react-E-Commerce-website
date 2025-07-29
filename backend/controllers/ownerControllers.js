@@ -368,10 +368,7 @@ ownerControllers.EditProduct = async (req, res) => {
 
 ownerControllers.getProductid = async (req, res) => {
   try {
-    console.log(`Hit the get product API`);
-
-
-    const product = await productModel.findById(req.params.id);
+     const product = await productModel.findById(req.params.id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -382,6 +379,27 @@ ownerControllers.getProductid = async (req, res) => {
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };
+
+
+ownerControllers.DeleteProduct = async (req, res) => {
+  try {
+    console.log(`✅ Hit the Delete product API`);
+    const product = await productModel.findByIdAndDelete(req.params.id); // ✅ CORRECT
+
+    if (!product) {
+      console.log('❌ Product not found');
+      return res.status(404).json({ message: "Product Not Found" });
+    }
+
+    console.log(`✅ Product deleted successfully`);
+    res.status(200).json({ success: true, message: "Product deleted", product });
+
+  } catch (error) {
+    console.error("❌ Server Error:", error.message);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
 
 
 
