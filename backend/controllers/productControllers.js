@@ -6,7 +6,7 @@ const productControllers = {};
 // ✅ Add Product Controller
 productControllers.addProduct = async (req, res) => {
   try {
-    console.log(`hit the add item api`);
+
 
     const { name, price, discount, bgcolor, panelcolor, textcolor, details } = req.body;
 
@@ -33,7 +33,7 @@ productControllers.addProduct = async (req, res) => {
       stream.end(image.buffer);
     });
 
-    console.log(`result is a -- ${JSON.stringify(result)}`);
+    
 
     // ✅ Save Product to Database
     const product = new productModel({

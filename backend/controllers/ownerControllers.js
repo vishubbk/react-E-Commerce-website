@@ -345,7 +345,7 @@ ownerControllers.OwnerOrderStatus = async (req, res) => {
 
 ownerControllers.EditProduct = async (req, res) => {
   try {
-    console.log(`Hit the EditProduct API`);
+
     const { name, price, discount, bgcolor, panelcolor, textcolor, details,information } = req.body;
 
     const updated = await productModel.findByIdAndUpdate(
@@ -383,7 +383,7 @@ ownerControllers.getProductid = async (req, res) => {
 
 ownerControllers.DeleteProduct = async (req, res) => {
   try {
-    console.log(`✅ Hit the Delete product API`);
+
     const product = await productModel.findByIdAndDelete(req.params.id); // ✅ CORRECT
 
     if (!product) {
@@ -391,7 +391,7 @@ ownerControllers.DeleteProduct = async (req, res) => {
       return res.status(404).json({ message: "Product Not Found" });
     }
 
-    console.log(`✅ Product deleted successfully`);
+   
     res.status(200).json({ success: true, message: "Product deleted", product });
 
   } catch (error) {

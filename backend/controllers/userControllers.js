@@ -400,7 +400,7 @@ userControllers.buynowSuccessful = async (req, res) => {
 
     // Find the product details
     const product = await cartModel.findById(productId);
-    console.log("��� Product:", product);
+
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -440,14 +440,14 @@ userControllers.MyOrders = async (req, res) => {
   try {
 
     const token = req.headers.authorization.split(" ")[1];;
-    console.log(`your token is ${token}`);
+
     if (!token) {
       return res.status(401).json({ message: "Unauthorized: No token provided" });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userEmail = decoded.email;
-    console.log(`your userEmail is ${userEmail}`);
+
 
     const user = await userModel.findOne({ email: userEmail }).populate("orders");
 
@@ -473,7 +473,7 @@ userControllers.MyOrders = async (req, res) => {
         };
       })
     );
-    console.log("Your Orders With Product Details:", ordersWithProductDetails);;
+
 
       return res.status(200).json({ orders: ordersWithProductDetails });
   } catch (error) {
@@ -484,10 +484,10 @@ userControllers.MyOrders = async (req, res) => {
 
 userControllers.cancelOrder = async (req, res) => {
   try {
-    console.log("You hit the cancel order API");
+
 
     const token = req.headers.authorization.split(" ")[1];
-    console.log(`Your token is ${token}`);
+  
 
     if (!token) {
       return res.status(401).json({ message: "Unauthorized: No token provided" });
