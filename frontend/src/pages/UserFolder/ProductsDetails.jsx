@@ -7,7 +7,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ShoppingBag } from "lucide-react";
 import { motion } from "framer-motion";
-import "../../App.css";
 
 const ProductsDetails = () => {
   const [loader, setLoader] = useState(false);
@@ -50,11 +49,6 @@ const ProductsDetails = () => {
   };
 
   return (
-    <div style={{
-      fontFamily: '"Gidole", sans-serif',
-      fontWeight: 400,
-      fontStyle: "normal",
-    }}>
     <>
       <Navbar />
 
@@ -136,7 +130,7 @@ const ProductsDetails = () => {
         draggable
         pauseOnHover
       />
-    </></div>
+    </>
   );
 };
 

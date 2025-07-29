@@ -19,6 +19,7 @@
     "@studio-freight/lenis": "^1.0.42",
     "@tailwindcss/vite": "^4.0.7",
     "axios": "^1.8.1",
+    "bootstrap": "^5.3.7",
     "framer-motion": "^12.4.10",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.475.0",

@@ -4,7 +4,7 @@ const upload = require("../config/multer-config"); // ✅ Import multer-config
 const { addProduct, getAllProducts, getProductById, deleteProduct } = require("../controllers/productControllers");
 
 // ✅ Corrected Route for Adding Product
-router.post("/addProduct", upload.single("image"), addProduct);
+router.post("/addProduct",  upload.fields([{ name: "image", maxCount: 3 }]), addProduct);
 
 router.get("/", getAllProducts);
 router.get("/:id", getProductById);

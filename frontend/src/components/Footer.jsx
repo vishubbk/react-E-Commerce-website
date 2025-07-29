@@ -9,7 +9,6 @@ const Footer = () => {
         <Link to="/refund" className="hover:text-blue-600 transition">Refund Policy</Link>
         <Link to="/contact" className="hover:text-blue-600 transition">Contact Policy</Link>
         <Link to="/shipping" className="hover:text-blue-600 transition">Shipping Policy</Link>
-        <Link className="nav-link flex items-center gap-2 " to={`/owner/register`}>DemoLink Owners</Link>
       </div>
       <p className="text-xs">&copy; 2025 Vishu-A. All rights reserved.</p>
     </footer>
