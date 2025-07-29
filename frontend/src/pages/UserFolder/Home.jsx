@@ -171,7 +171,7 @@ const Home = () => {
 
       <main className="container mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold mb-6 text-center">🛍️ Featured Products</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
   {loading
     ? Array.from({ length: 8 }).map((_, index) => (
         <div
