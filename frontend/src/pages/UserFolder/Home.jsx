@@ -198,7 +198,7 @@ const Home = () => {
             <>
  {filteredProducts.slice(0, 10).map(renderProductCard)}
 
- <div className="col-span-full h-100 relative flex flex-col md:flex-row items-center justify-between bg-gradient-to-r from-[#27858e] via-red-400 to-[#6a8e27] text-white p-6 rounded-2xl overflow-hidden">
+ <div className="col-span-full h-100 relative flex flex-col md:flex-row items-center justify-between bg-gradient-to-r from-[#27858e] via-red-400   to-[#3a1885] text-white p-6 rounded-2xl overflow-hidden">
   <div className="md:w-1/2 ">
     <img
       src="https://i.ibb.co/fY2pc8c1/LS20250730225719.png"
