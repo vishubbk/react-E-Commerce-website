@@ -3,15 +3,19 @@ import Footer from "../../components/Footer";
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ShoppingBag } from "lucide-react";
 import { motion } from "framer-motion";
+import Toastify from "toastify-js";
+import "toastify-js/src/toastify.css";
 
 const ProductsDetails = () => {
   const [loader, setLoader] = useState(false);
   const [product, setProduct] = useState(null);
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -33,6 +37,18 @@ const ProductsDetails = () => {
   const addToCart = async () => {
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        Toastify({
+          text: `You need to login first.!! `,
+          duration: 3000,
+          gravity: "top",
+          position: "right",
+          style: { background: "red", color: "#fff", borderRadius: "8px", fontWeight: "bold", padding: "12px" },
+        }).showToast();
+        navigate(`/users/login`)
+        return
+
+      }
       await axios.post(
         `${import.meta.env.VITE_BASE_URL}/users/addtocart`,
         { productId: id },
@@ -46,6 +62,29 @@ const ProductsDetails = () => {
       console.error("❌ Error adding product to cart:", error);
       toast.error("Failed to add product to cart. ❌");
     }
+  };
+  const handleBuynow = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      Toastify({
+        text: `You need to login first.!!`,
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        style: {
+          background: "red",
+          color: "#fff",
+          borderRadius: "8px",
+          fontWeight: "bold",
+          padding: "12px",
+        },
+      }).showToast();
+      navigate(`/users/login`);
+      return;
+    }
+
+    navigate(`/users/buynow/${product._id}`);
   };
 
   return (
@@ -101,12 +140,13 @@ const ProductsDetails = () => {
                   Add to Cart
                 </button>
 
-                <Link
-                  to={`/users/buynow/${product._id}`}
+                <button
+
+                  onClick={handleBuynow}
                   className="bg-[#d74545] hover:bg-[#e16767f2] text-white font-bold px-6 py-3 rounded-lg shadow-md transition duration-300 text-center"
                 >
                   Buy Now
-                </Link>
+                </button>
               </div>
             </div>
 

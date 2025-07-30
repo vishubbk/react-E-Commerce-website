@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import "../../App.css";
+
 
 const BuyNowSummary = () => {
   const navigate = useNavigate();
@@ -102,6 +104,12 @@ const BuyNowSummary = () => {
   };
 
   const handleCOD = () => {
+    const token = localStorage.getItem("token")
+    if(!token){
+      toast.error("❌ User Login First !! ");
+      navigate(`/users/login`)
+      return
+    }
     navigate(`/users/orderSuccess/${id}`);
   };
 
