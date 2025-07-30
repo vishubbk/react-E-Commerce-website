@@ -206,9 +206,9 @@ const Home = () => {
       className="w-80 absolute bottom-0 right-4  md:max-w-[400px] object-contain  "
     />
   </div>
-  <div className="md:w-1/2 absolute left-[3%] top-0 text-center md:text-left mt-6 block md:hidden ">
-    <h1 className="text-xl md:text-3xl font-extrabold mb-2 text-black">SHOP FOR MORE GADGETS</h1>
-    <p className="text-lg w-60 text-blue-200">Grab the Latest Gadgets at Jaw-Dropping Prices!</p>
+  <div className="md:w-1/2 absolute left-[2%] top-0 text-center md:text-left mt-6 block md:hidden ">
+    <h1 className="text-lg md:text-3xl font-extrabold mb-2 text-black">SHOP FOR MORE GADGETS</h1>
+    <p className="text-lg w-50 text-blue-200">Grab the Latest Gadgets at Jaw-Dropping Prices!</p>
   </div>
 
   <div className="md:w-1/2 absolute right-[40%] top-30 text-center md:text-left mt-6 hidden md:block">
