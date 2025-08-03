@@ -4,6 +4,20 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import "../../App.css";
+
+// Apple Store Inspired Theme
+const THEME = {
+  background: "#f5f6fa", // ultra-light gray
+  card: "#fff", // pure white card
+  accent: "#0071e3", // Apple blue
+  accentLight: "#eaf6ff", // light blue
+  accentDark: "#1d1d1f", // Apple dark text
+  button: "linear-gradient(90deg, #0071e3 0%, #2997ff 100%)", // blue gradient
+  buttonHover: "linear-gradient(90deg, #2997ff 0%, #0071e3 100%)",
+  text: "#1d1d1f", // Apple dark text
+  border: "#e0e0e5", // subtle border
+  shadow: "0 8px 32px 0 rgba(60,60,60,0.08)",
+};
 import Navbar from "../../components/Navbar"; // ✅ Ensure Navbar is imported
 
 const BuyNowSummary = () => {
@@ -111,74 +125,95 @@ const BuyNowSummary = () => {
 
   return (
     <div
-      className="min-h-screen bg-[#f9f9f9] text-gray-800"
-      style={{ fontFamily: '"Gidole", sans-serif' }}
+      className="min-h-screen flex flex-col items-center justify-start"
+      style={{
+        background: THEME.background,
+        color: THEME.text,
+        fontFamily: 'SF Pro Display, Inter, Arial, sans-serif',
+        minHeight: '100vh',
+      }}
     >
       <ToastContainer />
 
       {/* Navbar */}
-      <div className="absolute top-0 w-full z-50">
+      <div className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur border-b border-[#e0e0e5]">
         <Navbar />
       </div>
 
-      {/* Header */}
-      <div className="pt-28 px-6 w-full max-w-[95vw] mx-auto">
-        <h1 className="text-2xl font-bold">CheckOut</h1>
-        <div className="bg-amber-950 w-full h-[2px] mt-2"></div>
-      </div>
-
       {/* Main Content */}
-      {loading ? (
-        <p className="text-center mt-20 text-gray-500 text-xl">Loading product details...</p>
-      ) : (
-        <div className="w-[90vw] md:w-[80vw] mx-auto mt-5 bg-white shadow-md p-6 rounded-2xl">
-          <div className="mb-6">
-            <h2 className="text-2xl font-extrabold text-gray-900 mb-2">
-              Ready to place your order?
-            </h2>
-            <p className="text-gray-700">Let's make sure everything is perfect.</p>
-          </div>
+      <main className="flex flex-col items-center justify-center w-full" style={{ minHeight: '100vh' }}>
+        <div className="w-full max-w-xl mx-auto mt-32 mb-12">
+          <h1 className="text-3xl md:text-4xl font-bold text-center mb-2" style={{ color: THEME.accentDark, letterSpacing: '-0.02em' }}>
+            Review &amp; Pay
+          </h1>
+          <div style={{ background: THEME.accent, width: 48, height: 3, margin: '0 auto 32px', borderRadius: 2 }}></div>
 
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold">
-              Delivers: <span className="text-green-600">Shortly</span>
-            </h3>
-            <p className="text-sm text-gray-500">Standard Delivery</p>
-          </div>
-
-          {product && (
-            <div className="border-t pt-4">
-              <h3 className="text-xl font-semibold mb-2">Order Summary</h3>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between">
-                <div>
-                  <p className="text-lg font-medium text-gray-800">Product: {product.name}</p>
-                  <p className="text-md text-gray-600">Price: {product.price}</p>
+          {loading ? (
+            <p className="text-center text-blue-400 text-xl py-24">Loading product details...</p>
+          ) : product ? (
+            <section
+              className="rounded-3xl shadow-xl px-8 py-10 flex flex-col items-center"
+              style={{
+                background: THEME.card,
+                border: `1.5px solid ${THEME.border}`,
+                boxShadow: THEME.shadow,
+                minHeight: 420,
+              }}
+            >
+              <div className="flex flex-col md:flex-row md:items-center w-full gap-8 mb-8">
+                <div className="flex-1 flex justify-center items-center">
+                  <img
+                    src={product.image.url}
+                    alt={product.name}
+                    className="rounded-2xl object-contain"
+                    style={{ maxWidth: 220, maxHeight: 220, background: THEME.accentLight, border: `1.5px solid ${THEME.border}` }}
+                  />
                 </div>
-                <div>
-                  <img src={product.image.url} className="w-30" alt="" />
+                <div className="flex-1 flex flex-col justify-center items-center md:items-start">
+                  <h2 className="text-2xl font-semibold mb-2" style={{ color: THEME.accentDark }}>{product.name}</h2>
+                  <p className="text-lg mb-1" style={{ color: THEME.accent }}>
+                    Price: <span className="font-bold">₹{product.price}</span>
+                  </p>
+                  <p className="text-base text-gray-500 mb-2">Delivered: <span className="text-green-500 font-medium">Shortly</span></p>
+                  <div className="w-full h-[1px] bg-[#e0e0e5] my-3"></div>
+                  <p className="text-sm text-gray-400">Standard Delivery</p>
                 </div>
-
               </div>
+
+              <div className="w-full flex flex-col md:flex-row gap-4 mt-6">
+                <button
+                  onClick={handleCOD}
+                  className="flex-1 py-3 rounded-full text-lg font-semibold shadow transition border-none"
+                  style={{
+                    background: THEME.button,
+                    color: '#fff',
+                    boxShadow: '0 2px 8px 0 rgba(0,113,227,0.08)',
+                  }}
+                
+                >
+                  Cash on Delivery
+                </button>
+                <button
+                  onClick={handleOnlinePayment}
+                  className="flex-1 py-3 rounded-full text-lg font-semibold shadow transition border-none"
+                  style={{
+                    background: THEME.button,
+                    color: '#fff',
+                    boxShadow: '0 2px 8px 0 rgba(0,113,227,0.08)',
+                  }}
+                 
+                >
+                  Pay Online
+                </button>
+              </div>
+            </section>
+          ) : (
+            <div className="text-center text-gray-400 py-24">
+              <p className="text-xl">Product not found.</p>
             </div>
           )}
-
-          {/* Buttons */}
-          <div className="mt-6 flex flex-col gap-3">
-            <button
-              onClick={handleCOD}
-              className="w-full bg-gray-800 text-white py-2 rounded hover:bg-black transition"
-            >
-              Cash on Delivery (COD)
-            </button>
-            <button
-              onClick={handleOnlinePayment}
-              className="w-full bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
-            >
-              Pay Online
-            </button>
-          </div>
         </div>
-      )}
+      </main>
     </div>
   );
 };
