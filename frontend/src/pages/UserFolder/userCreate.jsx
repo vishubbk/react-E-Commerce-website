@@ -5,6 +5,8 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { Mail, Lock, Phone, User } from "lucide-react";
 import "../../App.css";
+import "react-toastify/dist/ReactToastify.css";
+import { ArrowLeft } from "lucide-react";
 
 const UserCreate = () => {
   const [firstname, setFirstname] = useState("");
@@ -73,13 +75,20 @@ const UserCreate = () => {
       fontFamily: '"Gidole", sans-serif',
       fontWeight: 400,
       fontStyle: "normal",
-    }} className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
+    }} className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-pink-100 via-purple-200 to-blue-300 px-4">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Create User Account</h1>
+      <button
+        className="absolute top-6 left-6 flex items-center text-gray-800 font-medium hover:text-black"
+        onClick={() => navigate("/")}
+      >
+        <ArrowLeft className="w-5 h-5 mr-2" />
+        Back
+      </button>
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md"
+        className="backdrop-blur-lg bg-white/40  shadow-xl rounded-2xl p-6 w-full max-w-md "
       >
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 ">
           {/* First and Last Name */}
           <div className="flex gap-3">
             {/* First Name */}
