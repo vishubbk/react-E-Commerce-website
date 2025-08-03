@@ -4,7 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import "../../App.css";
-
+import Navbar from "../../components/Navbar"; // ✅ Ensure Navbar is imported
 
 const BuyNowSummary = () => {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ const BuyNowSummary = () => {
         setProduct(response.data);
       } catch (error) {
         console.error("❌ Error fetching product:", error);
-        toast.error("Failed to fetch product details! ❌");
+        toast.error("❌ Failed to fetch product details!");
       } finally {
         setLoading(false);
       }
@@ -28,13 +28,10 @@ const BuyNowSummary = () => {
     fetchProduct();
   }, [id]);
 
-  // ✅ Load Razorpay script
+  // ✅ Load Razorpay SDK script
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
-      if (window.Razorpay) {
-        resolve(true);
-        return;
-      }
+      if (window.Razorpay) return resolve(true);
       const script = document.createElement("script");
       script.src = "https://checkout.razorpay.com/v1/checkout.js";
       script.onload = () => resolve(true);
@@ -43,7 +40,7 @@ const BuyNowSummary = () => {
     });
   };
 
-  // ✅ Handle online payment
+  // ✅ Online Payment Handler
   const handleOnlinePayment = async () => {
     try {
       const scriptLoaded = await loadRazorpayScript();
@@ -52,36 +49,35 @@ const BuyNowSummary = () => {
         return;
       }
 
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/payment/create-order`, {
+      const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/payment/create-order`, {
         amount: product.price * 100,
       });
 
-
-      const { id: order_id, currency, amount } = response.data;
+      const { id: order_id, currency, amount } = res.data;
 
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID, // ✅ Test or Live Key from .env
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount,
         currency,
         name: "Vishu Store",
         description: `Purchase: ${product.name}`,
         order_id,
-        handler: async (paymentResponse) => {
+        handler: async (response) => {
           try {
-            const verifyRes = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/verify-payment`, {
+            const verify = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/verify-payment`, {
               razorpay_order_id: order_id,
-              razorpay_payment_id: paymentResponse.razorpay_payment_id,
-              razorpay_signature: paymentResponse.razorpay_signature,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
             });
 
-            if (verifyRes.data.message === "Payment verified successfully") {
+            if (verify.data.message === "Payment verified successfully") {
               toast.success("✅ Payment Successful!");
               navigate(`/users/orderSuccess/${product._id}`);
             } else {
               toast.error("❌ Payment Verification Failed!");
             }
-          } catch (error) {
-            console.error("❌ Error verifying payment:", error);
+          } catch (err) {
+            console.error("❌ Verification Error:", err);
             toast.error("❌ Payment verification failed!");
           }
         },
@@ -97,50 +93,91 @@ const BuyNowSummary = () => {
 
       const razorpay = new window.Razorpay(options);
       razorpay.open();
-    } catch (error) {
-      console.error("❌ Payment Error:", error);
+    } catch (err) {
+      console.error("❌ Payment Error:", err);
       toast.error("❌ Error processing online payment.");
     }
   };
 
+  // ✅ COD Handler
   const handleCOD = () => {
-    const token = localStorage.getItem("token")
-    if(!token){
-      toast.error("❌ User Login First !! ");
-      navigate(`/users/login`)
-      return
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("❌ Please login to continue.");
+      return navigate("/users/login");
     }
     navigate(`/users/orderSuccess/${id}`);
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg mt-10" style={{
-      fontFamily: '"Gidole", sans-serif',
-      fontWeight: 400,
-      fontStyle: "normal",
-    }}>
+    <div
+      className="min-h-screen bg-[#f9f9f9] text-gray-800"
+      style={{ fontFamily: '"Gidole", sans-serif' }}
+    >
+      <ToastContainer />
+
+      {/* Navbar */}
+      <div className="absolute top-0 w-full z-50">
+        <Navbar />
+      </div>
+
+      {/* Header */}
+      <div className="pt-28 px-6 w-full max-w-[95vw] mx-auto">
+        <h1 className="text-2xl font-bold">CheckOut</h1>
+        <div className="bg-amber-950 w-full h-[2px] mt-2"></div>
+      </div>
+
+      {/* Main Content */}
       {loading ? (
-        <p className="text-center text-gray-500">Loading product details...</p>
+        <p className="text-center mt-20 text-gray-500 text-xl">Loading product details...</p>
       ) : (
-        <>
-          <h2 className="text-2xl font-bold mb-4">Order Summary</h2>
-          <p className="text-gray-700 mb-2">Product: <span className="font-semibold">{product?.name}</span></p>
-          <p className="text-gray-700 mb-6">Price: ₹<span className="font-semibold">{product?.price}</span></p>
+        <div className="w-[90vw] md:w-[80vw] mx-auto mt-5 bg-white shadow-md p-6 rounded-2xl">
+          <div className="mb-6">
+            <h2 className="text-2xl font-extrabold text-gray-900 mb-2">
+              Ready to place your order?
+            </h2>
+            <p className="text-gray-700">Let's make sure everything is perfect.</p>
+          </div>
 
-          <button
-            onClick={handleCOD}
-            className="w-full bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-800 mb-3"
-          >
-            Cash on Delivery (COD)
-          </button>
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold">
+              Delivers: <span className="text-green-600">Shortly</span>
+            </h3>
+            <p className="text-sm text-gray-500">Standard Delivery</p>
+          </div>
 
-          <button
-            onClick={handleOnlinePayment}
-            className="w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 transition-all"
-          >
-            Pay Online
-          </button>
-        </>
+          {product && (
+            <div className="border-t pt-4">
+              <h3 className="text-xl font-semibold mb-2">Order Summary</h3>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                <div>
+                  <p className="text-lg font-medium text-gray-800">Product: {product.name}</p>
+                  <p className="text-md text-gray-600">Price: {product.price}</p>
+                </div>
+                <div>
+                  <img src={product.image.url} className="w-30" alt="" />
+                </div>
+
+              </div>
+            </div>
+          )}
+
+          {/* Buttons */}
+          <div className="mt-6 flex flex-col gap-3">
+            <button
+              onClick={handleCOD}
+              className="w-full bg-gray-800 text-white py-2 rounded hover:bg-black transition"
+            >
+              Cash on Delivery (COD)
+            </button>
+            <button
+              onClick={handleOnlinePayment}
+              className="w-full bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
+            >
+              Pay Online
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
