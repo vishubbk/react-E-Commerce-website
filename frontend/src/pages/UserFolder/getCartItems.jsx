@@ -23,6 +23,11 @@ const GetCartItems = () => {
       try {
         setLoading(true);
         const token = localStorage.getItem("token");
+        if (!token) {
+          toast.error("You need to login first.");
+          setTimeout(() => navigate("/users/login"), 1000);
+          return;
+        }
         const response = await axios.get(`${baseURL}/users/getCartItems`, {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
