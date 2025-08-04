@@ -25,7 +25,7 @@ const Home = () => {
   ];
   const bannersImage = [
     { image: "https://i.ibb.co/N6qJGLBg/wireless-earbuds-with-neon-cyberpunk-style-lighting-2-removebg-preview.png" },
-    { image: "https://i.ibb.co/N6qJGLBg/wireless-earbuds-with-neon-cyberpunk-style-lighting-2-removebg-preview.png" },
+    { image: "https://i.ibb.co/8n66DsYw/still-life-wireless-cyberpunk-headphones.png",style:"w-60"},
     { image: "https://i.ibb.co/mrGH4zrF/wireless-earbuds-with-neon-cyberpunk-style-lighting.png" },
   ];
 
@@ -165,7 +165,7 @@ const Home = () => {
           </div>
           <div className="w-full md:w-1/2 flex justify-center px-4">
             <img
-              className="w-full absolute z-10 top-30 max-w-[300px] md:max-w-[400px] h-auto object-contain"
+              className={`${bannersImage[bannerIndex].style }  absolute z-10 top-30 max-w-[300px] md:max-w-[400px] h-auto object-contain`}
               src={bannersImage[bannerIndex].image}
               alt="Banner"
             />
