@@ -215,7 +215,7 @@ const BuyNowSummary = () => {
                     </div>
                     <div className="flex items-center gap-4 mb-2">
                       <img
-                        src="https://randomuser.me/api/portraits/men/32.jpg"
+                        src={user?.profilePicture }
                         alt="User"
                         className="w-10 h-10 rounded-full border border-blue-200 shadow"
                       />
