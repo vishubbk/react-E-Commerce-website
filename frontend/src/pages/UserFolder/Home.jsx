@@ -25,7 +25,7 @@ const Home = () => {
   ];
   const bannersImage = [
     { image: "https://i.ibb.co/N6qJGLBg/wireless-earbuds-with-neon-cyberpunk-style-lighting-2-removebg-preview.png" },
-    { image: "https://i.ibb.co/8n66DsYw/still-life-wireless-cyberpunk-headphones.png",style:"w-60"},
+    { image: "https://i.ibb.co/mrGH4zrF/wireless-earbuds-with-neon-cyberpunk-style-lighting.png"},
     { image: "https://i.ibb.co/mrGH4zrF/wireless-earbuds-with-neon-cyberpunk-style-lighting.png" },
   ];
 
