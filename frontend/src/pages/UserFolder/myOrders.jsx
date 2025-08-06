@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import "../../App.css";
+import Swal from "sweetalert2";
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -54,15 +55,47 @@ const MyOrders = () => {
     fetchOrders();
   }, [navigate]);
 
-  const handleCancelOrder = async (orderId) => {
+  const handleCancelOrder = async (orderId,ordername) => {
     try {
       const token = localStorage.getItem("token");
+      const result = await Swal.fire({
+            title: `Are you Sure Cancel this Order ${ordername}?`,
+            icon: "question",
+            showDenyButton: true,
+            confirmButtonText: "Yes",
+            denyButtonText: "No",
+          });
+      
+          if (!result.isConfirmed) return;
       await axios.delete(`${import.meta.env.VITE_BASE_URL}/users/myorders/${orderId}`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
       setOrders(orders.filter(order => order._id !== orderId));
-      alert('Order cancelled successfully');
+      Toastify({
+        text: `Order ${ordername} cancelled successfully. ☹️`,
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        style: { background: "green", color: "#fff", borderRadius: "8px", fontWeight: "bold", padding: "12px" },
+      }).showToast();
+      
+      Swal.fire({
+  title: "Did you like this order?",
+  showDenyButton: true,
+  confirmButtonText: "👍 Like",
+  denyButtonText: "👎 Unlike",
+  icon: "question",
+}).then((result) => {
+  Toastify({
+        text: `Thank you for your feedback!`,
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        style: { background: "blue", color: "#fff", borderRadius: "8px", fontWeight: "bold", padding: "12px" },
+      }).showToast();
+});
+
     } catch (error) {
       setError("Failed to cancel order");
     }
@@ -139,11 +172,18 @@ const MyOrders = () => {
                   </div>
                 </Link>
                 <button
-                  onClick={() => handleCancelOrder(order._id)}
-                  className="bg-red-500 w-full min-w-[10vw] sm:w-auto hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
-                >
-                  Cancel Order
-                </button>
+  onClick={() => handleCancelOrder(order._id,order.name)}
+  disabled={order.status === "completed" || order.status === "cancelled"}
+  title={order.status === "completed" || order.status === "cancelled" ? "Order can't be cancelled" : ""}
+  className={`bg-red-500 w-full min-w-[10vw] sm:w-auto hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 ${
+    order.status === "completed" || order.status === "cancelled"
+      ? "opacity-50 cursor-not-allowed"
+      : ""
+  }`}
+>
+  Cancel Order
+</button>
+
               </motion.div>
             ))}
           </div>

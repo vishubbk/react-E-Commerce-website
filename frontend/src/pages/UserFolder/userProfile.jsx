@@ -36,7 +36,7 @@ const Profile = () => {
           }
         );
 
-        console.log("Profile Data:", response.data);
+      
         setUser(response.data || {});
         setLoading(false);
       } catch (error) {

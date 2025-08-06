@@ -136,13 +136,16 @@ const UserProfileEdit = () => {
       fontStyle: "normal",
     }}>
     <>
-      <Header />
-      <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+    <div className="absolute top-0">
+       <Header />
+    </div>
+     
+      <div className="flex items-center justify-center min-h-screen mt-15 bg-gray-100 px-4">
         <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl">
           {/* Back Button */}
           <button
             className="flex items-center text-gray-700 hover:text-gray-900 transition-colors mb-4"
-            onClick={() => navigate("/users/profile")}
+            onClick={() => navigate(-1)}
           >
             <ArrowLeft className="w-5 h-5 mr-1" /> Back
           </button>
