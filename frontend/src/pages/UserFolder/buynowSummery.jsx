@@ -6,7 +6,7 @@ import axios from "axios";
 import "../../App.css";
 import Swal from "sweetalert2";
 import Navbar from "../../components/Navbar";
-
+import { motion } from 'framer-motion';
 // Apple Store Inspired Theme
 const THEME = {
   background: "#f5f6fa",
@@ -159,10 +159,29 @@ const BuyNowSummary = () => {
           <h1 className="text-3xl md:text-4xl font-bold text-center mb-2" style={{ color: THEME.accentDark }}>
             Review &amp; Pay
           </h1>
-          <div style={{ background: THEME.accent, width: 48, height: 3, margin: "0 auto 32px", borderRadius: 2 }}></div>
+          <div  style={{  background: THEME.accent, width: 48, height: 3, margin: "0 auto 32px", borderRadius: 2, display : setLoading?"none":"flex"}}></div>
 
           {loading ? (
-            <p className="text-center text-blue-400 text-xl py-24">Loading product details...</p>
+
+             
+<div style={{ position: "relative", height: 3, marginBottom: 32 }}>
+  <motion.div
+    style={{
+      background: THEME.accent,
+      width: 59,
+      height: 3,
+      borderRadius: 2,
+      position: "absolute",
+      left: "50%",
+      transform: "translateX(-70%)",
+    }}
+    animate={{ x: ["-100%", "0%", "60%"] }} // centered around 0
+   transition={{ duration: 1, repeat: Infinity, repeatType: "mirror" }}
+  />
+</div>
+
+            
+            
           ) : product ? (
             <section
               className="rounded-3xl shadow-xl px-8 py-10 flex flex-col items-center"
