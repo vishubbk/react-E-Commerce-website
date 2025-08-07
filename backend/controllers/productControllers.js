@@ -6,18 +6,26 @@ const productControllers = {};
 // ✅ Add Product Controller
 productControllers.addProduct = async (req, res) => {
   try {
+    const { name, price, discount, bgcolor, panelcolor, textcolor, details } =
+      req.body;
 
-
-    const { name, price, discount, bgcolor, panelcolor, textcolor, details } = req.body;
-
-
-    const image = req.file;
+    // Support multer.fields (req.files)
+    const image = req.files?.image?.[0];
+    console.log("Image:", image);
 
     if (!image) {
       return res.status(400).json({ message: "Image is required" });
     }
 
-    if (!name || !price || !discount || !bgcolor || !panelcolor || !textcolor || !details) {
+    if (
+      !name ||
+      !price ||
+      !discount ||
+      !bgcolor ||
+      !panelcolor ||
+      !textcolor ||
+      !details
+    ) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -32,8 +40,6 @@ productControllers.addProduct = async (req, res) => {
       );
       stream.end(image.buffer);
     });
-
-    
 
     // ✅ Save Product to Database
     const product = new productModel({
@@ -57,7 +63,6 @@ productControllers.addProduct = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 // ✅ Get All Products
 
