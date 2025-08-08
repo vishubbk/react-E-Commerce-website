@@ -23,6 +23,7 @@ const ProductsDetails = () => {
         setLoader(true);
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/products/${id}`);
         setProduct(response.data);
+        window.scrollTo({ top: 0, behavior: "instant" })
       } catch (error) {
         console.error("❌ Error fetching product:", error);
         toast.error("Failed to fetch product details! ❌");

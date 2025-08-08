@@ -37,7 +37,7 @@ const UserLogin = () => {
 
         setTimeout(() => {
           setLoading(false);
-          navigate("/");
+          navigate(-1);
         }, 2000);
       }
     } catch (error) {

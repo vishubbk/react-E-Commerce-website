@@ -120,7 +120,7 @@ const UserProfileEdit = () => {
       });
 
       if (response.status === 200) {
-        navigate("/users/profile");
+        navigate(-1);
       }
     } catch (error) {
       console.error("Error updating profile:", error);

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -33,8 +34,12 @@ const BuyNowSummary = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
+
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/products/${id}`);
         setProduct(response.data);
+         const  address = user.address?.city || user.address?.street;
+         console.log("Address:", address);
+         
       } catch (error) {
         console.error("❌ Error fetching product:", error);
         toast.error("❌ Failed to fetch product details!");
@@ -88,9 +93,15 @@ const BuyNowSummary = () => {
   // COD Order
   const handleCOD = () => {
     const token = localStorage.getItem("token");
-    if (!token) {
+    const  address = user.address.city || user.address?.street;
+    if (!token ) {
       toast.error("❌ Please login to continue.");
       return navigate("/users/login");
+    }
+
+    if (!address ) {
+      toast.error("❌ Plz Add Address in Profile");
+      return navigate("/users/profile/edit");
     }
 
     Swal.fire({

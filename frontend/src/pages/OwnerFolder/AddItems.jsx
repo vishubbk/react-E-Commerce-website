@@ -25,7 +25,7 @@ const AddItems = () => {
     panelcolor: "#f0f0f0",
     textcolor: "#000000",
     details: "",
-    image: null,
+    image: "",
   });
 
 
