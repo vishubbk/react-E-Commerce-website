@@ -6,15 +6,17 @@ const productControllers = {};
 // ✅ Add Product Controller
 productControllers.addProduct = async (req, res) => {
   try {
-    const { name, price, discount, bgcolor, panelcolor, textcolor, details } =
+    const { name, price, discount, bgcolor, panelcolor, textcolor, details,information } =
       req.body;
 
     // Support multer.fields (req.files)
-    const image = req.files?.image?.[0];
-    console.log("Image:", image);
+    const images = req.files?.images;
+    console.log("Images:", images);
 
-    if (!image) {
-      return res.status(400).json({ message: "Image is required" });
+    if (!images || images.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "At least one image is required" });
     }
 
     if (
@@ -24,22 +26,28 @@ productControllers.addProduct = async (req, res) => {
       !bgcolor ||
       !panelcolor ||
       !textcolor ||
+      !information ||
       !details
     ) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // ✅ Upload to Cloudinary with Promise
-    const result = await new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
-        { folder: "products" },
-        (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        }
-      );
-      stream.end(image.buffer);
-    });
+    // ✅ Upload multiple images to Cloudinary
+    const uploadPromises = images.map(
+      (image) =>
+        new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: "products" },
+            (error, result) => {
+              if (error) reject(error);
+              else resolve(result);
+            }
+          );
+          stream.end(image.buffer);
+        })
+    );
+
+    const uploadResults = await Promise.all(uploadPromises);
 
     // ✅ Save Product to Database
     const product = new productModel({
@@ -49,11 +57,12 @@ productControllers.addProduct = async (req, res) => {
       bgcolor,
       panelcolor,
       textcolor,
+      information,
       details,
-      image: {
+      images: uploadResults.map((result) => ({
         public_id: result.public_id,
         url: result.secure_url,
-      },
+      })),
     });
 
     await product.save();

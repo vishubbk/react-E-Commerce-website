@@ -10,10 +10,12 @@ const productSchema = new mongoose.Schema({
   textcolor: { type: String },
   details: { type: String },
   information: { type: String },
-  image: {
-    public_id: { type: String, required: true },
-    url: { type: String, required: true },
-  },
+  images: [
+    {
+      public_id: { type: String, required: true },
+      url: { type: String, required: true },
+    },
+  ],
 });
 
 // Create the Product model if it doesn't already exist
