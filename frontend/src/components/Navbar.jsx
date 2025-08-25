@@ -13,6 +13,7 @@ import {
   Menu,
   X,
   Package,
+  Bot,
 } from "lucide-react";
 
 const Navbar = () => {
@@ -75,6 +76,7 @@ const Navbar = () => {
               { path: "/users/getCartItems", label: "My Cart", icon: ShoppingBag },
               { path: "/users/Order", label: "Orders", icon: ShoppingCart },
               { path: "/users/profile", label: "Profile", icon: User },
+              { path: "/users/helpcenter", label: "Ai Help", icon: Bot },
             ].map(({ path, label, icon: Icon }) => (
               <Link
                 key={path}
@@ -149,6 +151,7 @@ const Navbar = () => {
               { path: "/users/getCartItems", label: "My Cart", icon: ShoppingBag },
               { path: "/users/Order", label: "Orders", icon: ShoppingCart },
               { path: "/users/profile", label: "Profile", icon: User },
+              { path: "/users/helpcenter", label: "Ai Help", icon: Bot },
             ].map(({ path, label, icon: Icon }) => (
               <Link
                 key={path}
