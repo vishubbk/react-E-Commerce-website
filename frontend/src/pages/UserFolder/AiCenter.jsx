@@ -18,13 +18,16 @@ const AiCenter = () => {
     setLoader(true);
 
     try {
-      const response = await axios.post(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyBH1o0gmb2dsw4RLXHdhm05PcRFSUzxucU",
-        {
-          model: "gemini-pro",
-          contents: [{ parts: [{ text: message }] }],
-        }
-      );
+      console.log("working done");
+      
+
+const response = await axios.post(
+  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${import.meta.env.VITE_AI_PRODUCT_KEY}`,
+  {
+    model: "gemini-pro",
+    contents: [{ parts: [{ text: message }] }],
+  }
+);
 
       const aiReply =
         response.data?.candidates?.[0]?.content?.parts?.[0]?.text ||
