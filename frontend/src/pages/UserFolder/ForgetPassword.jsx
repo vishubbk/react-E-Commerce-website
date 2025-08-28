@@ -12,7 +12,6 @@ const ForgetPassword = () => {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [otpTimer, setOtpTimer] = useState(0); // ⏳ Timer state
-  const [otpValues, setOtpValues] = useState(["", "", "", ""]);
   const navigate = useNavigate();
 
   // 🔄 Handle OTP countdown
@@ -98,32 +97,6 @@ const ForgetPassword = () => {
     }
   };
 
-  const handleOtpChange = (index, value) => {
-    if (isNaN(value)) return;
-
-    const newOtpValues = [...otpValues];
-    newOtpValues[index] = value;
-    setOtpValues(newOtpValues);
-    setOtp(newOtpValues.join("")); // Update the main OTP state
-
-    // Auto-focus next input
-    if (value !== "" && index < 3) {
-      const nextInput = document.querySelector(
-        `input[name='otp-${index + 1}']`
-      );
-      nextInput?.focus();
-    }
-  };
-
-  const handleKeyDown = (index, e) => {
-    if (e.key === "Backspace" && !otpValues[index] && index > 0) {
-      const prevInput = document.querySelector(
-        `input[name='otp-${index - 1}']`
-      );
-      prevInput?.focus();
-    }
-  };
-
   return (
     <div
       style={{
@@ -185,41 +158,44 @@ const ForgetPassword = () => {
           </div>
 
           {/* OTP Field */}
-          <div className="relative">
+          <div className="relative flex">
             <Key
               className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
               size={20}
             />
-            <div className="flex gap-2 items-center pl-10">
-              {[0, 1, 2, 3].map((index) => (
-                <input
-                  key={index}
-                  type="text"
-                  name={`otp-${index}`}
-                  maxLength={1}
-                  value={otpValues[index]}
-                  onChange={(e) => handleOtpChange(index, e.target.value)}
-                  onKeyDown={(e) => handleKeyDown(index, e)}
-                  className="w-12 h-12 text-center text-xl font-bold border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                />
-              ))}
-              <button
-                type="button"
-                onClick={otpGenerate}
-                disabled={otpTimer > 0}
-                className={`ml-2 disabled:cursor-not-allowed font-semibold px-3 py-2 rounded-lg ${
-                  otpTimer > 0
-                    ? "bg-gray-300 text-gray-600"
-                    : "bg-blue-300 hover:bg-blue-400 text-black"
-                }`}
-              >
-                {otpTimer > 0
-                  ? `${Math.floor(otpTimer / 60)}:${String(
-                      otpTimer % 60
-                    ).padStart(2, "0")}`
-                  : "Send OTP"}
-              </button>
-            </div>
+            <abbr title="ONLY [0-9] DIGITS ARE ALLOWED IN OTP">
+               <input
+              type="text" // text use karo taaki maxlength work kare
+              inputMode="numeric" // mobile pe number keypad aayega
+              placeholder="Enter your OTP"
+              maxLength={4} // sirf 4 digit tak allow karega
+              value={otp}
+              onChange={(e) => {
+                // sirf numbers allow karna
+                const value = e.target.value.replace(/[^0-9]/g, "");
+                setOtp(value);
+              }}
+              className="w-full pl-10 pr-28 py-3 border border-gray-300 rounded-lg focus:outline-none"
+            />
+            </abbr>
+           
+
+            <button
+              type="button"
+              onClick={otpGenerate}
+              disabled={otpTimer > 0}
+              className={`absolute disabled:cursor-not-allowed right-2 top-1/2 transform -translate-y-1/2 font-semibold px-3 py-2 rounded-lg cursor-pointer ${
+                otpTimer > 0
+                  ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                  : "bg-blue-300 hover:bg-blue-400 text-black"
+              }`}
+            >
+              {otpTimer > 0
+                ? `Resend in ${Math.floor(otpTimer / 120)}:${String(
+                    otpTimer % 120
+                  ).padStart(2, "0")}`
+                : "Send OTP"}
+            </button>
           </div>
 
           {/* Reset Button */}
