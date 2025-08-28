@@ -110,6 +110,9 @@ const UserLogin = () => {
           >
             {loading ? "Logging in..." : "Login"}
           </button>
+          <div className="text-center">
+            <Link to="/users/forgetPassword" className="text-purple-600 font-medium hover:underline ">Forget Password</Link>
+          </div>
 
           {/* Register Link */}
           <p className="text-center text-gray-700 mt-3">

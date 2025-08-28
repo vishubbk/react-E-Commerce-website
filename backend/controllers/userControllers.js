@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const validator = require("email-validator");
 const userModel = require("../models/userModel");
 const cartModel = require("../models/productModel");
+const {SendEmail} = require("../config/EmailValidator");
 
 
 const userControllers = {};
@@ -433,9 +434,9 @@ userControllers.buynowSuccessful = async (req, res) => {
 };
 
 //MyOrders
-
 const Product = require("../models/productModel"); // Import Product model
 
+// 📌 MyOrders User
 userControllers.MyOrders = async (req, res) => {
   try {
 
@@ -482,6 +483,7 @@ userControllers.MyOrders = async (req, res) => {
   }
 };
 
+// 📌 cancelOrder User
 userControllers.cancelOrder = async (req, res) => {
   try {
 
@@ -520,6 +522,91 @@ userControllers.cancelOrder = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+
+// 📌 SendOtp User
+userControllers.SendOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    // Find user
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Generate 4-digit OTP
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+
+    // Save OTP + Expiry
+    user.otp = otp;
+    user.otpExpiry = Date.now() + 5 * 60 * 1000; // 5 minutes
+    await user.save();
+
+    // ✅ Send OTP via Email
+    await SendEmail(
+      email,
+      "Your OTP Code",
+      `Your OTP is ${otp}. It will expire in 5 minutes.`,
+      `<h2>OTP Verification</h2><p>Your OTP is <b>${otp}</b></p><p>It will expire in 5 minutes.</p>`
+    );
+
+    return res.status(200).json({ message: "OTP sent successfully" });
+  } catch (error) {
+    console.error("❌ OTP HAS NOT BEEN GENERATED:", error.message);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
+// 📌 ResetPassword User
+userControllers.ResetPassword = async (req, res) => {
+  try {
+    const { email, otp, newpassword } = req.body;
+
+    // 1. Validate fields
+    if (!email || !otp || !newpassword) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // 2. Find user
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // 3. Check OTP validity
+    if (user.otp !== otp) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    // 4. Check OTP expiry
+    if (!user.otpExpiry || user.otpExpiry < Date.now()) {
+      return res.status(400).json({ message: "OTP has expired" });
+    }
+
+    // 5. Hash new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newpassword, salt);
+
+    // 6. Update password & clear OTP
+    user.password = hashedPassword;
+    user.otp = null;
+    user.otpExpiry = null;
+
+    await user.save();
+
+    return res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    console.error("PASSWORD NOT UPDATED:", error.message);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 
 
 

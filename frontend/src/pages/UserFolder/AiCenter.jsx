@@ -35,7 +35,7 @@ const response = await axios.post(
 
       setChat([...newChat, { sender: "ai", text: aiReply }]);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error:", error); 
       setChat([
         ...newChat,
         { sender: "ai", text: "⚠️ Something went wrong. Try again." },

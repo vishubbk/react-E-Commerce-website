@@ -12,6 +12,7 @@ import UserCreate from './pages/UserFolder/userCreate.jsx';
 import UserLogin from './pages/UserFolder/userLogin.jsx';
 import UserProfile from './pages/UserFolder/userProfile.jsx';
 import UserProfileEdit from './pages/UserFolder/UserProfileEdit.jsx';
+import ForgetPassword from './pages/UserFolder/ForgetPassword.jsx';
 import AiCenter from './pages/UserFolder/AiCenter.jsx';
 import Logout from './Logout.jsx';
 
@@ -50,6 +51,7 @@ const App = () => {
         <Route path="/users/logout" element={<Logout />} />
         <Route path="/users/Order" element={<MyOrders />} />
         <Route path="/users/helpcenter" element={<AiCenter />} />
+        <Route path="/users/forgetPassword" element={<ForgetPassword />} />
 
         {/* Owner Routes */}
         <Route path="/owner/register" element={<OwnerCreate />} />
