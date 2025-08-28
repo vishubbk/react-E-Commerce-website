@@ -149,7 +149,7 @@ const ProductsDetails = () => {
                     "https://via.placeholder.com/400x400?text=No+Image"
                   }
                   alt={product.name}
-                  className="w-full max-w-lg h-96 object-contain rounded-md shadow-md hover:scale-105 transition-transform duration-300"
+                  className="w-full max-w-lg h-96 object-contain rounded-md shadow-md  transition-transform duration-300"
                   loading="lazy"
                 />
               </div>

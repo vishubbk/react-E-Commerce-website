@@ -31,7 +31,7 @@ const ForgetPassword = () => {
       toast.error("❌ Please enter your email before requesting OTP");
       return;
     }
-     setOtpTimer(120); // ⏳ Start 2 minutes countdown
+    setOtpTimer(120); // ⏳ Start 2 minutes countdown
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/users/send-otp`,
@@ -41,13 +41,14 @@ const ForgetPassword = () => {
         toast.success("✅ OTP sent! Please check your email.", {
           autoClose: 2000,
         });
-       
       }
     } catch (error) {
       if (error.response) {
         toast.error(`❌ ${error.response.data.message || "Request failed!"}`);
       } else if (error.request) {
-        toast.error("❌ Server not responding. Check your internet connection.");
+        toast.error(
+          "❌ Server not responding. Check your internet connection."
+        );
       } else {
         toast.error("❌ Something went wrong!");
       }
@@ -65,7 +66,6 @@ const ForgetPassword = () => {
 
     toast.info("🔄 Resetting password...", { autoClose: 1000 });
     setLoading(true);
-
 
     try {
       const response = await axios.post(
@@ -88,7 +88,9 @@ const ForgetPassword = () => {
       if (error.response) {
         toast.error(`❌ ${error.response.data.message || "Request failed!"}`);
       } else if (error.request) {
-        toast.error("❌ Server not responding. Check your internet connection.");
+        toast.error(
+          "❌ Server not responding. Check your internet connection."
+        );
       } else {
         toast.error("❌ Something went wrong!");
       }
@@ -127,7 +129,10 @@ const ForgetPassword = () => {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {/* Email Field */}
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <Mail
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={20}
+            />
             <input
               type="email"
               placeholder="Enter your email"
@@ -139,7 +144,10 @@ const ForgetPassword = () => {
 
           {/* New Password Field */}
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <Lock
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={20}
+            />
             <input
               type="password"
               placeholder="Enter your New Password"
@@ -151,14 +159,27 @@ const ForgetPassword = () => {
 
           {/* OTP Field */}
           <div className="relative flex">
-            <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            <input
-              type="number"
+            <Key
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={20}
+            />
+            <abbr title="ONLY [0-9] DIGITS ARE ALLOWED IN OTP">
+               <input
+              type="text" // text use karo taaki maxlength work kare
+              inputMode="numeric" // mobile pe number keypad aayega
               placeholder="Enter your OTP"
+              maxLength={4} // sirf 4 digit tak allow karega
               value={otp}
-              onChange={(e) => setOtp(e.target.value)}
+              onChange={(e) => {
+                // sirf numbers allow karna
+                const value = e.target.value.replace(/[^0-9]/g, "");
+                setOtp(value);
+              }}
               className="w-full pl-10 pr-28 py-3 border border-gray-300 rounded-lg focus:outline-none"
             />
+            </abbr>
+           
+
             <button
               type="button"
               onClick={otpGenerate}

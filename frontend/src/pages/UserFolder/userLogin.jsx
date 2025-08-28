@@ -106,7 +106,7 @@ const UserLogin = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-purple-600 hover:bg-purple-700 transition text-white py-3 rounded-lg font-semibold shadow-md"
+            className="w-full bg-purple-600 disabled:bg-purple-500 disabled:cursor-not-allowed hover:bg-purple-700 transition text-white py-3 rounded-lg font-semibold shadow-md"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
@@ -121,6 +121,7 @@ const UserLogin = () => {
               Sign up
             </Link>
           </p>
+         
         </form>
       </div>
 

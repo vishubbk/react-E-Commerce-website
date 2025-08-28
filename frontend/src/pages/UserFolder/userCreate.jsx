@@ -156,7 +156,7 @@ const UserCreate = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition-all duration-300"
+            className="w-full bg-blue-600 disabled:bg-purple-500 disabled:cursor-not-allowed text-white py-3 rounded-md hover:bg-blue-700 transition-all duration-300"
           >
             {loading ? "Creating..." : "Create Account"}
           </button>
