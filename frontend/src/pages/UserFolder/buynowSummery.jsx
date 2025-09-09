@@ -38,8 +38,6 @@ const BuyNowSummary = () => {
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/products/${id}`);
         setProduct(response.data);
          const  address = user.address?.city || user.address?.street;
-         console.log("Address:", address);
-         
       } catch (error) {
         console.error("❌ Error fetching product:", error);
         toast.error("❌ Failed to fetch product details!");

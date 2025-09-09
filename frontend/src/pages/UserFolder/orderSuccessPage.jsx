@@ -22,7 +22,6 @@ const OrderSuccessPage = () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/products/${id}`);
         setProduct(response.data);
-        console.log("Order Details:", response.data);
       } catch (error) {
         console.error("Order Details Error:", error.message);
       }
