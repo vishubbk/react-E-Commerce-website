@@ -78,6 +78,7 @@ const Home = () => {
       setBannerIndex((prevIndex) => (prevIndex + 1) % banners.length);
     }, 5000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const addToCart = async (productId, productName) => {
@@ -147,7 +148,7 @@ const Home = () => {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.05 }}
-      className="relative group bg-white p-4 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-blue-500"
+      className="relative group bg-white p-4 rounded-xl shadow-lg hover:shadow-blue-400 hover:shadow-4xl transition-all  border-gray-200 hover:border-blue-900 border-2 hover:scale-101  duration-500 "
       style={{
         backgroundColor: "#ffffff",
         color: product.textcolor || "#000000",
@@ -156,9 +157,13 @@ const Home = () => {
       <Link to={`/products/${product._id}`}>
         <div className="relative h-48 rounded-lg overflow-hidden">
           <img
-            src={product.images?.[0]?.url || product.image?.url || "https://via.placeholder.com/150"}
+            src={
+              product.images?.[0]?.url ||
+              product.image?.url ||
+              "https://via.placeholder.com/150"
+            }
             alt={product.name}
-            className="w-full h-full object-contain transition-transform duration-500 hover:scale-110"
+            className="w-full h-full object-contain"
             onError={(e) => {
               e.target.src = "https://via.placeholder.com/150";
               e.target.onerror = null;
@@ -261,6 +266,7 @@ const Home = () => {
                     className="w-80 absolute bottom-0 right-4  md:max-w-[400px] object-contain  "
                   />
                 </div>
+
                 <div className="md:w-1/2 absolute left-[3%] top-0 text-center md:text-left mt-6 block md:hidden ">
                   <h1 className="text-xl md:text-3xl font-extrabold mb-2 text-black">
                     SHOP FOR MORE GADGETS
@@ -269,7 +275,6 @@ const Home = () => {
                     Grab the Latest Gadgets at Jaw-Dropping Prices!
                   </p>
                 </div>
-
                 <div className="md:w-1/2 absolute right-[40%] top-30 text-center md:text-left mt-6 hidden md:block">
                   <h1 className="text-2xl md:text-3xl font-extrabold mb-2">
                     SHOP FOR MORE GADGETS

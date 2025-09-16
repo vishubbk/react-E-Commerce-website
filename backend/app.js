@@ -14,7 +14,7 @@ const homeRoutes = require("./routes/homeRoutes");
 const productRoutes = require("./routes/productRoutes");
 const ownerRoutes = require("./routes/ownerRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
-
+const aiRoutes = require("./routes/airoute");
 // Import Middleware
 const authMiddleware = require("./middlewares/AuthMiddleware"); // Ensure token validation
 
@@ -69,6 +69,7 @@ app.use("/owner", ownerRoutes);
 app.use("/users", userRoutes);
 app.use("/home", homeRoutes);
 app.use("/payment", paymentRoutes);
+app.use("/ai-help", aiRoutes);
 
 // 🔹 Protected Profile Route (Requires Auth)
 app.get("/users/profile", authMiddleware, (req, res) => {

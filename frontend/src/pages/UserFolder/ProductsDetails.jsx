@@ -104,6 +104,16 @@ const ProductsDetails = () => {
     navigate(`/users/buynow/${product._id}`);
   };
 
+  function MyCompunents() {
+    useEffect(() => {
+      window.scrollTo({top:0,behavior:"instant"})
+  
+    }, [])
+    
+
+  }
+  MyCompunents()
+
   // Calculate discount percentage safely
   const discountPercent =
     product && product.price && product.discount
@@ -114,7 +124,7 @@ const ProductsDetails = () => {
     <>
       <Navbar />
 
-      <div className="container mx-auto px-4 py-24 pt-20 flex flex-col items-center mb-20">
+      <div  className="container mx-auto px-4 py-24 pt-20 flex flex-col items-center mb-20">
         {loader ? (
           <div className="flex flex-col items-center justify-center min-h-[300px]">
             <motion.div

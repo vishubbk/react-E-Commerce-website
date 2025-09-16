@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
@@ -6,42 +6,49 @@ import Footer from "../../components/Footer";
 const AiCenter = () => {
   const [loader, setLoader] = useState(false);
   const [message, setMessage] = useState("");
-  const [chat, setChat] = useState([]);
+  const [chat, setChat] = useState([
+    {
+      sender: "ai",
+      text: "👋 Welcome to Biggest Shopping Mall AI Center! How can I help you with your e-commerce project today?",
+    },
+  ]);
+  const chatEndRef = useRef(null);
+
+  // Scroll to bottom when chat updates
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chat]);
 
   async function sendMessage() {
     if (!message.trim()) return;
 
-    // Add user message to chat
-    const newChat = [...chat, { sender: "user", text: message }];
+    const userMessage = message;
+    const newChat = [...chat, { sender: "user", text: userMessage }];
     setChat(newChat);
     setMessage("");
     setLoader(true);
 
     try {
-      console.log("working done");
-      
+      // Send message to backend
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/ai-help`,
+        { code: userMessage },
+        { withCredentials: true }
+      );
 
-const response = await axios.post(
-  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${import.meta.env.VITE_AI_PRODUCT_KEY}`,
-  {
-    model: "gemini-pro",
-    contents: [{ parts: [{ text: message }] }],
-  }
-);
-
-      const aiReply =
-        response.data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-        "No response";
+      // Backend returns { text: aiResponse }
+      const aiReply = response.data.text || "⚠️ Something went wrong. Please try again.";
 
       setChat([...newChat, { sender: "ai", text: aiReply }]);
     } catch (error) {
-      console.error("Error:", error); 
+      console.error("Error:", error);
       setChat([
         ...newChat,
-        { sender: "ai", text: "⚠️ Something went wrong. Try again." },
+        { sender: "ai", text: "⚠️ Something went wrong. Please try again later." },
       ]);
+    } finally {
+      setLoader(false);
     }
-    setLoader(false);
   }
 
   return (
@@ -56,13 +63,10 @@ const response = await axios.post(
         <div className="w-full max-w-2xl flex flex-col bg-white shadow-xl border border-gray-200 rounded-2xl overflow-hidden">
           {/* Chat Area */}
           <div className="flex-1 p-5 space-y-4 overflow-y-auto max-h-[65vh]">
-            <h1 className="text-2xl flex justify-center font-bold m-4">Ready when you are. </h1>
             {chat.map((msg, index) => (
               <div
                 key={index}
-                className={`flex ${
-                  msg.sender === "user" ? "justify-end" : "justify-start"
-                }`}
+                className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
                   className={`px-4 py-2 rounded-2xl max-w-[75%] text-sm md:text-base ${
@@ -82,6 +86,7 @@ const response = await axios.post(
                 </div>
               </div>
             )}
+            <div ref={chatEndRef} />
           </div>
 
           {/* Input Box */}
