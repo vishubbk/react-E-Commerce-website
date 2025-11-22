@@ -6,6 +6,7 @@ const {
   getAllProducts,
   getProductById,
   deleteProduct,
+  suggestedProduct
 } = require("../controllers/productControllers");
 
 // ✅ Corrected Route for Adding Product with multiple images
@@ -16,6 +17,7 @@ router.post(
 );
 
 router.get("/", getAllProducts);
+router.get("/suggest/:id", suggestedProduct);
 router.get("/:id", getProductById);
 router.delete("/:id", deleteProduct);
 

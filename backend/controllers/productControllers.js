@@ -11,7 +11,6 @@ productControllers.addProduct = async (req, res) => {
 
     // Support multer.fields (req.files)
     const images = req.files?.images;
-    console.log("Images:", images);
 
     if (!images || images.length === 0) {
       return res
@@ -71,7 +70,11 @@ productControllers.addProduct = async (req, res) => {
     res.status(201).json({ message: "Product added successfully", product });
   } catch (error) {
     console.error("Error adding product:", error);
+     if (error.code === "ENOTFOUND") {
+        console.log("⚠️ Please check your Internet connection or DNS settings!");
+    }
     res.status(500).json({ error: error.message });
+
   }
 };
 
@@ -112,6 +115,29 @@ productControllers.deleteProduct = async (req, res) => {
     }
     res.status(200).json({ message: "Product deleted successfully" });
   } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+// ✅ Suggested Product
+productControllers.suggestedProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await productModel.findById(id);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    const category = product.category;
+
+    const suggestedProduct = await productModel.find({ category, _id: { $ne: id } }).limit(4);
+
+    res.status(200).json(suggestedProduct);
+  }
+
+    catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
