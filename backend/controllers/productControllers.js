@@ -6,7 +6,7 @@ const productControllers = {};
 // ✅ Add Product Controller
 productControllers.addProduct = async (req, res) => {
   try {
-    const { name, price, discount, bgcolor, panelcolor, textcolor, details,information } =
+    const { name, price, discount, bgcolor, panelcolor, textcolor, details,information, category  } =
       req.body;
 
     // Support multer.fields (req.files)
@@ -26,6 +26,7 @@ productControllers.addProduct = async (req, res) => {
       !bgcolor ||
       !panelcolor ||
       !textcolor ||
+      !category ||
       !information ||
       !details
     ) {
@@ -59,6 +60,7 @@ productControllers.addProduct = async (req, res) => {
       textcolor,
       information,
       details,
+      category,
       images: uploadResults.map((result) => ({
         public_id: result.public_id,
         url: result.secure_url,
@@ -73,7 +75,7 @@ productControllers.addProduct = async (req, res) => {
   }
 };
 
-// ✅ Get All Products
+// ✅ Get All Productˀ
 
 productControllers.getAllProducts = async (req, res) => {
   try {

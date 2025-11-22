@@ -24,6 +24,7 @@ const AddItems = () => {
     textcolor: "#000000",
     details: "",
     information: "",
+    category:"",
     images: [],
   });
   const [previewImages, setPreviewImages] = useState([]);
@@ -149,6 +150,7 @@ const AddItems = () => {
         textcolor: "#000000",
         details: "",
         information: "",
+        category:"",
         images: [],
       });
 
@@ -302,6 +304,18 @@ const AddItems = () => {
   name="information"
   placeholder="Enter Product Information"
   value={formData.information}
+  onChange={handleChange}
+  className="border p-2 rounded-md h-20"
+/>
+
+            {/* category Information */}
+            <label className="font-semibold text-gray-700">
+              category Information:
+            </label>
+           <textarea
+  name="category"
+  placeholder="Enter category Information"
+  value={formData.category}
   onChange={handleChange}
   className="border p-2 rounded-md h-20"
 />

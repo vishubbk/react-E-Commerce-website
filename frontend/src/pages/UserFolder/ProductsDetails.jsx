@@ -15,6 +15,7 @@ import "toastify-js/src/toastify.css";
 const ProductsDetails = () => {
   const [loader, setLoader] = useState(false);
   const [product, setProduct] = useState(null);
+  const [item, setItem] = useState([]);
   const [selectedImage, setSelectedImage] = useState(0);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -107,9 +108,9 @@ const ProductsDetails = () => {
   function MyCompunents() {
     useEffect(() => {
       window.scrollTo({top:0,behavior:"instant"})
-  
+
     }, [])
-    
+
 
   }
   MyCompunents()
@@ -172,7 +173,7 @@ const ProductsDetails = () => {
                       key={index}
                       src={img.url}
                       alt={`${product.name} view ${index + 1}`}
-                      className={`w-24 h-24 object-cover rounded-md cursor-pointer transition-all duration-200 
+                      className={`w-24 h-24 object-cover rounded-md cursor-pointer transition-all duration-200
                         ${
                           selectedImage === index
                             ? "border-2 border-blue-500 shadow-lg scale-105"
@@ -235,6 +236,16 @@ const ProductsDetails = () => {
               <p className="text-gray-700">
                 {product.information || "No additional details available."}
               </p>
+            </div>
+
+            {/* More Products */}
+            <div className="div">
+              <h1>Recommended </h1>
+              <div className="">
+                {itmes.map((item) =>(
+                  <div key={item._id} className="">hello</div>
+                ))}
+              </div>
             </div>
           </div>
         )}
