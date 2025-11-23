@@ -337,12 +337,12 @@ const ProductsDetails = () => {
                       alt={it.name}
                       className="w-14 h-14 object-contain bg-gray-50 p-1 rounded"
                     />
-                    <div className="flex-1">
+                    <div className="flex-1 w-14">
                       <div className="text-sm font-medium truncate">{it.name}</div>
                       <div className="text-sm text-blue-600">₹{fmt(it.discount)}</div>
                     </div>
                     <button
-                      onClick={() => navigate(`/users/products/${it._id}`)}
+                      onClick={() => navigate(`/products/${it._id}`)}
                       className="text-sm text-gray-700 hover:underline"
                     >
                       View
