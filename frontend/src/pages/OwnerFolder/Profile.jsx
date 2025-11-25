@@ -56,7 +56,7 @@ const Profile = () => {
       setPaymentLoading(true);
 
       const response = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/api/orders/paymentInfo`,
+        `${import.meta.env.VITE_BASE_URL}/orders/paymentInfo`,
         {
           withCredentials: true,
           headers: {

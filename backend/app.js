@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const connectdb = require("./db/db");
 const path = require("path");
 
+
 // Import Routes
 const userRoutes = require("./routes/userRoutes");
 const homeRoutes = require("./routes/homeRoutes");
@@ -15,9 +16,8 @@ const ownerRoutes = require("./routes/ownerRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const orderRoutes = require("./routes/orderRoute");
 const aiRoutes = require("./routes/airoute");
-
 // Import Middleware
-const authMiddleware = require("./middlewares/AuthMiddleware");
+const authMiddleware = require("./middlewares/AuthMiddleware"); // Ensure token validation
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -30,14 +30,9 @@ app.use(cookieParser());
 // 🔹 CORS Configuration
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "https://biggest-shop-mart.onrender.com",
-      "https://react-e-commerce-website-olx6.onrender.com",
-    ],
+    origin: ["http://localhost:5173","https://biggest-shop-mart.onrender.com"],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    methods: ["GET", "POST", "PUT", "DELETE","PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
@@ -50,38 +45,49 @@ connectdb()
     process.exit(1);
   });
 
-// 🔹 Simple Health Check Route
-app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", message: "✅ Server is running!" });
+// 🔹 Basic Testing Route
+app.get("/", (req, res) => {
+  res.send("✅ Server is running!");
 });
 
-// 🔹 API Routes (all prefixed with /api)
-app.use("/api/products", productRoutes);
-app.use("/api/owner", ownerRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/home", homeRoutes);
-app.use("/api/payment", paymentRoutes);
-app.use("/api/orders", orderRoutes);
-app.use("/api/ai-help", aiRoutes);
+// 🔹 Set Cookie Route (For Testing)
+app.get("/set-cookie", (req, res) => {
+  res.cookie("token", process.env.JWT_SECRET, {
+    httpOnly: true,
+  });
+  res.json({ message: "Cookie has been set!" });
+});
 
-// 🔹 Example Protected Route (optional, if not already inside userRoutes)
-app.get("/api/users/profile-check", authMiddleware, (req, res) => {
+// 🔹 Get Cookie Route
+app.get("/get-cookie", (req, res) => {
+  console.log("Cookies received from client:", req.cookies);
+  res.json({ cookies: req.cookies });
+});
+
+// 🔹 Define Routes
+app.use("/products", productRoutes);
+app.use("/owner", ownerRoutes);
+app.use("/users", userRoutes);
+app.use("/home", homeRoutes);
+app.use("/payment", paymentRoutes);
+app.use("/orders", orderRoutes);
+app.use("/ai-help", aiRoutes);
+
+// 🔹 Protected Profile Route (Requires Auth)
+app.get("/users/profile", authMiddleware, (req, res) => {
   res.json({ message: "Profile data", user: req.user });
 });
 
-// 🔹 Error Handling Middleware (for API errors)
+// 🔹 Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error("Error:", err.stack);
-  if (res.headersSent) {
-    return next(err);
-  }
   res.status(500).json({ message: "Internal Server Error" });
 });
 
-// 🔹 Serve static files from React build folder
+// Serve static files from React build folder
 app.use(express.static(path.join(__dirname, "client/build")));
 
-// 🔹 React fallback route for client-side routing
+// React fallback route for client-side routing
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "client/build", "index.html"));
 });
