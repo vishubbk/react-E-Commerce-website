@@ -70,7 +70,7 @@ app.use("/owner", ownerRoutes);
 app.use("/users", userRoutes);
 app.use("/home", homeRoutes);
 app.use("/payment", paymentRoutes);
-app.use("/orders", orderRoutes);
+app.use("/api/orders", orderRoutes);
 app.use("/ai-help", aiRoutes);
 
 // 🔹 Protected Profile Route (Requires Auth)

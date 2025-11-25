@@ -204,7 +204,7 @@ const BuyNowSummary = () => {
       return;
     }
 
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/orders/placeorder`, {
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/orders/placeorder`, {
       productId: id,
       amount: product.price,
       paymentMethod: "Online",
