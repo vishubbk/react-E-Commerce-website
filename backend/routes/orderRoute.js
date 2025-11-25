@@ -8,7 +8,7 @@ const authMiddleware = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
-router.post("/placeorder", placeOrder); // ✅ Protected Route
+router.post("/placeorder",authMiddleware, placeOrder); // ✅ Protected Route
 router.get("/paymentInfo", authMiddleware, getPaymentInfo); // ✅ Protected Route
 // router.delete("/myorders/:orderId", authMiddleware, cancelOrder); // ✅ Protected Route
 
