@@ -4,7 +4,7 @@ const {
   getPaymentInfo,
   cancelOrder,
 } = require("../controllers/orderController");
-const authMiddleware = require("../middlewares/authMiddleware");
+const authMiddleware = require("../middlewares/AuthMiddleware");
 
 const router = express.Router();
 
