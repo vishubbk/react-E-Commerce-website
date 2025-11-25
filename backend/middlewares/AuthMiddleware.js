@@ -1,18 +1,36 @@
-const jwt = require('jsonwebtoken');
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized: No token provided" });
-  }
-
   try {
+    // 🟡 Check authorization header exists
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({ message: "Unauthorized: No token provided" });
+    }
+
+    // 🟡 Validate Bearer format
+    if (!authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "Unauthorized: Invalid token format" });
+    }
+
+    // 🟡 Extract token
+    const token = authHeader.split(" ")[1];
+
+    // 🟡 Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // 👈 This is the key line (sets req.user)
+
+    // 🟡 Add user payload to request
+    req.user = {
+      id: decoded.id,
+      email: decoded.email,
+    };
+
     next();
+
   } catch (error) {
-    return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    console.error("Auth Middleware Error:", error.message);
+    return res.status(401).json({ message: "Unauthorized: Invalid or expired token" });
   }
 };
 

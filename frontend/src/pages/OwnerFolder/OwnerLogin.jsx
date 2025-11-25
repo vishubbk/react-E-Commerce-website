@@ -32,12 +32,7 @@ const OwnerLogin = () => {
       if (response.status === 200) {
         toast.success("Login successful!");
         localStorage.setItem("token", response.data.token);
-        // ✅ Corrected token assignment
-
-
-
-
-
+       
         setLoading(false);
         navigate("/owner/dashboard");
       }

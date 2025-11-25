@@ -13,12 +13,12 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    
+
     otp: {
         type: String
     },
      otpExpiry: { type: Date },
-   
+
     cart: [{ type: mongoose.Schema.Types.ObjectId, ref: "product" }],
     orders: [{
         productId: { type: mongoose.Schema.Types.ObjectId, ref: "product" },

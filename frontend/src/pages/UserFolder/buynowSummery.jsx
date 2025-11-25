@@ -1,13 +1,13 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { motion } from 'framer-motion';
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
-import "../../App.css";
 import Swal from "sweetalert2";
+import "../../App.css";
 import Navbar from "../../components/Navbar";
-import { motion } from 'framer-motion';
 // Apple Store Inspired Theme
 const THEME = {
   background: "#f5f6fa",
@@ -29,15 +29,22 @@ const BuyNowSummary = () => {
   const [product, setProduct] = useState(null);
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
+  const [showPaymentPopup, setShowPaymentPopup] = useState(false);
+
+  // <-- Add payment form state
+  const [cardNumber, setCardNumber] = useState("");
+  const [expMonth, setExpMonth] = useState("");
+  const [expYear, setExpYear] = useState("");
+  const [cvv, setCvv] = useState("");
 
   // Fetch product details
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-
+        
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/products/${id}`);
         setProduct(response.data);
-         const  address = user.address?.city || user.address?.street;
+        // const  address = user.address?.city || user.address?.street;
       } catch (error) {
         console.error("❌ Error fetching product:", error);
         toast.error("❌ Failed to fetch product details!");
@@ -91,7 +98,8 @@ const BuyNowSummary = () => {
   // COD Order
   const handleCOD = () => {
     const token = localStorage.getItem("token");
-    const  address = user.address.city || user.address?.street;
+    // <-- use optional chaining to avoid crash when address is undefined
+    const address = user.address?.city || user.address?.street;
     if (!token ) {
       toast.error("❌ Please login to continue.");
       return navigate("/users/login");
@@ -137,17 +145,85 @@ const BuyNowSummary = () => {
 
   // Online payment (Coming Soon)
   const handleOnlinePayment = () => {
-    Swal.fire({
-      title: "🚧 Online Payment Coming Soon!",
-      text: "We're working hard to enable secure online payments. Stay tuned!",
-      imageUrl:
-        "https://t3.ftcdn.net/jpg/15/78/52/62/240_F_1578526240_jCsGf0TA8yVYQq9a5GiKP4UnlpsXQdKx.jpg",
-      imageWidth: 400,
-      imageHeight: 200,
-      imageAlt: "Coming Soon",
-      confirmButtonColor: "#0071e3",
-    });
+    setShowPaymentPopup(true);
   };
+
+  // Validate payment details (mock)
+  const validatePaymentDetails = async (cardNumberParam, yearParam, cvvParam, monthParam)=>{
+
+    const card = cardNumberParam ?? cardNumber;
+    const yearRaw = yearParam ?? expYear;
+    const cvvVal = cvvParam ?? cvv;
+    const monthRaw = monthParam ?? expMonth;
+
+    // normalize numeric values
+    const monthNum = Number((monthRaw || "").toString().trim());
+    let yearNum = Number((yearRaw || "").toString().trim());
+
+    // support 2-digit year
+    if (!isNaN(yearNum) && yearRaw && yearRaw.toString().length === 2) {
+      yearNum = 2000 + yearNum;
+    }
+
+    // basic format validation
+    const basicValid =
+      card?.trim().length === 16 &&
+      !isNaN(monthNum) &&
+      monthNum >= 1 &&
+      monthNum <= 12 &&
+      !isNaN(yearNum) &&
+      (yearRaw?.toString().trim().length === 4 || yearRaw?.toString().trim().length === 2) &&
+      cvvVal?.trim().length === 3;
+
+    if (!basicValid) {
+      toast.error("❌ Invalid card details. Check card number, expiry and CVV.");
+      return;
+    }
+
+    // expiry check against current month/year
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1; // 1-12
+
+    const isExpired = yearNum < currentYear || (yearNum === currentYear && monthNum < currentMonth);
+
+    if (isExpired) {
+      setShowPaymentPopup(false);
+      toast.error("❌ Card expired. Please use a valid card.");
+      setCardNumber("");
+      setExpMonth("");
+      setExpYear("");
+      setCvv("");
+      return;
+    }
+
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/orders/placeorder`, {
+      productId: id,
+      amount: product.price,
+      paymentMethod: "Online",
+
+    }, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          withCredentials: true,
+    });
+
+    // If valid and not expired, proceed
+    Swal.fire({
+      title: "Processing Payment...",
+      text: "Please wait a moment.",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    setTimeout(() => {
+      Swal.close();
+      setShowPaymentPopup(false); // close on success
+      toast.success("✅ Payment successful!");
+      navigate(`/users/orderSuccess/${id}`);
+    }, 2000);
+  }
 
   return (
     <div
@@ -168,11 +244,11 @@ const BuyNowSummary = () => {
           <h1 className="text-3xl md:text-4xl font-bold text-center mb-2" style={{ color: THEME.accentDark }}>
             Review &amp; Pay
           </h1>
-          <div  style={{  background: THEME.accent, width: 48, height: 3, margin: "0 auto 32px", borderRadius: 2, display : setLoading?"none":"flex"}}></div>
+          <div  style={{  background: THEME.accent, width: 48, height: 3, margin: "0 auto 32px", borderRadius: 2, display : loading ? "none" : "flex"}}></div>
 
           {loading ? (
 
-             
+
 <div style={{ position: "relative", height: 3, marginBottom: 32 }}>
   <motion.div
     style={{
@@ -184,13 +260,13 @@ const BuyNowSummary = () => {
       left: "50%",
       transform: "translateX(-70%)",
     }}
-    animate={{ x: ["-100%", "0%", "60%"] }} // centered around 0
+    animate={{ x: ["-100%", "0%", "60%"] }}
    transition={{ duration: 1, repeat: Infinity, repeatType: "mirror" }}
   />
 </div>
 
-            
-            
+
+
           ) : product ? (
             <section
               className="rounded-3xl shadow-xl px-8 py-10 flex flex-col items-center"
@@ -243,7 +319,7 @@ const BuyNowSummary = () => {
                     </div>
                     <div className="flex items-center gap-4 mb-2">
                       <img
-                        src={user?.profilePicture }
+                        src={user?.profilePicture || "/default-avatar.png"}
                         alt="User"
                         className="w-10 h-10 rounded-full border border-blue-200 shadow"
                       />
@@ -294,6 +370,73 @@ const BuyNowSummary = () => {
             </div>
           )}
         </div>
+        {/* PAYMENT POPUP */}
+        {showPaymentPopup && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[999]"
+            onClick={() => setShowPaymentPopup(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              className="bg-white w-[90%] max-w-md rounded-2xl p-6 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 className="text-2xl font-bold text-center mb-4">💳 Secure Payment</h2>
+
+              {/* <-- Wire inputs to state */}
+              <input
+                placeholder="Card Number"
+                maxLength="16"
+                className="w-full border p-3 rounded-lg mb-3"
+                value={cardNumber}
+                onChange={(e) => setCardNumber(e.target.value.replace(/\D/g, "").slice(0,16))}
+              />
+              <div className="flex gap-3">
+                <input
+                  placeholder="MM"
+                  maxLength="2"
+                  className="border p-3 rounded-lg w-1/2"
+                  value={expMonth}
+                  onChange={(e) => setExpMonth(e.target.value.replace(/[^\d]/g, "").substring(0, 2))}
+                />
+                <input
+                  placeholder="YYYY"
+                  maxLength="4"
+                  className="border p-3 rounded-lg w-1/2"
+                  value={expYear}
+                  onChange={(e) => setExpYear(e.target.value.replace(/\D/g, "").slice(0,4))}
+                />
+              </div>
+              <input
+                placeholder="CVV"
+                maxLength="3"
+                className="border p-3 rounded-lg w-1/2 mt-3"
+                value={cvv}
+                onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0,3))}
+              />
+
+              <div className="flex gap-4 mt-6">
+                <button onClick={() => setShowPaymentPopup(false)} className="flex-1 py-3 rounded-xl bg-gray-200 font-semibold">
+                  Cancel
+                </button>
+
+                <button
+                  className="flex-1 py-3 rounded-xl font-semibold text-white"
+                  style={{ background: THEME.button }}
+                  onClick={() => {
+                    // don't close the popup here; validate first
+                    validatePaymentDetails();
+                  }}
+                >
+                  Pay ₹{product?.price}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
       </main>
     </div>
   );
