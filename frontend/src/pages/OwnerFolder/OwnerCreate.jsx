@@ -79,9 +79,9 @@ import "../../App.css";
       fontWeight: 400,
       fontStyle: "normal",
     }}>
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Create User Account</h1>
-      <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
-        <div className="flex flex-col gap-4">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">Create Owner Account 🔐</h1>
+      <form onSubmit={handleSubmit} className="bg-white shadow-lg  rounded-lg p-6 w-full max-w-md">
+        <div className="flex flex-col gap-4 ">
           <div className="fullname flex w-full gap-3">
             <label className="text-gray-700 font-medium w-1/2">
               First Name
@@ -150,7 +150,7 @@ import "../../App.css";
           className="w-full mt-6 bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition-all duration-300"
           disabled={loading}
         >
-          {loading ? "Loading..." : "Create User"}
+          {loading ? "Loading..." : "Create Owner Account"}
         </button>
 
         <p className="text-gray-700 font-medium mt-3 flex justify-center">

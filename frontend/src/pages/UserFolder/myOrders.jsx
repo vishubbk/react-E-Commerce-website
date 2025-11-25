@@ -39,6 +39,7 @@ const MyOrders = () => {
           }
         );
         setOrders(response?.data?.orders || []);
+
       } catch (error) {
         if (error.response?.status === 401) {
           localStorage.removeItem("token");
@@ -143,7 +144,7 @@ const MyOrders = () => {
               >
                 <Link to={`/products/${order.productId}`} className="flex items-center flex-grow hover:underline mb-4 sm:mb-0 sm:mr-4">
                   <img
-                    src={order.images?.[0]?.url || "https://via.placeholder.com/150"}
+                    src={order.image || "https://via.placeholder.com/150"}
                     alt={order.name}
                     className="w-full sm:w-28 h-28 object-contain rounded-md shadow-lg transition-transform transform hover:scale-105"
                   />

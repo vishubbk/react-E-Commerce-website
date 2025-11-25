@@ -460,14 +460,15 @@ userControllers.MyOrders = async (req, res) => {
     const ordersWithProductDetails = await Promise.all(
       user.orders.map(async (order) => {
         const product = await Product.findById(order.productId);
+        console.log( "Product:", product?.images?.[0]?.url );
 
 
         return {
           productId: order.productId,
           _id: order._id,
           name: product?.name || "Unknown Product",
-          image: product?.image || "",
-          price: product?.price || order.price, // If price isn't in product, fallback to order price
+          image: product?.images?.[0]?.url || "",
+          price: product?.price || order.price, // If price isn't in product, fallback to order
           quantity: order.quantity,
           status: order.status,
           orderDate: order.orderDate,
@@ -489,7 +490,7 @@ userControllers.cancelOrder = async (req, res) => {
 
 
     const token = req.headers.authorization.split(" ")[1];
-  
+
 
     if (!token) {
       return res.status(401).json({ message: "Unauthorized: No token provided" });
