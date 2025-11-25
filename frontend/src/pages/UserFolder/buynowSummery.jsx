@@ -151,7 +151,7 @@ const BuyNowSummary = () => {
 
   // Online payment (Coming Soon)
   const handleOnlinePayment = () => {
-    setIsProcessing
+    setIsProcessing(true);
     setShowPaymentPopup(true);
   };
 
