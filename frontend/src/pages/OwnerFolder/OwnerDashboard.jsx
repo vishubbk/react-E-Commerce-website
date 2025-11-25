@@ -104,7 +104,7 @@ const OwnerDashboard = () => {
               <p className="text-center text-gray-500">No users available.</p>
             )}
 
-            <h3 className="text-lg font-semibold text-gray-800 mt-6">📦 Products:</h3>
+            {/* <h3 className="text-lg font-semibold text-gray-800 mt-6">📦 Products:</h3>
             {data.products?.length > 0 ? (
               <ul className="list-disc list-inside text-gray-600">
                 {data.products.map((product, index) => (
@@ -114,8 +114,8 @@ const OwnerDashboard = () => {
                 ))}
               </ul>
             ) : (
-              <p className="text-center text-gray-500">No products available.</p>
-            )}
+              <p className="text-center text-gray-500">No products available.</p> */}
+            {/* )} */}
           </div>
         ) : (
           <p className="text-center text-red-500">Failed to load data.</p>

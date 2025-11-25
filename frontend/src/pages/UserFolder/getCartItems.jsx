@@ -122,7 +122,7 @@ const GetCartItems = () => {
                 <div key={item._id} className="bg-white rounded-lg shadow-md p-4 flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
                    <Link className="flex" to={`/products/${item._id}`}>
                   <img
-                    src={item.image?.url || "https://via.placeholder.com/150"}
+                    src={item.images?.[0]?.url || "https://via.placeholder.com/150"}
                     alt={item.name}
                     className="w-24 h-24  rounded-md"
                   /></Link>

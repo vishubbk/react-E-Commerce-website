@@ -61,7 +61,7 @@ const AllItems = () => {
               >
                 <div className="relative h-48 overflow-hidden rounded-md">
                   <img
-                    src={item.image?.url || "https://via.placeholder.com/150"}
+                    src={item.images?.[0]?.url || "https://via.placeholder.com/150"}
                     alt={item.name}
                     className="absolute inset-0 w-full h-full object-contain hover:scale-50 transition duration-500"
                   />

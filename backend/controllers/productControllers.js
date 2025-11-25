@@ -12,6 +12,7 @@ productControllers.addProduct = async (req, res) => {
     // Support multer.fields (req.files)
     const images = req.files?.images;
 
+
     if (!images || images.length === 0) {
       return res
         .status(400)
@@ -31,6 +32,7 @@ productControllers.addProduct = async (req, res) => {
     ) {
       return res.status(400).json({ message: "All fields are required" });
     }
+    const categoryLower = category.toLowerCase();
 
     // ✅ Upload multiple images to Cloudinary
     const uploadPromises = images.map(
@@ -59,7 +61,7 @@ productControllers.addProduct = async (req, res) => {
       textcolor,
       information,
       details,
-      category,
+      category:categoryLower,
       images: uploadResults.map((result) => ({
         public_id: result.public_id,
         url: result.secure_url,

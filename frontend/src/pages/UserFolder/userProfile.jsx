@@ -36,7 +36,7 @@ const Profile = () => {
           }
         );
 
-      
+
         setUser(response.data || {});
         setLoading(false);
       } catch (error) {
@@ -92,7 +92,7 @@ const Profile = () => {
                   <div className="relative group">
                     <div className="w-40 h-40 rounded-full overflow-hidden ring-4 ring-blue-100 shadow-lg">
                       <img
-                        src={user?.profilePicture || "https://via.placeholder.com/150"}
+                        src={user?.profilePicture || "https://static.vecteezy.com/system/resources/previews/020/192/489/non_2x/winner-human-or-happy-human-logo-design-vector.jpg"}
                         alt="Profile"
                         className="w-full h-full object-cover"
                       />

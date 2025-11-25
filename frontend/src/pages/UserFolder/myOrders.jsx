@@ -65,7 +65,7 @@ const MyOrders = () => {
             confirmButtonText: "Yes",
             denyButtonText: "No",
           });
-      
+
           if (!result.isConfirmed) return;
       await axios.delete(`${import.meta.env.VITE_BASE_URL}/users/myorders/${orderId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -79,7 +79,7 @@ const MyOrders = () => {
         position: "right",
         style: { background: "green", color: "#fff", borderRadius: "8px", fontWeight: "bold", padding: "12px" },
       }).showToast();
-      
+
       Swal.fire({
   title: "Did you like this order?",
   showDenyButton: true,
@@ -143,7 +143,7 @@ const MyOrders = () => {
               >
                 <Link to={`/products/${order.productId}`} className="flex items-center flex-grow hover:underline mb-4 sm:mb-0 sm:mr-4">
                   <img
-                    src={order.image?.url || "https://via.placeholder.com/150"}
+                    src={order.images?.[0]?.url || "https://via.placeholder.com/150"}
                     alt={order.name}
                     className="w-full sm:w-28 h-28 object-contain rounded-md shadow-lg transition-transform transform hover:scale-105"
                   />

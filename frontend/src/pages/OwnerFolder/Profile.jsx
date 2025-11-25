@@ -113,7 +113,7 @@ const Profile = () => {
                       src={
                         owner?.profilePicture?.startsWith("data:image")
                           ? owner.profilePicture
-                          : "https://via.placeholder.com/150"
+                          : "https://img.icons8.com/ios7/1200/landlord.jpg"
                       }
                       alt="Profile"
                       className="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"

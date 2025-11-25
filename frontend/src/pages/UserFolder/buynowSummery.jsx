@@ -5,6 +5,10 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FaCcVisa } from "react-icons/fa6";
+import { FaEye,FaEyeSlash } from "react-icons/fa";
+
+
 import Swal from "sweetalert2";
 import "../../App.css";
 import Navbar from "../../components/Navbar";
@@ -30,18 +34,20 @@ const BuyNowSummary = () => {
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
   const [showPaymentPopup, setShowPaymentPopup] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // <-- Add payment form state
   const [cardNumber, setCardNumber] = useState("");
   const [expMonth, setExpMonth] = useState("");
   const [expYear, setExpYear] = useState("");
   const [cvv, setCvv] = useState("");
+  const [showCvv, setShowCvv] = useState(false);
 
   // Fetch product details
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        
+
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/products/${id}`);
         setProduct(response.data);
         // const  address = user.address?.city || user.address?.street;
@@ -145,6 +151,7 @@ const BuyNowSummary = () => {
 
   // Online payment (Coming Soon)
   const handleOnlinePayment = () => {
+    setIsProcessing
     setShowPaymentPopup(true);
   };
 
@@ -278,9 +285,9 @@ const BuyNowSummary = () => {
               }}
             >
               <div className="flex flex-col md:flex-row md:items-center w-full gap-8 mb-8">
-                <div className="flex-1 flex justify-center items-center">
+                <div className="flex-1 md:mt-0 lg:-mt-60 flex justify-center items-center">
                   <img
-                    src={product?.image?.url || "/fallback-image.jpg"}
+                    src={product.images?.[0]?.url  || "/fallback-image.jpg"}
                     alt={product?.name || "Product Image"}
                     className="rounded-2xl object-contain"
                     style={{
@@ -319,7 +326,7 @@ const BuyNowSummary = () => {
                     </div>
                     <div className="flex items-center gap-4 mb-2">
                       <img
-                        src={user?.profilePicture || "/default-avatar.png"}
+                        src={user?.profilePicture || "https://static.vecteezy.com/system/resources/previews/020/192/489/non_2x/winner-human-or-happy-human-logo-design-vector.jpg"}
                         alt="User"
                         className="w-10 h-10 rounded-full border border-blue-200 shadow"
                       />
@@ -342,7 +349,8 @@ const BuyNowSummary = () => {
               <div className="w-full flex flex-col md:flex-row gap-4 mt-6">
                 <button
                   onClick={handleCOD}
-                  className="flex-1 py-3 rounded-full text-lg font-semibold shadow transition"
+                  disabled={isProcessing}
+                  className="flex-1 py-3 rounded-full text-lg font-semibold shadow transition disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
                     background: THEME.button,
                     color: "#fff",
@@ -353,7 +361,8 @@ const BuyNowSummary = () => {
                 </button>
                 <button
                   onClick={handleOnlinePayment}
-                  className="flex-1 py-3 rounded-full text-lg font-semibold shadow transition"
+                  disabled={isProcessing}
+                  className="flex-1 py-3  rounded-full text-lg font-semibold shadow transition disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
                     background: THEME.button,
                     color: "#fff",
@@ -372,65 +381,65 @@ const BuyNowSummary = () => {
         </div>
         {/* PAYMENT POPUP */}
         {showPaymentPopup && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[999]"
-            onClick={() => setShowPaymentPopup(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              className="bg-white w-[90%] max-w-md rounded-2xl p-6 shadow-xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <h2 className="text-2xl font-bold text-center mb-4">💳 Secure Payment</h2>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[999] p-4" onClick={() => setShowPaymentPopup(false)}>
+            <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+              <h2 className="text-2xl font-bold text-center mb-6">💳 Secure Payment</h2>
 
-              {/* <-- Wire inputs to state */}
-              <input
-                placeholder="Card Number"
-                maxLength="16"
-                className="w-full border p-3 rounded-lg mb-3"
-                value={cardNumber}
-                onChange={(e) => setCardNumber(e.target.value.replace(/\D/g, "").slice(0,16))}
-              />
-              <div className="flex gap-3">
-                <input
-                  placeholder="MM"
-                  maxLength="2"
-                  className="border p-3 rounded-lg w-1/2"
-                  value={expMonth}
-                  onChange={(e) => setExpMonth(e.target.value.replace(/[^\d]/g, "").substring(0, 2))}
-                />
-                <input
-                  placeholder="YYYY"
-                  maxLength="4"
-                  className="border p-3 rounded-lg w-1/2"
-                  value={expYear}
-                  onChange={(e) => setExpYear(e.target.value.replace(/\D/g, "").slice(0,4))}
-                />
+              <div className="mb-4">
+                <label className="block text-sm font-bold text-gray-600 mb-2 ml-1">Card Number</label>
+                <div className="flex items-center w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus-within:ring-2"
+     style={{ "--tw-ring-color": THEME.accent }}>
+
+  <input
+    placeholder="XXXX XXXX XXXX XXXX"
+    maxLength="16"
+    className="w-full outline-none text-gray-700"
+    value={cardNumber}
+    onChange={(e) => setCardNumber(e.target.value.replace(/\D/g, "").slice(0, 16))}
+  />
+
+  <FaCcVisa className="text-3xl text-blue-600 ml-2" />
+</div>
               </div>
-              <input
-                placeholder="CVV"
-                maxLength="3"
-                className="border p-3 rounded-lg w-1/2 mt-3"
-                value={cvv}
-                onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0,3))}
-              />
 
-              <div className="flex gap-4 mt-6">
-                <button onClick={() => setShowPaymentPopup(false)} className="flex-1 py-3 rounded-xl bg-gray-200 font-semibold">
+              <div className="mb-4">
+                <label className="block text-sm font-bold text-gray-600 mb-2 ml-1">Expiration Date</label>
+                <div className="flex gap-3">
+                  <input placeholder="MM" maxLength="2" className="w-1/2 border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2" style={{ "--tw-ring-color": THEME.accent }} value={expMonth} onChange={(e) => setExpMonth(e.target.value.replace(/[^\d]/g, "").substring(0, 2))} />
+                  <input placeholder="YYYY" maxLength="4" className="w-1/2 border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2" style={{ "--tw-ring-color": THEME.accent }} value={expYear} onChange={(e) => setExpYear(e.target.value.replace(/\D/g, "").slice(0, 4))} />
+                </div>
+              </div>
+
+             <div className="mb-6">
+  <label className="block text-sm font-bold text-gray-600 mb-2 ml-1">CVV</label>
+
+  <div className="relative w-1/3">
+    <input
+      type={showCvv ? "text" : "password"}
+      placeholder="CVV"
+      maxLength="3"
+      className="w-full border border-gray-300 p-3 pr-10 rounded-lg focus:outline-none focus:ring-2"
+      style={{ "--tw-ring-color": THEME.accent }}
+      value={cvv}
+      onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, 3))}
+    />
+
+    {/* Icon inside input field */}
+    <button
+      type="button"
+      onClick={() => setShowCvv(!showCvv)}
+      className="absolute inset-y-0 right-3 flex items-center text-gray-600 hover:text-gray-900"
+    >
+      {showCvv ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+    </button>
+  </div>
+</div>
+
+              <div className="flex gap-4">
+                <button onClick={() => setShowPaymentPopup(false)} className="flex-1 py-3 rounded-xl bg-gray-200 font-semibold hover:bg-gray-300 transition">
                   Cancel
                 </button>
-
-                <button
-                  className="flex-1 py-3 rounded-xl font-semibold text-white"
-                  style={{ background: THEME.button }}
-                  onClick={() => {
-                    // don't close the popup here; validate first
-                    validatePaymentDetails();
-                  }}
-                >
+                <button onClick={() => validatePaymentDetails()} className="flex-1 py-3 rounded-xl font-semibold text-white transition" style={{ background: THEME.button }}>
                   Pay ₹{product?.price}
                 </button>
               </div>
