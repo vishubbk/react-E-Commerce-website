@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 
+
 const ProductsDetails = () => {
   const [loader, setLoader] = useState(false);
   const [product, setProduct] = useState(null);
@@ -130,9 +131,12 @@ const ProductsDetails = () => {
 
   return (
     <>
-      <Navbar />
+    <div className="absolute top-0">
 
-      <div className="container mx-auto px-4 py-8">
+      <Navbar />
+    </div>
+
+      <div className="container relative top-13 mx-auto px-4 py-8 " >
         {/* Breadcrumb */}
         <div className="text-sm text-gray-600 mb-4">
           <Link to="/" className="hover:underline">
@@ -167,7 +171,7 @@ const ProductsDetails = () => {
             <div className="h-10 bg-gray-300 w-full rounded-md"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 ">
             {/* Left: Thumbnails (vertical) + Main Image */}
             <div className="lg:col-span-5 bg-white rounded-lg p-4 shadow-sm">
               <div className="flex gap-4">

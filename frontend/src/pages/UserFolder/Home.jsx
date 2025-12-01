@@ -1,21 +1,30 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import Lenis from "@studio-freight/lenis";
 import axios from "axios";
+import { motion } from "framer-motion";
+import { PackageX } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  FaCamera,
+  FaClock,
+  FaHeadphones,
+  FaLaptop,
+  FaMobileAlt,
+  FaTv,
+} from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
-import Lenis from "@studio-freight/lenis";
-import { motion } from "framer-motion";
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
-import { PackageX } from "lucide-react";
 import "../../App.css";
+import Footer from "../../components/Footer";
+import Navbar from "../../components/Navbar";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [bannerIndex, setBannerIndex] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState("");
   const navigate = useNavigate();
 
   const banners = [
@@ -45,6 +54,16 @@ const Home = () => {
       image:
         "https://i.ibb.co/mrGH4zrF/wireless-earbuds-with-neon-cyberpunk-style-lighting.png",
     },
+  ];
+
+  const categoryList = [
+    { label: "All", value: "" },
+    { label: "Electronics", value: "electronics", icon: <FaMobileAlt /> },
+    { label: "TV", value: "tv", icon: <FaTv /> },
+    { label: "Monitor", value: "monitor", icon: <FaLaptop /> },
+    { label: "Watch", value: "watch", icon: <FaClock /> },
+    { label: "Headphones", value: "headphones", icon: <FaHeadphones /> },
+    { label: "Camera", value: "camera", icon: <FaCamera /> },
   ];
 
   useEffect(() => {
@@ -138,9 +157,16 @@ const Home = () => {
     }
   };
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProducts = products
+    .filter((product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .filter((product) =>
+      selectedCategory === ""
+        ? true
+        : product.category &&
+          product.category.toLowerCase().includes(selectedCategory)
+    );
 
   const renderProductCard = (product) => (
     <motion.div
@@ -209,7 +235,7 @@ const Home = () => {
 
       {/* Hero Banner */}
       <div className="w-full mt-14">
-        <motion.div className="relative w-full min-h-[480px] bg-gradient-to-r from-white via-red-300 to-blue-600 text-black shadow-md flex flex-col md:flex-row items-center justify-between px-4 py-8 gap-6">
+        <motion.div className="relative w-full min-h-[380px] bg-gradient-to-r from-white via-red-300 to-blue-600 text-black shadow-md flex flex-col md:flex-row items-center justify-between px-4 py-8 gap-6">
           <div className="w-full md:w-1/2 text-center md:text-left px-4 relative">
             <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold">
               {banners[bannerIndex].title}
@@ -226,6 +252,27 @@ const Home = () => {
             />
           </div>
         </motion.div>
+      </div>
+
+      {/* Filter Box UI */}
+      <div className="container mx-auto mt-10 px-4">
+        <div className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 rounded-2xl shadow-lg p-6 flex flex-wrap gap-4 items-center justify-center">
+          {categoryList.map((cat) => (
+            <button
+              key={cat.label}
+              className={`flex items-center gap-2 px-5 py-2 rounded-full font-semibold shadow transition-all duration-300
+                ${selectedCategory === cat.value
+                  ? "bg-blue-600 text-white scale-105"
+                  : "bg-white text-blue-700 hover:bg-blue-100"
+                }`}
+              onClick={() => setSelectedCategory(cat.value)}
+            >
+              {cat.icon && <span className="text-xl">{cat.icon}</span>}
+              {cat.label}
+            </button>
+          ))}
+          
+        </div>
       </div>
 
       {/* Search Bar */}
