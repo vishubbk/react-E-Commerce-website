@@ -531,21 +531,22 @@ userControllers.SendOtp = async (req, res) => {
     const { email } = req.body;
 
     if (!email) {
-      return res.status(400).json({ message: "Email is required" });
+      return res.status(400).json({ status: "error", message: "Email is required" });
     }
 
     // Find user
     const user = await userModel.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ status: "error", message: "User not found" });
     }
 
     // Generate 4-digit OTP
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
 
     // Save OTP + Expiry
+    const expiry = Date.now() + 5 * 60 * 1000; // 5 minutes
     user.otp = otp;
-    user.otpExpiry = Date.now() + 5 * 60 * 1000; // 5 minutes
+    user.otpExpiry = expiry;
     await user.save();
 
     // ✅ Send OTP via Email
@@ -556,10 +557,15 @@ userControllers.SendOtp = async (req, res) => {
       `<h2>OTP Verification</h2><p>Your OTP is <b>${otp}</b></p><p>It will expire in 5 minutes.</p>`
     );
 
-    return res.status(200).json({ message: "OTP sent successfully" });
+    return res.status(200).json({
+      status: "success",
+      message: "OTP sent successfully",
+      expiry,
+      info: "Check your email for the OTP. It is valid for 5 minutes."
+    });
   } catch (error) {
     console.error("❌ OTP HAS NOT BEEN GENERATED:", error.message);
-    return res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({ status: "error", message: "Internal Server Error" });
   }
 };
 
