@@ -553,8 +553,7 @@ userControllers.SendOtp = async (req, res) => {
     await SendEmail(
       email,
       "Your OTP Code",
-      `Your OTP is ${otp}. It will expire in 5 minutes.`,
-      `<h2>OTP Verification</h2><p>Your OTP is <b>${otp}</b></p><p>It will expire in 5 minutes.</p>`
+      `${otp}.  It will expire in 5 minutes.`,
     );
 
     return res.status(200).json({
