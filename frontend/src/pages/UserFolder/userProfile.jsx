@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate,Link } from "react-router-dom";
 import Header from "../../components/Navbar";
-import { ArrowLeft, Mail, Phone, User, Edit2 } from "lucide-react";
+import { ArrowLeft, Mail, Phone, User, Edit2,UserRound } from "lucide-react";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import "../../App.css";
@@ -104,22 +104,40 @@ const Profile = () => {
                       {user?.firstname || "N/A"} {user?.lastname || ""}
                     </h1>
                     <p className="text-gray-500 mb-6">{user?.email || "No email provided"}</p>
-                    <button
-                      onClick={() => navigate("/users/profile/edit")}
-                      className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg
-                        hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
-                    >
-                      <Edit2 className="w-4 h-4 mr-2" />
-                      Edit Profile
-                    </button>
-                     <button
-                      onClick={() => navigate("/users/Order")}
-                      className="inline-flex items-center px-6 py-3 bg-red-600 text-white rounded-lg
-                        hover:bg-red-700 transition-colors shadow-md hover:shadow-lg"
-                    >
-                      <Edit2 className="w-4 h-4 mr-2" />
-                     My Orders
-                    </button>
+                    <div className="flex flex-wrap gap-4 w-full mt-4">
+
+  {/* Edit Profile Button */}
+  <button
+    onClick={() => navigate("/users/profile/edit")}
+    className="flex items-center justify-center gap-2
+      px-5 py-3 sm:px-6 sm:py-3
+      bg-blue-600 text-white font-medium
+      rounded-xl shadow-md
+      hover:bg-blue-700 hover:shadow-lg
+      transition-all duration-300
+      w-full sm:w-auto text-sm sm:text-base"
+  >
+    <Edit2 className="w-4 h-4" />
+    Edit Profile
+  </button>
+
+  {/* My Orders Button */}
+  <button
+    onClick={() => navigate("/users/Order")}
+    className="flex items-center justify-center gap-2
+      px-5 py-3 sm:px-6 sm:py-3
+      bg-red-600 text-white font-medium
+      rounded-xl shadow-md
+      hover:bg-red-700 hover:shadow-lg
+      transition-all duration-300
+      w-full sm:w-auto text-sm sm:text-base"
+  >
+    <UserRound className="w-4 h-4" />
+    My Orders
+  </button>
+
+</div>
+
                   </div>
                 </div>
               </div>
