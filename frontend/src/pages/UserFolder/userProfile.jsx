@@ -112,6 +112,14 @@ const Profile = () => {
                       <Edit2 className="w-4 h-4 mr-2" />
                       Edit Profile
                     </button>
+                     <button
+                      onClick={() => navigate("/users/Order")}
+                      className="inline-flex items-center px-6 py-3 bg-red-600 text-white rounded-lg
+                        hover:bg-red-700 transition-colors shadow-md hover:shadow-lg"
+                    >
+                      <Edit2 className="w-4 h-4 mr-2" />
+                     My Orders
+                    </button>
                   </div>
                 </div>
               </div>
