@@ -1,81 +1,110 @@
-import { HashRouter   as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { lazy, Suspense } from "react";
 
+/* =======================
+   User Pages (Lazy)
+======================= */
+import Home from "./pages/UserFolder/Home.jsx";
+const UserCreate = lazy(() => import("./pages/UserFolder/userCreate.jsx"));
+const UserLogin = lazy(() => import("./pages/UserFolder/userLogin.jsx"));
+const UserProfile = lazy(() => import("./pages/UserFolder/userProfile.jsx"));
+const UserProfileEdit = lazy(() => import("./pages/UserFolder/UserProfileEdit.jsx"));
+const UserCart = lazy(() => import("./pages/UserFolder/getCartItems.jsx"));
+const Buynow = lazy(() => import("./pages/UserFolder/buynowSummery.jsx"));
+const OrderSuccess = lazy(() => import("./pages/UserFolder/orderSuccessPage.jsx"));
+const MyOrders = lazy(() => import("./pages/UserFolder/myOrders.jsx"));
+const ProductsDetails = lazy(() => import("./pages/UserFolder/ProductsDetails.jsx"));
+const ForgetPassword = lazy(() => import("./pages/UserFolder/ForgetPassword.jsx"));
+const AiCenter = lazy(() => import("./pages/UserFolder/AiCenter.jsx"));
+const Logout = lazy(() => import("./Logout.jsx"));
 
-import Buynow from './pages/UserFolder/buynowSummery.jsx';
-import UserCart from './pages/UserFolder/getCartItems.jsx';
-import Home from './pages/UserFolder/Home.jsx';
-import MyOrders from './pages/UserFolder/myOrders.jsx';
-import OrderSuccess from './pages/UserFolder/orderSuccessPage.jsx';
-import ProductsDetails from './pages/UserFolder/ProductsDetails.jsx';
-import RouteProtection from './pages/UserFolder/RouteProtection.jsx';
-import UserCreate from './pages/UserFolder/userCreate.jsx';
-import UserLogin from './pages/UserFolder/userLogin.jsx';
-import UserProfile from './pages/UserFolder/userProfile.jsx';
-import UserProfileEdit from './pages/UserFolder/UserProfileEdit.jsx';
-import ForgetPassword from './pages/UserFolder/ForgetPassword.jsx';
-import AiCenter from './pages/UserFolder/AiCenter.jsx';
-import Logout from './Logout.jsx';
+/* =======================
+   Owner Pages (Lazy)
+======================= */
+const OwnerLogin = lazy(() => import("./pages/OwnerFolder/OwnerLogin.jsx"));
+const OwnerCreate = lazy(() => import("./pages/OwnerFolder/OwnerCreate.jsx"));
+const OwnerDashboard = lazy(() => import("./pages/OwnerFolder/OwnerDashboard.jsx"));
+const OwnerAllItems = lazy(() => import("./pages/OwnerFolder/AllItems.jsx"));
+const OwnerAddItems = lazy(() => import("./pages/OwnerFolder/AddItems.jsx"));
+const OwnerProfile = lazy(() => import("./pages/OwnerFolder/Profile.jsx"));
+const OwnerProfileEdit = lazy(() => import("./pages/OwnerFolder/EditProfile.jsx"));
+const OwnerAllOrders = lazy(() => import("./pages/OwnerFolder/AllOrdersShow.jsx"));
+const EditProduct = lazy(() => import("./pages/OwnerFolder/ItemsEdit.jsx"));
 
-import OwnerLogin from './pages/OwnerFolder/OwnerLogin.jsx';
-import OwnerCreate from './pages/OwnerFolder/OwnerCreate.jsx';
-import OwnerDashboard from './pages/OwnerFolder/OwnerDashboard.jsx';
-import OwnerAllItems from './pages/OwnerFolder/AllItems.jsx';
-import OwnerAddItems from './pages/OwnerFolder/AddItems.jsx';
-import OwnerProfile from './pages/OwnerFolder/Profile.jsx';
-import OwnerProfileEdit from './pages/OwnerFolder/EditProfile.jsx';
-import OwnerAllOrders from './pages/OwnerFolder/AllOrdersShow.jsx';
-import EditProduct from './pages/OwnerFolder/ItemsEdit.jsx';
+/* =======================
+   Static Pages (Lazy)
+======================= */
+const Privacy = lazy(() => import("./pages/Static/Privacy.jsx"));
+const Refund = lazy(() => import("./pages/Static/Refund.jsx"));
+const Terms = lazy(() => import("./pages/Static/Terms.jsx"));
+const Contact = lazy(() => import("./pages/Static/Contact.jsx"));
+const Shipping = lazy(() => import("./pages/Static/Shipping.jsx"));
 
-import Privacy from './pages/Static/Privacy.jsx';
-import Refund from './pages/Static/Refund.jsx';
-import Terms from './pages/Static/Terms.jsx';
-import Contact from './pages/Static/Contact.jsx';
-import Shipping from './pages/Static/Shipping.jsx';
+/* =======================
+   Fallback / Protection
+======================= */
+const RouteProtection = lazy(() =>
+  import("./pages/UserFolder/RouteProtection.jsx")
+);
 
+/* =======================
+   Loader Component
+======================= */
+const PageLoader = () => (
+  <div style={{ textAlign: "center", marginTop: "40px" }}>
+    <h2>🌀 Loading Page...</h2>
+  </div>
+);
 
+/* =======================
+   App Component
+======================= */
 const App = () => {
   return (
     <Router>
-      <Routes>
-        {/* Home Route */}
-        <Route path="/" element={<Home />} />
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          {/* Home */}
 
-        {/* User Routes */}
-        <Route path="/users/register" element={<UserCreate />} />
-        <Route path="/users/login" element={<UserLogin />} />
-        <Route path="/users/profile" element={<UserProfile />} />
-        <Route path="/users/profile/edit" element={<UserProfileEdit />} />
-        <Route path="/users/getCartItems" element={<UserCart />} />
-        <Route path="/users/buynow/:id" element={<Buynow />} />
-        <Route path="/users/orderSuccess/:id" element={<OrderSuccess />} />
-        <Route path="/users/logout" element={<Logout />} />
-        <Route path="/users/Order" element={<MyOrders />} />
-        <Route path="/users/helpcenter" element={<AiCenter />} />
-        <Route path="/users/forgetPassword" element={<ForgetPassword />} />
+          {/* User Routes */}
+          <Route path="/users/register" element={<UserCreate />} />
+          <Route path="/users/login" element={<UserLogin />} />
+          <Route path="/users/profile" element={<UserProfile />} />
+          <Route path="/users/profile/edit" element={<UserProfileEdit />} />
+          <Route path="/users/getCartItems" element={<UserCart />} />
+          <Route path="/users/buynow/:id" element={<Buynow />} />
+          <Route path="/users/orderSuccess/:id" element={<OrderSuccess />} />
+          <Route path="/users/order" element={<MyOrders />} />
+          <Route path="/users/helpcenter" element={<AiCenter />} />
+          <Route path="/users/forgetPassword" element={<ForgetPassword />} />
+          <Route path="/users/logout" element={<Logout />} />
 
-        {/* Owner Routes */}
-        <Route path="/owner/register" element={<OwnerCreate />} />
-        <Route path="/owner/login" element={<OwnerLogin />} />
-        <Route path="/owner/dashboard" element={<OwnerDashboard />} />
-        <Route path="/owner/all-items" element={<OwnerAllItems />} />
-        <Route path="/owner/add-items" element={<OwnerAddItems />} />
-        <Route path="/owner/profile" element={<OwnerProfile />} />
-        <Route path="/owner/editProfile" element={<OwnerProfileEdit />} />
-        <Route path="/owner/AllOrders" element={<OwnerAllOrders />} />
-        <Route path="/owner/EditProduct/:id" element={<EditProduct />} />
+          {/* Owner Routes */}
+          <Route path="/owner/register" element={<OwnerCreate />} />
+          <Route path="/owner/login" element={<OwnerLogin />} />
+          <Route path="/owner/dashboard" element={<OwnerDashboard />} />
+          <Route path="/owner/all-items" element={<OwnerAllItems />} />
+          <Route path="/owner/add-items" element={<OwnerAddItems />} />
+          <Route path="/owner/profile" element={<OwnerProfile />} />
+          <Route path="/owner/editProfile" element={<OwnerProfileEdit />} />
+          <Route path="/owner/AllOrders" element={<OwnerAllOrders />} />
+          <Route path="/owner/EditProduct/:id" element={<EditProduct />} />
 
-        {/* Product Routes */}
-        <Route path="/products/:id" element={<ProductsDetails />} />
-        {/* payment Protection Routes */}
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/refund" element={<Refund />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/shipping" element={<Shipping />} />
-        <Route path="/contact" element={<Contact />} />
+          {/* Product */}
+          <Route path="/products/:id" element={<ProductsDetails />} />
 
-        {/* Fallback Route */}
-        <Route path="*" element={<RouteProtection />} />
-      </Routes>
+          {/* Static Pages */}
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/refund" element={<Refund />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/shipping" element={<Shipping />} />
+          <Route path="/contact" element={<Contact />} />
+
+          {/* Fallback */}
+          <Route path="*" element={<RouteProtection />} />
+        </Routes>
+      </Suspense>
     </Router>
   );
 };

@@ -189,6 +189,7 @@ const Home = () => {
               "https://via.placeholder.com/150"
             }
             alt={product.name}
+            loading="lazy"
             className="w-full h-full object-contain"
             onError={(e) => {
               e.target.src = "https://via.placeholder.com/150";
@@ -248,6 +249,7 @@ const Home = () => {
             <img
               className={`${bannersImage[bannerIndex].style}  absolute z-10 top-30 max-w-[300px] md:max-w-[400px] h-auto object-contain`}
               src={bannersImage[bannerIndex].image}
+              loading="lazy"
               alt="Banner"
             />
           </div>
@@ -271,7 +273,7 @@ const Home = () => {
               {cat.label}
             </button>
           ))}
-          
+
         </div>
       </div>
 
@@ -310,6 +312,7 @@ const Home = () => {
                   <img
                     src="https://i.ibb.co/fY2pc8c1/LS20250730225719.png"
                     alt="Shop Now"
+                    loading="lazy"
                     className="w-80 absolute bottom-0 right-4  md:max-w-[400px] object-contain  "
                   />
                 </div>
